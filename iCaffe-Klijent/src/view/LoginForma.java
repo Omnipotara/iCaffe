@@ -5,20 +5,24 @@
 package view;
 
 import javax.swing.JOptionPane;
-import kontroler.Kontroler;
-import model.Prodavac;
+import komunikacija.Komunikacija;
+import model.Musterija;
+import operacije.Operacija;
+import transfer.KlijentskiZahtev;
+import transfer.ServerskiOdgovor;
 
 /**
  *
  * @author Omnix
  */
 public class LoginForma extends javax.swing.JFrame {
-    private ServerForma sf;
+    KlijentskaForma kf;
     /**
      * Creates new form LoginForma
      */
     public LoginForma() {
         initComponents();
+        kontroler.Kontroler.getInstance().setLf(this);
     }
 
     /**
@@ -32,13 +36,13 @@ public class LoginForma extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtUsername = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
         txtPassword = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Username");
+        jLabel1.setText("Email");
 
         jLabel2.setText("Password");
 
@@ -54,19 +58,20 @@ public class LoginForma extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(txtUsername))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                            .addComponent(txtPassword)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(133, 133, 133)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -74,37 +79,47 @@ public class LoginForma extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                .addGap(37, 37, 37)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String username = txtUsername.getText();
+        String email = txtEmail.getText();
         String password = String.valueOf(txtPassword.getPassword());
-        Prodavac p = new Prodavac();
-        p.setUsername(username);
-        p.setPassword(password);
+        Musterija m = new Musterija();
+        m.setEmail(email);
+        m.setPassword(password);
+
+        KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGIN);
+        Komunikacija.getInstance().posaljiZahtev(kz);
+        ServerskiOdgovor so = Komunikacija.getInstance().primiOdgovor();
         
-        p = Kontroler.getInstance().ulogujProdavca(p);
+        if(so == null){
+            JOptionPane.showMessageDialog(this, "Problem pri komunikaciji sa serverom..", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
-        if(p == null){
+        m = (Musterija) so.getParam();
+
+        if(m == null){
             JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        JOptionPane.showMessageDialog(this, "Uspesno ste se ulogovali!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
-        sf = new ServerForma(p);
-        sf.setVisible(true);
-        this.dispose();
         
+        JOptionPane.showMessageDialog(this, "Uspesno ste se ulogovali!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
+        kf = new KlijentskaForma(m);
+        kf.setVisible(true);
+        this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -146,7 +161,7 @@ public class LoginForma extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

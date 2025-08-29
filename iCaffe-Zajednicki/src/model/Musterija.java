@@ -5,6 +5,7 @@
 package model;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -17,16 +18,18 @@ public class Musterija implements Serializable{
     private String username;
     private String password;
     private KategorijaMusterije kategorijaMusterije;
+    private Duration preostaloVreme;
 
     public Musterija() {
     }
 
-    public Musterija(int id, String email, String username, String password, KategorijaMusterije kategorijaMusterije) {
+    public Musterija(int id, String email, String username, String password, KategorijaMusterije kategorijaMusterije, Duration preostaloVreme) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
         this.kategorijaMusterije = kategorijaMusterije;
+        this.preostaloVreme = preostaloVreme;
     }
 
     public int getId() {
@@ -68,6 +71,16 @@ public class Musterija implements Serializable{
     public void setKategorijaMusterije(KategorijaMusterije kategorijaMusterije) {
         this.kategorijaMusterije = kategorijaMusterije;
     }
+
+    public Duration getPreostaloVreme() {
+        return preostaloVreme;
+    }
+
+    public void setPreostaloVreme(Duration preostaloVreme) {
+        this.preostaloVreme = preostaloVreme;
+    }
+    
+    
 
     @Override
     public int hashCode() {

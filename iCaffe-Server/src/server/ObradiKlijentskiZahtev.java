@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import kontroler.Kontroler;
 import model.Musterija;
 import operacije.Operacija;
 import transfer.KlijentskiZahtev;
@@ -44,7 +45,15 @@ public class ObradiKlijentskiZahtev extends Thread {
 
             switch (kz.getOperacija()) {
                 case Operacija.LOGIN:
-
+                    Musterija m = (Musterija) kz.getParam();
+                    Musterija ulogovan = Kontroler.getInstance().ulogujMusteriju(m);
+                    
+                    if(ulogovan != null){
+                        this.ulogovan = ulogovan;
+                    }
+                    
+                    so.setParam(ulogovan);
+                    posaljiServerskiOdgovor(so);
                     break;
                 default:
                     throw new AssertionError();

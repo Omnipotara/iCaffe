@@ -7,6 +7,7 @@ package kontroler;
 import baza.DBBroker;
 import java.util.ArrayList;
 import java.util.List;
+import model.Musterija;
 import model.Prodavac;
 import server.ObradiKlijentskiZahtev;
 
@@ -38,8 +39,12 @@ public class Kontroler {
         this.listaNiti = listaNiti;
     }
 
-    public Prodavac uloguj(Prodavac p) {
-        return dbb.uloguj(p);
+    public Prodavac ulogujProdavca(Prodavac p) {
+        return dbb.ulogujProdavca(p);
+    }
+
+    public Musterija ulogujMusteriju(Musterija m) {
+        return dbb.ulogujMusteriju(m);
     }
     
     
