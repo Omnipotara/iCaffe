@@ -4,14 +4,19 @@
  */
 package model;
 
+import domen.DomainObject;
 import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
  *
  * @author Omnix
  */
-public class StavkaRacuna implements Serializable {
+public class StavkaRacuna implements Serializable, DomainObject<StavkaRacuna> {
+
     private int rb;
     private Racun racun;
     private int kolicina;
@@ -107,7 +112,84 @@ public class StavkaRacuna implements Serializable {
     public String toString() {
         return "StavkaRacuna{" + "rb=" + rb + ", racun=" + racun + ", kolicina=" + kolicina + ", cenaStavke=" + cenaStavke + ", jedinicnaCena=" + jedinicnaCena + ", usluga=" + usluga + '}';
     }
-    
-    
-    
+
+    @Override
+    public String getInsertQuery() {
+        return "INSERT INTO stavka_racuna (rb, racunId, kolicina, cenaStavke, jedinicnaCena, uslugaId) VALUES (?, ?, ?, ?, ?, ?)";
+    }
+
+    @Override
+    public void fillInsertStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, rb);
+        ps.setInt(2, racun != null ? racun.getId() : 0);
+        ps.setInt(3, kolicina);
+        ps.setDouble(4, cenaStavke);
+        ps.setDouble(5, jedinicnaCena);
+        ps.setInt(6, usluga != null ? usluga.getId() : 0);
+    }
+
+    @Override
+    public String getUpdateQuery() {
+        return "UPDATE stavka_racuna SET kolicina = ?, cenaStavke = ?, jedinicnaCena = ?, uslugaId = ? WHERE rb = ? AND racunId = ?";
+    }
+
+    @Override
+    public void fillUpdateStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, kolicina);
+        ps.setDouble(2, cenaStavke);
+        ps.setDouble(3, jedinicnaCena);
+        ps.setInt(4, usluga != null ? usluga.getId() : 0);
+        ps.setInt(5, rb);
+        ps.setInt(6, racun != null ? racun.getId() : 0);
+    }
+
+    @Override
+    public String getDeleteQuery() {
+        return "DELETE FROM stavka_racuna WHERE rb = ? AND racunId = ?";
+    }
+
+    @Override
+    public void fillDeleteStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, rb);
+        ps.setInt(2, racun != null ? racun.getId() : 0);
+    }
+
+    @Override
+    public String getSelectQuery() {
+        return "SELECT s.rb, s.racunId, s.kolicina, s.cenaStavke, s.jedinicnaCena, s.uslugaId, "
+                + "u.naziv AS uslugaNaziv, u.cena AS uslugaCena "
+                + "FROM stavka_racuna s "
+                + "LEFT JOIN usluga u ON s.uslugaId = u.id "
+                + "WHERE s.racunId = ?";
+    }
+
+    @Override
+    public StavkaRacuna createFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            int rb = rs.getInt("rb");
+            int kolicina = rs.getInt("kolicina");
+            double cenaStavke = rs.getDouble("cenaStavke");
+            double jedinicnaCena = rs.getDouble("jedinicnaCena");
+
+            // Racun ali samo ID
+            int racunId = rs.getInt("racunId");
+            Racun racun = new Racun();
+            racun.setId(racunId);
+
+            // Usluga
+            int uslugaId = rs.getInt("uslugaId");
+            String naziv = rs.getString("uslugaNaziv");
+            double cena = rs.getDouble("uslugaCena");
+            Usluga usluga = new Usluga(uslugaId, naziv, cena);
+
+            return new StavkaRacuna(rb, racun, kolicina, cenaStavke, jedinicnaCena, usluga);
+        }
+        return null;
+    }
+
+    @Override
+    public void fillSelectStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, racun != null ? racun.getId() : 0);
+    }
+
 }

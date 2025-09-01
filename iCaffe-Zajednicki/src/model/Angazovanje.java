@@ -4,15 +4,21 @@
  */
 package model;
 
+import domen.DomainObject;
 import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
  *
  * @author Omnix
  */
-public class Angazovanje implements Serializable {
+public class Angazovanje implements Serializable, DomainObject<Angazovanje> {
+
     private Prodavac prodavac;
     private TerminDezurstva termin;
     private LocalDate datum;
@@ -78,10 +84,82 @@ public class Angazovanje implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Angazovanje{" + "prodavac=" + prodavac + ", termin=" + termin + ", datum=" + datum + '}';
+    public String getInsertQuery() {
+        return "INSERT INTO angazovanje (prodavacId, terminId, datum) VALUES (?, ?, ?)";
     }
-    
-    
-    
+
+    @Override
+    public void fillInsertStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, prodavac.getId());
+        ps.setInt(2, termin.getId());
+        ps.setObject(3, datum);
+    }
+
+    @Override
+    public String getUpdateQuery() {
+        return "UPDATE angazovanje SET datum = ? WHERE prodavacId = ? AND terminId = ?";
+    }
+
+    @Override
+    public void fillUpdateStatement(PreparedStatement ps) throws SQLException {
+        ps.setDate(1, java.sql.Date.valueOf(datum));
+        ps.setInt(2, prodavac.getId());
+        ps.setInt(3, termin.getId());
+    }
+
+    @Override
+    public String getDeleteQuery() {
+        return "DELETE FROM angazovanje WHERE prodavacId = ? AND terminId = ? AND datum = ?";
+    }
+
+    @Override
+    public void fillDeleteStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, prodavac.getId());
+        ps.setInt(2, termin.getId());
+        ps.setObject(3, datum);
+    }
+
+    @Override
+    public String getSelectQuery() {
+        return "SELECT a.datum, "
+                + "p.id AS prodavacId, p.ime, p.prezime, p.email, p.username, "
+                + "t.id AS terminId, t.smena, t.vremeOd, t.vremeDo "
+                + "FROM angazovanje a "
+                + "JOIN prodavac p ON a.prodavacId = p.id "
+                + "JOIN termin_dezurstva t ON a.terminId = t.id "
+                + "WHERE a.prodavacId = ? AND a.datum = ?";
+    }
+
+    @Override
+    public Angazovanje createFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            // Prodavac
+            Prodavac p = new Prodavac();
+            p.setId(rs.getInt("prodavacId"));
+            p.setIme(rs.getString("ime"));
+            p.setPrezime(rs.getString("prezime"));
+            p.setEmail(rs.getString("email"));
+            p.setUsername(rs.getString("username"));
+
+            // Termin
+            TerminDezurstva t = new TerminDezurstva();
+            t.setId(rs.getInt("terminId"));
+            t.setSmena(Smene.valueOf(rs.getString("smena").toUpperCase()));
+            t.setVremeOd(rs.getTime("vremeOd").toLocalTime());
+            t.setVremeDo(rs.getTime("vremeDo").toLocalTime());
+
+            // Datum angažovanja
+            LocalDate d = rs.getObject("datum", LocalDate.class);
+
+            return new Angazovanje(p, t, d);
+        }
+        return null;
+    }
+
+    @Override
+    public void fillSelectStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, prodavac != null ? prodavac.getId() : 0);
+        ps.setObject(2, datum);
+    }
+
 }

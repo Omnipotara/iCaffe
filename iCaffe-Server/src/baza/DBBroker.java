@@ -4,6 +4,7 @@
  */
 package baza;
 
+import domen.DomainObject;
 import model.Prodavac;
 import java.sql.*;
 import java.time.Duration;
@@ -18,6 +19,79 @@ import model.Musterija;
  */
 public class DBBroker {
 
+    // --- DEFAULT CRUD metode ---
+    public <T extends DomainObject<T>> boolean insert(T obj) {
+        try {
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(obj.getInsertQuery());
+            obj.fillInsertStatement(ps);
+            int inserted = ps.executeUpdate();
+            Konekcija.getInstance().getKonekcija().commit();
+
+            return inserted > 0;
+
+        } catch (SQLException ex) {
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException e) {
+            }
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public <T extends DomainObject<T>> boolean update(T obj) {
+        try {
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(obj.getUpdateQuery());
+            obj.fillUpdateStatement(ps);
+            int updated = ps.executeUpdate();
+            Konekcija.getInstance().getKonekcija().commit();
+
+            return updated > 0;
+
+        } catch (SQLException ex) {
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException e) {
+            }
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public <T extends DomainObject<T>> boolean delete(T obj) {
+        try {
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(obj.getDeleteQuery());
+            obj.fillDeleteStatement(ps);
+            int deleted = ps.executeUpdate();
+            Konekcija.getInstance().getKonekcija().commit();
+
+            return deleted > 0;
+
+        } catch (SQLException ex) {
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException e) {
+            }
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public <T extends DomainObject<T>> T select(T obj) {
+        try {
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(obj.getSelectQuery());
+            obj.fillSelectStatement(ps);
+            ResultSet rs = ps.executeQuery();
+
+            return obj.createFromResultSet(rs);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    
+    // --- SPECIFICNE metode ---
     public Prodavac ulogujProdavca(Prodavac p) {
         try {
             String upit = "SELECT * FROM PRODAVAC WHERE username = ? AND password = ?";
@@ -54,9 +128,9 @@ public class DBBroker {
                 m.setUsername(rs.getString("m.username"));
                 Duration d = Duration.ofSeconds(rs.getInt("m.preostaloVreme"));
                 m.setPreostaloVreme(d);
-                
+
                 KategorijaMusterije km = new KategorijaMusterije(rs.getInt("km.id"), rs.getString("km.naziv"), rs.getInt("km.popust"));
-                
+
                 m.setKategorijaMusterije(km);
 
                 return m;

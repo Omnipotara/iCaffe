@@ -4,11 +4,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Omnix
  */
-public enum Smene {
+public enum Smene implements Serializable {
     PRVA,
     DRUGA,
     TRECA

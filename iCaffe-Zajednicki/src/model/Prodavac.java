@@ -4,14 +4,19 @@
  */
 package model;
 
+import domen.DomainObject;
 import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
  *
  * @author Omnix
  */
-public class Prodavac implements Serializable {
+public class Prodavac implements Serializable, DomainObject<Prodavac> {
+
     private int id;
     private String ime;
     private String prezime;
@@ -107,6 +112,69 @@ public class Prodavac implements Serializable {
     public String toString() {
         return "Prodavac{" + "ime=" + ime + ", prezime=" + prezime + ", username=" + username + '}';
     }
-    
-    
+
+    @Override
+    public String getInsertQuery() {
+        return "INSERT INTO prodavac (ime, prezime, email, username, password) VALUES (?, ?, ?, ?, ?)";
+    }
+
+    @Override
+    public void fillInsertStatement(PreparedStatement ps) throws SQLException {
+        ps.setString(1, ime);
+        ps.setString(2, prezime);
+        ps.setString(3, email);
+        ps.setString(4, username);
+        ps.setString(5, password);
+    }
+
+    @Override
+    public String getUpdateQuery() {
+        return "UPDATE prodavac SET ime = ?, prezime = ?, email = ?, username = ?, password = ? WHERE id = ?";
+    }
+
+    @Override
+    public void fillUpdateStatement(PreparedStatement ps) throws SQLException {
+        ps.setString(1, ime);
+        ps.setString(2, prezime);
+        ps.setString(3, email);
+        ps.setString(4, username);
+        ps.setString(5, password);
+        ps.setInt(6, id);
+    }
+
+    @Override
+    public String getDeleteQuery() {
+        return "DELETE FROM prodavac WHERE id = ?";
+    }
+
+    @Override
+    public void fillDeleteStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectQuery() {
+        return "SELECT id, ime, prezime, email, username, password FROM prodavac WHERE id = ?";
+    }
+
+    @Override
+    public Prodavac createFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            int id = rs.getInt("id");
+            String ime = rs.getString("ime");
+            String prezime = rs.getString("prezime");
+            String email = rs.getString("email");
+            String username = rs.getString("username");
+            String password = rs.getString("password");
+
+            return new Prodavac(id, ime, prezime, email, username, password);
+        }
+        return null;
+    }
+
+    @Override
+    public void fillSelectStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, id);
+    }
+
 }

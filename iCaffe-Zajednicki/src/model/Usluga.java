@@ -4,13 +4,18 @@
  */
 package model;
 
+import domen.DomainObject;
 import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
  * @author Omnix
  */
-public class Usluga implements Serializable{
+public class Usluga implements Serializable, DomainObject<Usluga> {
+
     private int id;
     private String naziv;
     private double cena;
@@ -73,6 +78,59 @@ public class Usluga implements Serializable{
     public String toString() {
         return "Usluga{" + "id=" + id + ", naziv=" + naziv + ", cena=" + cena + '}';
     }
-    
-    
+
+    @Override
+    public String getInsertQuery() {
+        return "INSERT INTO usluga (naziv, cena) VALUES (?, ?)";
+    }
+
+    @Override
+    public void fillInsertStatement(PreparedStatement ps) throws SQLException {
+        ps.setString(1, naziv);
+        ps.setDouble(2, cena);
+    }
+
+    @Override
+    public String getUpdateQuery() {
+        return "UPDATE usluga SET naziv = ?, cena = ? WHERE id = ?";
+    }
+
+    @Override
+    public void fillUpdateStatement(PreparedStatement ps) throws SQLException {
+        ps.setString(1, naziv);
+        ps.setDouble(2, cena);
+        ps.setInt(3, id);
+    }
+
+    @Override
+    public String getDeleteQuery() {
+        return "DELETE FROM usluga WHERE id = ?";
+    }
+
+    @Override
+    public void fillDeleteStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectQuery() {
+        return "SELECT id, naziv, cena FROM usluga WHERE id = ?";
+    }
+
+    @Override
+    public Usluga createFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            int id = rs.getInt("id");
+            String naziv = rs.getString("naziv");
+            double cena = rs.getDouble("cena");
+            return new Usluga(id, naziv, cena);
+        }
+        return null;
+    }
+
+    @Override
+    public void fillSelectStatement(PreparedStatement ps) throws SQLException {
+        ps.setInt(1, id);
+    }
+
 }
