@@ -31,11 +31,11 @@ public class Konekcija {
         }
     }
 
-    public  Connection getKonekcija() {
+    public Connection getKonekcija() {
         return konekcija;
     }
 
-    public  void setKonekcija(Connection konekcija) {
+    public void setKonekcija(Connection konekcija) {
         Konekcija.konekcija = konekcija;
     }
     
