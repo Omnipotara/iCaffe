@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  *
@@ -145,6 +146,29 @@ public class TerminDezurstva implements Serializable, DomainObject<TerminDezurst
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT id, smena, vremeOd, vremeDo FROM termin_dezurstva";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<TerminDezurstva> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<TerminDezurstva> lista = new java.util.ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            Smene smena = Smene.valueOf(rs.getString("smena"));
+            LocalTime vremeOd = rs.getTime("vremeOd").toLocalTime();
+            LocalTime vremeDo = rs.getTime("vremeDo").toLocalTime();
+            lista.add(new TerminDezurstva(id, smena, vremeOd, vremeDo));
+        }
+        return lista;
     }
 
 }

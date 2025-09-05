@@ -8,6 +8,7 @@ import domen.DomainObject;
 import model.Prodavac;
 import java.sql.*;
 import java.time.Duration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.KategorijaMusterije;
@@ -90,7 +91,19 @@ public class DBBroker {
         return null;
     }
 
-    
+    public <T extends DomainObject<T>> List<T> selectAll(T obj) {
+        try {
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(obj.getSelectAllQuery());
+            obj.fillSelectAllStatement(ps);
+            ResultSet rs = ps.executeQuery();
+
+            return obj.createListFromResultSet(rs);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     // --- SPECIFICNE metode ---
     public Prodavac ulogujProdavca(Prodavac p) {
         try {
@@ -141,6 +154,69 @@ public class DBBroker {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public boolean daLiJeUlogovan(Musterija musterija) {
+        try {
+            String upit = "SELECT * FROM MUSTERIJA_ULOGOVANI WHERE id = ?";
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit);
+            ps.setInt(1, musterija.getId());
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean zabeleziUlogovanog(Musterija musterija) {
+        try {
+            String upit = "INSERT INTO MUSTERIJA_ULOGOVANI "
+                    + "(id, email, username, password, kategorijaId, preostaloVreme) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit)) {
+                ps.setInt(1, musterija.getId());
+                ps.setString(2, musterija.getEmail());
+                ps.setString(3, musterija.getUsername());
+                ps.setString(4, musterija.getPassword());
+                ps.setInt(5, musterija.getKategorijaMusterije() != null ? musterija.getKategorijaMusterije().getId() : 0);
+                ps.setLong(6, musterija.getPreostaloVreme() != null ? musterija.getPreostaloVreme().toSeconds() : 0);
+
+                int inserted = ps.executeUpdate();
+                Konekcija.getInstance().getKonekcija().commit();
+                return inserted > 0;
+            }
+        } catch (SQLException ex) {
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException e) {
+            }
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean odlogujMusteriju(Musterija m) {
+        try {
+            String upit = "DELETE FROM MUSTERIJA_ULOGOVANI WHERE id = ?";
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit);
+            ps.setInt(1, m.getId());
+            int deleted = ps.executeUpdate();
+            Konekcija.getInstance().getKonekcija().commit();
+            
+            return deleted > 0;
+            
+        } catch (SQLException ex) {
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
     }
 
 }

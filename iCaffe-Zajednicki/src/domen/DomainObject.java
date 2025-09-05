@@ -4,6 +4,7 @@
  */
 package domen;
 import java.sql.*;
+import java.util.List;
 
 /**
  *
@@ -27,11 +28,18 @@ public interface DomainObject<T> {
     // Popunjava PreparedStatement za DELETE
     void fillDeleteStatement(PreparedStatement ps) throws SQLException;
     
-    // Vraća SQL upit za SELECT operaciju (npr. da vrati sve redove)
+    // Vraća SQL upit za SELECT operaciju za jedan objekat
     String getSelectQuery();
     // Popunjava PreparedStatement za SELECT
     void fillSelectStatement(PreparedStatement ps) throws SQLException;
     
     // Kreira objekat iz ResultSet-a
     T createFromResultSet(ResultSet rs) throws SQLException;
+    
+    // Vraća SQL upit za SELECT operaciju za sve redove
+    String getSelectAllQuery();
+    // Popunjava PreparedStatement za SELECT
+    void fillSelectAllStatement(PreparedStatement ps) throws SQLException;
+    
+    List<T> createListFromResultSet(ResultSet rs) throws SQLException;
 }

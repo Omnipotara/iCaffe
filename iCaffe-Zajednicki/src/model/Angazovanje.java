@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -160,6 +161,48 @@ public class Angazovanje implements Serializable, DomainObject<Angazovanje> {
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, prodavac != null ? prodavac.getId() : 0);
         ps.setObject(2, datum);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT a.datum, "
+                + "p.id AS prodavacId, p.ime, p.prezime, p.email, p.username, "
+                + "t.id AS terminId, t.smena, t.vremeOd, t.vremeDo "
+                + "FROM angazovanje a "
+                + "JOIN prodavac p ON a.prodavacId = p.id "
+                + "JOIN termin_dezurstva t ON a.terminId = t.id";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<Angazovanje> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<Angazovanje> lista = new ArrayList<>();
+        while (rs.next()) {
+            // Prodavac
+            Prodavac p = new Prodavac();
+            p.setId(rs.getInt("prodavacId"));
+            p.setIme(rs.getString("ime"));
+            p.setPrezime(rs.getString("prezime"));
+            p.setEmail(rs.getString("email"));
+            p.setUsername(rs.getString("username"));
+
+            // Termin
+            TerminDezurstva t = new TerminDezurstva();
+            t.setId(rs.getInt("terminId"));
+            t.setSmena(Smene.valueOf(rs.getString("smena").toUpperCase()));
+            t.setVremeOd(rs.getTime("vremeOd").toLocalTime());
+            t.setVremeDo(rs.getTime("vremeDo").toLocalTime());
+
+            // Datum angažovanja
+            LocalDate d = rs.getObject("datum", LocalDate.class);
+
+            lista.add(new Angazovanje(p, t, d));
+        }
+        return lista;
     }
 
 }

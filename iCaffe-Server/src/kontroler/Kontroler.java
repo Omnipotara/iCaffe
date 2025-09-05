@@ -44,7 +44,17 @@ public class Kontroler {
     }
 
     public Musterija ulogujMusteriju(Musterija m) {
-        return dbb.ulogujMusteriju(m);
+        Musterija musterija = dbb.ulogujMusteriju(m);
+        
+        if(musterija != null && !dbb.daLiJeUlogovan(musterija)){
+            dbb.zabeleziUlogovanog(musterija);
+        }
+        
+        return musterija;
+    }
+
+    public boolean odlogujMusteriju(Musterija m) {
+        return dbb.odlogujMusteriju(m);
     }
     
     

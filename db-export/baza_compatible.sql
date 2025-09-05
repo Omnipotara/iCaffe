@@ -70,6 +70,23 @@ CREATE TABLE `musterija` (
 insert  into `musterija`(`id`,`email`,`username`,`password`,`kategorijaId`,`preostaloVreme`) values 
 (1,'gio','gio','gio',1,3900);
 
+/*Table structure for table `musterija_ulogovani` */
+
+DROP TABLE IF EXISTS `musterija_ulogovani`;
+
+CREATE TABLE `musterija_ulogovani` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `email` varchar(50) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `kategorijaId` bigint(20) DEFAULT NULL,
+  `preostaloVreme` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `musterija_ibfk_1` (`kategorijaId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `musterija_ulogovani` */
+
 /*Table structure for table `prodavac` */
 
 DROP TABLE IF EXISTS `prodavac`;

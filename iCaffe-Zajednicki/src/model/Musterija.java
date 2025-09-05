@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -190,6 +191,44 @@ public class Musterija implements Serializable, DomainObject<Musterija> {
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT m.id, m.email, m.username, m.password, m.kategorijaId, m.preostaloVreme, "
+                + "k.naziv AS kategorijaNaziv, k.popust AS kategorijaPopust "
+                + "FROM musterija m "
+                + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<Musterija> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<Musterija> list = new java.util.ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String email = rs.getString("email");
+            String username = rs.getString("username");
+            String password = rs.getString("password");
+
+            // Kategorija
+            int kategorijaId = rs.getInt("kategorijaId");
+            String naziv = rs.getString("kategorijaNaziv");
+            int popust = rs.getInt("kategorijaPopust");
+            KategorijaMusterije kategorija = new KategorijaMusterije(kategorijaId, naziv, popust);
+
+            // Preostalo vreme
+            long vreme = rs.getLong("preostaloVreme");
+            Duration preostalo = Duration.ofSeconds(vreme);
+
+            Musterija m = new Musterija(id, email, username, password, kategorija, preostalo);
+            list.add(m);
+        }
+        return list;
     }
 
 }

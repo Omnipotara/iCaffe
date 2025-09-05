@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -131,6 +133,28 @@ public class KategorijaMusterije implements Serializable, DomainObject<Kategorij
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT * FROM kategorija_musterije";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<KategorijaMusterije> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<KategorijaMusterije> list = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String naziv = rs.getString("naziv");
+            int popust = rs.getInt("popust");
+            list.add(new KategorijaMusterije(id, naziv, popust));
+        }
+        return list;
     }
 
 }

@@ -25,7 +25,8 @@ import transfer.ServerskiOdgovor;
 public class Komunikacija extends Thread {
 
     private static Komunikacija instance;
-    Socket s;
+    private Socket s;
+    private boolean kraj = false;
 
     public static Komunikacija getInstance() {
         if (instance == null) {
@@ -45,19 +46,30 @@ public class Komunikacija extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        try{
+        while (!kraj) {
             ServerskiOdgovor so = primiOdgovor();
             if (so == null) {
                 return;
             }
 
             switch (so.getOperacija()) {
-                case Operacija.LOGIN:
-                    
+                case Operacija.LOGOUT:
+                    kraj = true;
+                    Kontroler.getInstance().getKf().prikaziLogoutPoruku();
                     break;
 
                 default:
                     throw new AssertionError();
+            }
+        }
+        } finally {
+            if(s != null && !s.isClosed()){
+                try {
+                    s.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Komunikacija.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
@@ -68,7 +80,7 @@ public class Komunikacija extends Thread {
             ServerskiOdgovor so = (ServerskiOdgovor) ois.readObject();
             return so;
         } catch (EOFException | SocketException ex) {
-            System.out.println("Jbg.");
+            System.out.println("Prekinuta konekcija.");
 
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Komunikacija.class.getName()).log(Level.SEVERE, null, ex);

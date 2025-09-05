@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -175,6 +177,32 @@ public class Prodavac implements Serializable, DomainObject<Prodavac> {
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT id, ime, prezime, email, username, password FROM prodavac";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<Prodavac> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<Prodavac> lista = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String ime = rs.getString("ime");
+            String prezime = rs.getString("prezime");
+            String email = rs.getString("email");
+            String username = rs.getString("username");
+            String password = rs.getString("password");
+
+            lista.add(new Prodavac(id, ime, prezime, email, username, password));
+        }
+        return lista;
     }
 
 }

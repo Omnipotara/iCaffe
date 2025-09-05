@@ -34,29 +34,51 @@ public class ObradiKlijentskiZahtev extends Thread {
 
     @Override
     public void run() {
-        while (!kraj) {
-            KlijentskiZahtev kz = primiKlijentskiZahtev();
-            ServerskiOdgovor so = new ServerskiOdgovor();
+        try {
+            while (!kraj) {
+                KlijentskiZahtev kz = primiKlijentskiZahtev();
+                ServerskiOdgovor so = new ServerskiOdgovor();
 
-            if (kz == null) {
-                System.out.println("Klijentski zahtev je prazan : NEMA KONEKCIJE");
-                break;
-            }
-
-            switch (kz.getOperacija()) {
-                case Operacija.LOGIN:
-                    Musterija m = (Musterija) kz.getParam();
-                    Musterija ulogovan = Kontroler.getInstance().ulogujMusteriju(m);
-                    
-                    if(ulogovan != null){
-                        this.ulogovan = ulogovan;
-                    }
-                    
-                    so.setParam(ulogovan);
-                    posaljiServerskiOdgovor(so);
+                if (kz == null) {
+                    System.out.println("Klijentski zahtev je prazan : NEMA KONEKCIJE");
                     break;
-                default:
-                    throw new AssertionError();
+                }
+
+                switch (kz.getOperacija()) {
+                    case Operacija.LOGIN:
+                        Musterija m = (Musterija) kz.getParam();
+                        Musterija ulogovan = Kontroler.getInstance().ulogujMusteriju(m);
+
+                        if (ulogovan != null) {
+                            this.ulogovan = ulogovan;
+                        }
+
+                        so.setParam(ulogovan);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case Operacija.LOGOUT:
+                        m = (Musterija) kz.getParam();
+                        boolean odlogovan = Kontroler.getInstance().odlogujMusteriju(m);
+                        this.ulogovan = null;
+
+                        so.setParam(odlogovan);
+                        so.setOperacija(Operacija.LOGOUT);
+                        posaljiServerskiOdgovor(so);
+
+                        kraj = true;
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+        } finally {
+            if(s!= null && !s.isClosed()){
+                try {
+                    s.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ObradiKlijentskiZahtev.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

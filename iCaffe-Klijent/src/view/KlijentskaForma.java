@@ -4,15 +4,18 @@
  */
 package view;
 
+import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.Musterija;
+import operacije.Operacija;
+import transfer.KlijentskiZahtev;
 
 /**
  *
  * @author Omnix
  */
 public class KlijentskaForma extends javax.swing.JFrame {
-
+    Musterija m;
     /**
      * Creates new form KlijentskaForma
      */
@@ -21,6 +24,7 @@ public class KlijentskaForma extends javax.swing.JFrame {
     }
     
      public KlijentskaForma(Musterija m) {
+         this.m = m;
         initComponents();
         kontroler.Kontroler.getInstance().setKf(this);
         setTitle("Zdravo " + m.getUsername() + "!" + m.getPreostaloVreme().toHours() + "h " + m.getPreostaloVreme().toMinutes() % 60 + "min ");
@@ -37,21 +41,40 @@ public class KlijentskaForma extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnLogout = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 328, Short.MAX_VALUE)
+                .addComponent(btnLogout))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnLogout)
+                .addContainerGap(271, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGOUT);
+        Komunikacija.getInstance().posaljiZahtev(kz);
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -89,5 +112,11 @@ public class KlijentskaForma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLogout;
     // End of variables declaration//GEN-END:variables
+
+    public void prikaziLogoutPoruku() {
+        JOptionPane.showMessageDialog(this, "Uspesno ste se izlogovali.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+    }
 }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -190,6 +191,45 @@ public class StavkaRacuna implements Serializable, DomainObject<StavkaRacuna> {
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, racun != null ? racun.getId() : 0);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT s.rb, s.racunId, s.kolicina, s.cenaStavke, s.jedinicnaCena, s.uslugaId, "
+                + "u.naziv AS uslugaNaziv, u.cena AS uslugaCena "
+                + "FROM stavka_racuna s "
+                + "LEFT JOIN usluga u ON s.uslugaId = u.id";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<StavkaRacuna> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<StavkaRacuna> lista = new java.util.ArrayList<>();
+        while (rs.next()) {
+            int rb = rs.getInt("rb");
+            int kolicina = rs.getInt("kolicina");
+            double cenaStavke = rs.getDouble("cenaStavke");
+            double jedinicnaCena = rs.getDouble("jedinicnaCena");
+
+            // Racun samo ID
+            int racunId = rs.getInt("racunId");
+            Racun racun = new Racun();
+            racun.setId(racunId);
+
+            // Usluga
+            int uslugaId = rs.getInt("uslugaId");
+            String naziv = rs.getString("uslugaNaziv");
+            double cena = rs.getDouble("uslugaCena");
+            Usluga usluga = new Usluga(uslugaId, naziv, cena);
+
+            StavkaRacuna stavka = new StavkaRacuna(rb, racun, kolicina, cenaStavke, jedinicnaCena, usluga);
+            lista.add(stavka);
+        }
+        return lista;
     }
 
 }

@@ -11,6 +11,6 @@ import java.io.Serializable;
  * @author Omnix
  */
 public enum Operacija implements Serializable{
-    LOGIN,
+    LOGIN, LOGOUT,
     
 }

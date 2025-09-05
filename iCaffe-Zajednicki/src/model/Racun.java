@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *
@@ -199,6 +200,71 @@ public class Racun implements Serializable, DomainObject<Racun> {
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT r.id, r.datum, r.ukupnacena, "
+                + "p.id AS prodavacId, p.ime AS prodavacIme, p.prezime AS prodavacPrezime, "
+                + "p.email AS prodavacEmail, p.username AS prodavacUsername, "
+                + "m.id AS musterijaId, m.email AS musterijaEmail, m.username AS musterijaUsername, "
+                + "m.password AS musterijaPassword, m.kategorijaId AS kategorijaId, m.preostaloVreme AS preostaloVreme, "
+                + "k.naziv AS kategorijaNaziv, k.popust AS kategorijaPopust "
+                + "FROM racun r "
+                + "JOIN prodavac p ON r.prodavacId = p.id "
+                + "JOIN musterija m ON r.musterijaId = m.id "
+                + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<Racun> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<Racun> lista = new java.util.ArrayList<>();
+        while (rs.next()) {
+            // Prodavac
+            Prodavac p = new Prodavac(
+                    rs.getInt("prodavacId"),
+                    rs.getString("prodavacIme"),
+                    rs.getString("prodavacPrezime"),
+                    rs.getString("prodavacEmail"),
+                    rs.getString("prodavacUsername"),
+                    null
+            );
+
+            // Kategorija musterije
+            KategorijaMusterije k = new KategorijaMusterije(
+                    rs.getInt("kategorijaId"),
+                    rs.getString("kategorijaNaziv"),
+                    rs.getInt("kategorijaPopust")
+            );
+
+            // Musterija
+            long vreme = rs.getLong("preostaloVreme");
+            Musterija m = new Musterija(
+                    rs.getInt("musterijaId"),
+                    rs.getString("musterijaEmail"),
+                    rs.getString("musterijaUsername"),
+                    rs.getString("musterijaPassword"),
+                    k,
+                    java.time.Duration.ofSeconds(vreme)
+            );
+
+            // Racun
+            Racun r = new Racun(
+                    rs.getInt("id"),
+                    rs.getTimestamp("datum").toLocalDateTime(),
+                    rs.getDouble("ukupnacena"),
+                    p,
+                    m
+            );
+
+            lista.add(r);
+        }
+        return lista;
     }
 
 }

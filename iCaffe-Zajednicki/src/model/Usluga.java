@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -131,6 +132,28 @@ public class Usluga implements Serializable, DomainObject<Usluga> {
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
         ps.setInt(1, id);
+    }
+
+    @Override
+    public String getSelectAllQuery() {
+        return "SELECT id, naziv, cena FROM usluga";
+    }
+
+    @Override
+    public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
+        // Nema parametara (za sad)
+    }
+
+    @Override
+    public List<Usluga> createListFromResultSet(ResultSet rs) throws SQLException {
+        List<Usluga> lista = new java.util.ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String naziv = rs.getString("naziv");
+            double cena = rs.getDouble("cena");
+            lista.add(new Usluga(id, naziv, cena));
+        }
+        return lista;
     }
 
 }
