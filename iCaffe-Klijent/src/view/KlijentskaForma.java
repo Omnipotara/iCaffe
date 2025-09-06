@@ -7,6 +7,7 @@ package view;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.Musterija;
+import niti.MusterijaTimerNit;
 import operacije.Operacija;
 import transfer.KlijentskiZahtev;
 
@@ -15,22 +16,24 @@ import transfer.KlijentskiZahtev;
  * @author Omnix
  */
 public class KlijentskaForma extends javax.swing.JFrame {
+
     Musterija m;
+
     /**
      * Creates new form KlijentskaForma
      */
     public KlijentskaForma() {
         initComponents();
     }
-    
-     public KlijentskaForma(Musterija m) {
-         this.m = m;
+
+    public KlijentskaForma(Musterija m) {
+        this.m = m;
         initComponents();
         kontroler.Kontroler.getInstance().setKf(this);
-        setTitle("Zdravo " + m.getUsername() + "!" + m.getPreostaloVreme().toHours() + "h " + m.getPreostaloVreme().toMinutes() % 60 + "min ");
+        MusterijaTimerNit mtn = new MusterijaTimerNit(this, m);
+        mtn.start();
         Komunikacija.getInstance().start();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -118,5 +121,9 @@ public class KlijentskaForma extends javax.swing.JFrame {
     public void prikaziLogoutPoruku() {
         JOptionPane.showMessageDialog(this, "Uspesno ste se izlogovali.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
+    }
+
+    public void istekloVreme() {
+        JOptionPane.showMessageDialog(this, "NEMA VISE VREMENA.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
     }
 }

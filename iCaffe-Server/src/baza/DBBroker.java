@@ -146,14 +146,23 @@ public class DBBroker {
 
                 m.setKategorijaMusterije(km);
 
+                if(daLiJeUlogovan(m)){
+                    m = new Musterija();
+                    m.setId(-2);
+                } else {
+                    zabeleziUlogovanog(m);
+                }
                 return m;
             }
-            m = null;
+            m = new Musterija();
+            m.setId(-1);
             return m;
         } catch (SQLException ex) {
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        m = new Musterija();
+        m.setId(-1);
+        return m;
     }
 
     public boolean daLiJeUlogovan(Musterija musterija) {
@@ -173,15 +182,11 @@ public class DBBroker {
     public boolean zabeleziUlogovanog(Musterija musterija) {
         try {
             String upit = "INSERT INTO MUSTERIJA_ULOGOVANI "
-                    + "(id, email, username, password, kategorijaId, preostaloVreme) "
-                    + "VALUES (?, ?, ?, ?, ?, ?)";
+                    + "(id, username) "
+                    + "VALUES (?, ?)";
             try (PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit)) {
                 ps.setInt(1, musterija.getId());
-                ps.setString(2, musterija.getEmail());
-                ps.setString(3, musterija.getUsername());
-                ps.setString(4, musterija.getPassword());
-                ps.setInt(5, musterija.getKategorijaMusterije() != null ? musterija.getKategorijaMusterije().getId() : 0);
-                ps.setLong(6, musterija.getPreostaloVreme() != null ? musterija.getPreostaloVreme().toSeconds() : 0);
+                ps.setString(2, musterija.getUsername());
 
                 int inserted = ps.executeUpdate();
                 Konekcija.getInstance().getKonekcija().commit();
@@ -204,9 +209,9 @@ public class DBBroker {
             ps.setInt(1, m.getId());
             int deleted = ps.executeUpdate();
             Konekcija.getInstance().getKonekcija().commit();
-            
+
             return deleted > 0;
-            
+
         } catch (SQLException ex) {
             try {
                 Konekcija.getInstance().getKonekcija().rollback();
@@ -215,8 +220,29 @@ public class DBBroker {
             }
             Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return false;
+    }
+
+    public void smanjiVreme(int id) {
+        try {
+        String upit = "UPDATE musterija SET preostaloVreme = preostaloVreme - 1 WHERE id = ? AND preostaloVreme > 0";
+        PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit);
+        ps.setInt(1, id);
+
+        int updated = ps.executeUpdate();
+        if (updated > 0) {
+            Konekcija.getInstance().getKonekcija().commit();
+        } else {
+            Konekcija.getInstance().getKonekcija().rollback();
+        }
+    } catch (SQLException ex) {
+        try {
+            Konekcija.getInstance().getKonekcija().rollback();
+        } catch (SQLException e) {
+        }
+        Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
 }

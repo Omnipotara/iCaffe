@@ -110,8 +110,11 @@ public class LoginForma extends javax.swing.JFrame {
         
         m = (Musterija) so.getParam();
 
-        if(m == null){
+        if(m.getId() == -1){
             JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (m.getId() == -2){
+            JOptionPane.showMessageDialog(this, "Korisnik je vec ulogovan.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
             return;
         }
         

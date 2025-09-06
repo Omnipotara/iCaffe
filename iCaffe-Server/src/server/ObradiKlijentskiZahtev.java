@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import kontroler.Kontroler;
 import model.Musterija;
+import niti.MusterijaTimerNit;
 import operacije.Operacija;
 import transfer.KlijentskiZahtev;
 import transfer.ServerskiOdgovor;
@@ -27,6 +28,7 @@ public class ObradiKlijentskiZahtev extends Thread {
     private Socket s;
     private Musterija ulogovan = null;
     private boolean kraj = false;
+    MusterijaTimerNit mtn;
 
     public ObradiKlijentskiZahtev(Socket s) {
         this.s = s;
@@ -49,8 +51,11 @@ public class ObradiKlijentskiZahtev extends Thread {
                         Musterija m = (Musterija) kz.getParam();
                         Musterija ulogovan = Kontroler.getInstance().ulogujMusteriju(m);
 
-                        if (ulogovan != null) {
+                        if (ulogovan.getId() > 0) {
                             this.ulogovan = ulogovan;
+                            Kontroler.getInstance().getListaNiti().add(this);
+                            mtn = new MusterijaTimerNit(this.ulogovan);
+                            mtn.start();
                         }
 
                         so.setParam(ulogovan);
@@ -60,7 +65,9 @@ public class ObradiKlijentskiZahtev extends Thread {
                     case Operacija.LOGOUT:
                         m = (Musterija) kz.getParam();
                         boolean odlogovan = Kontroler.getInstance().odlogujMusteriju(m);
+                        Kontroler.getInstance().getListaNiti().remove(this);
                         this.ulogovan = null;
+                        mtn.setKraj(true);
 
                         so.setParam(odlogovan);
                         so.setOperacija(Operacija.LOGOUT);
