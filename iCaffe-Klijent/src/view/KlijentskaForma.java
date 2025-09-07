@@ -18,6 +18,7 @@ import transfer.KlijentskiZahtev;
 public class KlijentskaForma extends javax.swing.JFrame {
 
     Musterija m;
+    MusterijaTimerNit mtn;
 
     /**
      * Creates new form KlijentskaForma
@@ -30,9 +31,9 @@ public class KlijentskaForma extends javax.swing.JFrame {
         this.m = m;
         initComponents();
         kontroler.Kontroler.getInstance().setKf(this);
-        MusterijaTimerNit mtn = new MusterijaTimerNit(this, m);
-        mtn.start();
         Komunikacija.getInstance().start();
+        mtn = new MusterijaTimerNit(this, m);
+        mtn.start();
     }
 
     /**
@@ -77,6 +78,7 @@ public class KlijentskaForma extends javax.swing.JFrame {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGOUT);
         Komunikacija.getInstance().posaljiZahtev(kz);
+        mtn.setKraj(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
@@ -124,6 +126,8 @@ public class KlijentskaForma extends javax.swing.JFrame {
     }
 
     public void istekloVreme() {
-        JOptionPane.showMessageDialog(this, "NEMA VISE VREMENA.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
+        Komunikacija.getInstance().setKraj(true);
+        JOptionPane.showMessageDialog(this, "Nestalo vam je vremena, uplatite jos kod prodavca kako biste koristili nalog.", "Logout izvrsen", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
     }
 }

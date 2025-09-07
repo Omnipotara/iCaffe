@@ -26,19 +26,21 @@ public class MusterijaTimerNit extends Thread {
     @Override
     public void run() {
         long preostalo = musterija.getPreostaloVreme().getSeconds();
-        while (!kraj && preostalo > 0) {
+        while (!kraj && preostalo >= 0) {
             try {
-                Thread.sleep(1000); // 1 sekunda
-                preostalo--;
+                if (preostalo > 0) {
+                    Thread.sleep(1000); // 1 sekunda
+                    preostalo--;
 
-                // azurira se vrednost u bazi
-                Kontroler.getInstance().smanjiVreme(musterija.getId());
+                    // azurira se vrednost u bazi
+                    Kontroler.getInstance().smanjiVreme(musterija.getId());
 
-                System.out.println("Musteriji " + musterija.getUsername() + " ostalo: " + preostalo);
+                    System.out.println("Musteriji " + musterija.getUsername() + " ostalo: " + preostalo);
+                }
 
                 if (preostalo <= 0) {
                     // automatski logout
-                    Kontroler.getInstance().odlogujMusteriju(musterija);
+                    Kontroler.getInstance().istekloVreme(musterija);
                     kraj = true;
                 }
             } catch (InterruptedException e) {
@@ -46,8 +48,6 @@ public class MusterijaTimerNit extends Thread {
             }
         }
     }
-
-    
 
     public Musterija getMusterija() {
         return musterija;

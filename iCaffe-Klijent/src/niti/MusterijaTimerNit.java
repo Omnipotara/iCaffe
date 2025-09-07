@@ -18,7 +18,7 @@ public class MusterijaTimerNit extends Thread {
 
     private KlijentskaForma kf;
     private Musterija musterija;
-    private Label lblVreme;
+    private Label lblVreme; //Ovo se trenutno ne koristi ali sam ga dodao u slucaju da na labeli odlucim da prikazujem preostalo vreme
     private boolean kraj = false;
 
     public MusterijaTimerNit() {

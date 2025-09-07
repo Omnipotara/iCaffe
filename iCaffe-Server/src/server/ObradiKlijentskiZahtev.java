@@ -80,9 +80,11 @@ public class ObradiKlijentskiZahtev extends Thread {
                 }
             }
         } finally {
-            if(s!= null && !s.isClosed()){
+            if (s != null && !s.isClosed()) {
                 try {
                     s.close();
+                    System.out.println("Korisnik se odvezao.");
+                    System.out.flush();
                 } catch (IOException ex) {
                     Logger.getLogger(ObradiKlijentskiZahtev.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -137,6 +139,14 @@ public class ObradiKlijentskiZahtev extends Thread {
 
     public void setUlogovani(Musterija ulogovan) {
         this.ulogovan = ulogovan;
+    }
+
+    public void ugasiNit() {
+        Kontroler.getInstance().getListaNiti().remove(this);
+        this.ulogovan = null;
+        mtn.setKraj(true);
+        kraj = true;
+
     }
 
 }

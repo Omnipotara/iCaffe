@@ -118,4 +118,14 @@ public class Komunikacija extends Thread {
         this.s = s;
     }
 
+    public boolean isKraj() {
+        return kraj;
+    }
+
+    public void setKraj(boolean kraj) {
+        this.kraj = kraj;
+    }
+    
+    
+
 }
