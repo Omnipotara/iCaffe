@@ -87,6 +87,11 @@ public class ServerForma extends javax.swing.JFrame {
         menuFile.add(menuItemAngazovanja);
 
         menuItemKategorijeMusterija.setText("Kategorije musterija");
+        menuItemKategorijeMusterija.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemKategorijeMusterijaActionPerformed(evt);
+            }
+        });
         menuFile.add(menuItemKategorijeMusterija);
 
         jMenuBar1.add(menuFile);
@@ -127,6 +132,11 @@ public class ServerForma extends javax.swing.JFrame {
         AngazovanjaForma af = new AngazovanjaForma(this, false);
         af.setVisible(true);
     }//GEN-LAST:event_menuItemAngazovanjaActionPerformed
+
+    private void menuItemKategorijeMusterijaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemKategorijeMusterijaActionPerformed
+        KategorijeMusterijaForma kmf = new KategorijeMusterijaForma(this, false);
+        kmf.setVisible(true);
+    }//GEN-LAST:event_menuItemKategorijeMusterijaActionPerformed
 
     /**
      * @param args the command line arguments

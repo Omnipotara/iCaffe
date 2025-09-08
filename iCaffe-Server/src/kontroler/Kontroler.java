@@ -8,6 +8,7 @@ import baza.DBBroker;
 import java.util.ArrayList;
 import java.util.List;
 import model.Angazovanje;
+import model.KategorijaMusterije;
 import model.Musterija;
 import model.Prodavac;
 import server.ObradiKlijentskiZahtev;
@@ -114,5 +115,16 @@ public class Kontroler {
         return dbb.vratiListuOnlineMusterija();
     }
 
-    
+    public List<KategorijaMusterije> vratiListuKategorijaMusterija() {
+        return dbb.selectAll(new KategorijaMusterije());
+    }
+
+    public boolean obrisiKategorijuMusterije(KategorijaMusterije km) {
+        return dbb.delete(km);
+    }
+
+    public boolean dodajNovuKategorijuMusterije(KategorijaMusterije km) {
+        return dbb.insert(km);
+    }
+
 }
