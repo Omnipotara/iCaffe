@@ -7,9 +7,11 @@ package kontroler;
 import baza.DBBroker;
 import java.util.ArrayList;
 import java.util.List;
+import model.Angazovanje;
 import model.Musterija;
 import model.Prodavac;
 import server.ObradiKlijentskiZahtev;
+import view.ServerForma;
 
 /**
  *
@@ -20,6 +22,7 @@ public class Kontroler {
     private List<ObradiKlijentskiZahtev> listaNiti;
     private DBBroker dbb;
     private static Kontroler instance;
+    private ServerForma sf;
 
     public static Kontroler getInstance() {
         if (instance == null) {
@@ -60,7 +63,7 @@ public class Kontroler {
     public void istekloVreme(Musterija musterija) {
         ObradiKlijentskiZahtev zaPrekidanje;
         Kontroler.getInstance().odlogujMusteriju(musterija);
-        
+
         for (ObradiKlijentskiZahtev okz : listaNiti) {
             if (okz.getUlogovani() != null && okz.getUlogovani().equals(musterija)) {
                 zaPrekidanje = okz;
@@ -71,4 +74,45 @@ public class Kontroler {
 
     }
 
+    public boolean dodajNovoAngazovanje(Angazovanje a) {
+        try {
+            return dbb.insert(a);
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public List<Angazovanje> vratiListuAngazovanja() {
+        return dbb.selectAll(new Angazovanje());
+    }
+
+    public boolean obrisiAngazovanje(Angazovanje a) {
+        return dbb.delete(a);
+    }
+
+    public boolean promeniAngazovanje(Angazovanje a) {
+        return dbb.update(a);
+    }
+
+    public DBBroker getDbb() {
+        return dbb;
+    }
+
+    public void setDbb(DBBroker dbb) {
+        this.dbb = dbb;
+    }
+
+    public ServerForma getSf() {
+        return sf;
+    }
+
+    public void setSf(ServerForma sf) {
+        this.sf = sf;
+    }
+
+    public List<Musterija> vratiListuOnlineMusterija() {
+        return dbb.vratiListuOnlineMusterija();
+    }
+
+    
 }

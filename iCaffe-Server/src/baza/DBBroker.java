@@ -8,6 +8,7 @@ import domen.DomainObject;
 import model.Prodavac;
 import java.sql.*;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -146,7 +147,7 @@ public class DBBroker {
 
                 m.setKategorijaMusterije(km);
 
-                if(daLiJeUlogovan(m)){
+                if (daLiJeUlogovan(m)) {
                     m = new Musterija();
                     m.setId(-2);
                 } else {
@@ -226,23 +227,58 @@ public class DBBroker {
 
     public void smanjiVreme(int id) {
         try {
-        String upit = "UPDATE musterija SET preostaloVreme = preostaloVreme - 1 WHERE id = ? AND preostaloVreme > 0";
-        PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit);
-        ps.setInt(1, id);
+            String upit = "UPDATE musterija SET preostaloVreme = preostaloVreme - 1 WHERE id = ? AND preostaloVreme > 0";
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit);
+            ps.setInt(1, id);
 
-        int updated = ps.executeUpdate();
-        if (updated > 0) {
-            Konekcija.getInstance().getKonekcija().commit();
-        } else {
-            Konekcija.getInstance().getKonekcija().rollback();
+            int updated = ps.executeUpdate();
+            if (updated > 0) {
+                Konekcija.getInstance().getKonekcija().commit();
+            } else {
+                Konekcija.getInstance().getKonekcija().rollback();
+            }
+        } catch (SQLException ex) {
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException e) {
+            }
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } catch (SQLException ex) {
+    }
+
+    public List<Musterija> vratiListuOnlineMusterija() {
+        List<Musterija> lista = new ArrayList<>();
         try {
-            Konekcija.getInstance().getKonekcija().rollback();
-        } catch (SQLException e) {
-        }
-        Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    }
+            String upit = "SELECT m.id, m.email, m.username, m.password, m.kategorijaId, m.preostaloVreme, "
+                    + "k.naziv AS kategorijaNaziv, k.popust AS kategorijaPopust "
+                    + "FROM musterija_ulogovani mu "
+                    + "JOIN musterija m ON mu.id = m.id "
+                    + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id";
 
+            PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String email = rs.getString("email");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+
+                int kategorijaId = rs.getInt("kategorijaId");
+                String naziv = rs.getString("kategorijaNaziv");
+                int popust = rs.getInt("kategorijaPopust");
+                KategorijaMusterije kategorija = new KategorijaMusterije(kategorijaId, naziv, popust);
+
+                long vreme = rs.getLong("preostaloVreme");
+                Duration preostalo = Duration.ofSeconds(vreme);
+
+                Musterija m = new Musterija(id, email, username, password, kategorija, preostalo);
+                lista.add(m);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lista;
+
+    }
 }

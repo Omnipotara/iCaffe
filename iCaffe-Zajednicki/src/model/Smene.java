@@ -5,13 +5,35 @@
 package model;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 
 /**
  *
  * @author Omnix
  */
 public enum Smene implements Serializable {
-    PRVA,
-    DRUGA,
-    TRECA
+    PRVA(LocalTime.of(6, 0), LocalTime.of(14, 0)),
+    DRUGA(LocalTime.of(14, 0), LocalTime.of(22, 0)),
+    TRECA(LocalTime.of(22, 0), LocalTime.of(6, 0));
+
+    private final LocalTime vremeOd;
+    private final LocalTime vremeDo;
+
+    Smene(LocalTime vremeOd, LocalTime vremeDo) {
+        this.vremeOd = vremeOd;
+        this.vremeDo = vremeDo;
+    }
+
+    public LocalTime getVremeOd() {
+        return vremeOd;
+    }
+
+    public LocalTime getVremeDo() {
+        return vremeDo;
+    }
+
+    @Override
+    public String toString() {
+        return name() + " SMENA";
+    }
 }

@@ -98,14 +98,14 @@ public class Angazovanje implements Serializable, DomainObject<Angazovanje> {
 
     @Override
     public String getUpdateQuery() {
-        return "UPDATE angazovanje SET datum = ? WHERE prodavacId = ? AND terminId = ?";
+        return "UPDATE angazovanje SET terminId = ? WHERE prodavacId = ? AND datum = ?";
     }
 
     @Override
     public void fillUpdateStatement(PreparedStatement ps) throws SQLException {
-        ps.setDate(1, java.sql.Date.valueOf(datum));
+        ps.setDate(3, java.sql.Date.valueOf(datum));
         ps.setInt(2, prodavac.getId());
-        ps.setInt(3, termin.getId());
+        ps.setInt(1, termin.getId());
     }
 
     @Override
@@ -170,7 +170,14 @@ public class Angazovanje implements Serializable, DomainObject<Angazovanje> {
                 + "t.id AS terminId, t.smena, t.vremeOd, t.vremeDo "
                 + "FROM angazovanje a "
                 + "JOIN prodavac p ON a.prodavacId = p.id "
-                + "JOIN termin_dezurstva t ON a.terminId = t.id";
+                + "JOIN termin_dezurstva t ON a.terminId = t.id "
+                + "ORDER BY a.datum DESC, "
+                + "CASE t.smena "
+                + "WHEN 'Prva' THEN 3 "
+                + "WHEN 'Druga' THEN 2 "
+                + "WHEN 'Treća' THEN 1 "
+                + "ELSE 4 "
+                + "END ASC";
     }
 
     @Override

@@ -60,6 +60,8 @@ public class ObradiKlijentskiZahtev extends Thread {
 
                         so.setParam(ulogovan);
                         posaljiServerskiOdgovor(so);
+
+                        Kontroler.getInstance().getSf().osveziTabelu();
                         break;
 
                     case Operacija.LOGOUT:
@@ -74,6 +76,8 @@ public class ObradiKlijentskiZahtev extends Thread {
                         posaljiServerskiOdgovor(so);
 
                         kraj = true;
+
+                        Kontroler.getInstance().getSf().osveziTabelu();
                         break;
                     default:
                         throw new AssertionError();

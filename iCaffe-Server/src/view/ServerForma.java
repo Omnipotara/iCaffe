@@ -4,7 +4,9 @@
  */
 package view;
 
+import kontroler.Kontroler;
 import model.Prodavac;
+import modeli.ModelTabeleMusterija;
 import server.PokreniServer;
 
 /**
@@ -12,19 +14,27 @@ import server.PokreniServer;
  * @author Omnix
  */
 public class ServerForma extends javax.swing.JFrame {
+
     private PokreniServer ps;
+    private PostaviAngazovanjeForma paf;
+
     /**
      * Creates new form ServerForma
      */
     public ServerForma() {
         initComponents();
     }
-    
+
     public ServerForma(Prodavac p) {
         initComponents();
+        Kontroler.getInstance().setSf(this);
         setTitle("Zdravo " + p.getIme() + "!");
         ps = new PokreniServer();
         ps.start();
+        paf = new PostaviAngazovanjeForma(this, true, p, null, null);
+        paf.setVisible(true);
+
+        osveziTabelu();
     }
 
     /**
@@ -37,6 +47,12 @@ public class ServerForma extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblOnlineMusterije = new javax.swing.JTable();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        menuFile = new javax.swing.JMenu();
+        menuItemAngazovanja = new javax.swing.JMenuItem();
+        menuItemKategorijeMusterija = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,21 +63,57 @@ public class ServerForma extends javax.swing.JFrame {
             }
         });
 
+        tblOnlineMusterije.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblOnlineMusterije);
+
+        menuFile.setText("File");
+
+        menuItemAngazovanja.setText("Angazovanja");
+        menuItemAngazovanja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAngazovanjaActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemAngazovanja);
+
+        menuItemKategorijeMusterija.setText("Kategorije musterija");
+        menuFile.add(menuItemKategorijeMusterija);
+
+        jMenuBar1.add(menuFile);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(162, 162, 162)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(173, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(104, 104, 104))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -70,6 +122,11 @@ public class ServerForma extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.out.println(kontroler.Kontroler.getInstance().getListaNiti());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void menuItemAngazovanjaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAngazovanjaActionPerformed
+        AngazovanjaForma af = new AngazovanjaForma(this, false);
+        af.setVisible(true);
+    }//GEN-LAST:event_menuItemAngazovanjaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -108,5 +165,16 @@ public class ServerForma extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenuItem menuItemAngazovanja;
+    private javax.swing.JMenuItem menuItemKategorijeMusterija;
+    private javax.swing.JTable tblOnlineMusterije;
     // End of variables declaration//GEN-END:variables
+
+    public void osveziTabelu() {
+        ModelTabeleMusterija mtm = new ModelTabeleMusterija(Kontroler.getInstance().vratiListuOnlineMusterija());
+        tblOnlineMusterije.setModel(mtm);
+    }
 }

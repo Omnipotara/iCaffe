@@ -112,7 +112,7 @@ public class Prodavac implements Serializable, DomainObject<Prodavac> {
 
     @Override
     public String toString() {
-        return "Prodavac{" + "ime=" + ime + ", prezime=" + prezime + ", username=" + username + '}';
+        return ime + " " + prezime;
     }
 
     @Override
