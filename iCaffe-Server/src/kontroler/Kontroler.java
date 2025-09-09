@@ -51,6 +51,16 @@ public class Kontroler {
     public void setListaNiti(List<ObradiKlijentskiZahtev> listaNiti) {
         this.listaNiti = listaNiti;
     }
+    
+    public ServerForma getSf() {
+        return sf;
+    }
+
+    public void setSf(ServerForma sf) {
+        this.sf = sf;
+    }
+    
+    /* -- DEFAULT CRUD OPERACIJE DOMENSKOG OBJEKTA -- */
 
     public <T extends DomainObject<T>> boolean dodaj(T object) {
         return new DodajSO<T>().execute(object);
@@ -82,6 +92,8 @@ public class Kontroler {
         }
         return new ArrayList<T>();
     }
+    
+    /* -- SPECIFICNE METODE -- */
 
     public Prodavac ulogujProdavca(Prodavac p) {
         return dbb.ulogujProdavca(p);
@@ -111,14 +123,6 @@ public class Kontroler {
             }
         }
 
-    }
-
-    public ServerForma getSf() {
-        return sf;
-    }
-
-    public void setSf(ServerForma sf) {
-        this.sf = sf;
     }
 
     public List<Musterija> vratiListuOnlineMusterija() {

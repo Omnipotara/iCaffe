@@ -73,6 +73,11 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
         });
 
         btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,9 +134,25 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
     }//GEN-LAST:event_btnObrisiActionPerformed
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
-        PostavitiKategorijuMusterijeForma pmkf = new PostavitiKategorijuMusterijeForma(null, true, this);
+        PostavitiKategorijuMusterijeForma pmkf = new PostavitiKategorijuMusterijeForma(null, true, this, null);
         pmkf.setVisible(true);
     }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        int selektovaniRed = tblKategorijeMusterija.getSelectedRow();
+
+        if (selektovaniRed == -1) {
+            JOptionPane.showMessageDialog(this, "Izaberite neku kategoriju za izmenu!");
+            return;
+        }
+
+        ModelTabeleKategorijaMusterija mtkm = (ModelTabeleKategorijaMusterija) tblKategorijeMusterija.getModel();
+        List<KategorijaMusterije> listaKategorijaMusterija = mtkm.getListaKategorija();
+        KategorijaMusterije km = listaKategorijaMusterija.get(selektovaniRed);
+        
+        PostavitiKategorijuMusterijeForma pmkf = new PostavitiKategorijuMusterijeForma(null, true, this, km);
+        pmkf.setVisible(true);
+    }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**
      * @param args the command line arguments

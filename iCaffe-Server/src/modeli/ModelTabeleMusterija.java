@@ -45,7 +45,7 @@ public class ModelTabeleMusterija extends AbstractTableModel {
             case 2:
                 return m.getKategorijaMusterije().getNaziv();
             case 3:
-                return "-" + m.getKategorijaMusterije().getPopust() + "%";
+                return m.getKategorijaMusterije().getPopust() + "%";
             default:
                 return "N/A";
         }

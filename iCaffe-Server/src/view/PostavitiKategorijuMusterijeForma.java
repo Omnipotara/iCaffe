@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.util.List;
 import javax.swing.JOptionPane;
 import kontroler.Kontroler;
 import model.KategorijaMusterije;
@@ -13,7 +14,10 @@ import model.KategorijaMusterije;
  * @author Omnix
  */
 public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
-    KategorijeMusterijaForma kmf;
+
+    private KategorijeMusterijaForma kmf;
+    private KategorijaMusterije km;
+
     /**
      * Creates new form PostavitiKategorijuMusterijeForma
      */
@@ -21,11 +25,20 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
-    
-    public PostavitiKategorijuMusterijeForma(java.awt.Frame parent, boolean modal, KategorijeMusterijaForma kmf) {
+
+    public PostavitiKategorijuMusterijeForma(java.awt.Frame parent, boolean modal, KategorijeMusterijaForma kmf, KategorijaMusterije km) {
         super(parent, modal);
         initComponents();
         this.kmf = kmf;
+        this.km = km;
+
+        if (this.km == null) {
+            btnIzmeni.setVisible(false);
+        } else {
+            btnDodaj.setVisible(false);
+            txtNaziv.setText(km.getNaziv());
+            txtPopust.setText(String.valueOf(km.getPopust()));
+        }
     }
 
     /**
@@ -52,6 +65,11 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
         jLabel2.setText("Popust [%]");
 
         btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniActionPerformed(evt);
+            }
+        });
 
         btnOdustani.setText("Odustani");
         btnOdustani.addActionListener(new java.awt.event.ActionListener() {
@@ -120,30 +138,75 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
         String naziv = txtNaziv.getText();
         int popust = 0;
+
+        List<KategorijaMusterije> listaKategorija = Kontroler.getInstance().vratiSve(new KategorijaMusterije());
+        for (KategorijaMusterije k : listaKategorija) {
+            if (k.getNaziv().equals(naziv)) {
+                JOptionPane.showMessageDialog(this, "Vec postoji kategorija sa tim imenom, promenite ime.", "Neuspesno dodavanje", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
         try {
             popust = Integer.parseInt(txtPopust.getText());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unesite broj.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if(popust >= 0 && popust <= 100){
+
+        if (popust >= 0 && popust <= 100) {
             KategorijaMusterije km = new KategorijaMusterije();
             km.setNaziv(naziv);
             km.setPopust(popust);
             boolean dodato = Kontroler.getInstance().dodaj(km);
-            
-            if(dodato){
-             JOptionPane.showMessageDialog(this, "Uspesno ste dodali kategoriju!");
-             kmf.osveziTabelu();
-             this.dispose();
-             return;
+
+            if (dodato) {
+                JOptionPane.showMessageDialog(this, "Uspesno ste dodali kategoriju!");
+                kmf.osveziTabelu();
+                this.dispose();
+                return;
             }
             JOptionPane.showMessageDialog(this, "Problem sa dodavanjem kategorije!");
         } else {
             JOptionPane.showMessageDialog(this, "Unesite broj izmedju 0 i 100.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        String naziv = txtNaziv.getText();
+        int popust = 0;
+
+        List<KategorijaMusterije> listaKategorija = Kontroler.getInstance().vratiSve(km);
+        for (KategorijaMusterije k : listaKategorija) {
+            if (k.getNaziv().equals(naziv) && k.getId() != km.getId()) {
+                JOptionPane.showMessageDialog(this, "Vec postoji kategorija sa tim imenom, promenite ime.", "Neuspesno dodavanje", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        try {
+            popust = Integer.parseInt(txtPopust.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Unesite broj.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
+        }
+
+        if (popust >= 0 && popust <= 100) {
+            km.setNaziv(naziv);
+            km.setPopust(popust);
+
+            boolean izmenjeno = Kontroler.getInstance().izmeni(km);
+
+            if (izmenjeno) {
+                JOptionPane.showMessageDialog(this, "Uspesno ste izmenili kategoriju!");
+                kmf.osveziTabelu();
+                this.dispose();
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "Problem sa izmenom kategorije!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Unesite broj izmedju 0 i 100.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**
      * @param args the command line arguments
