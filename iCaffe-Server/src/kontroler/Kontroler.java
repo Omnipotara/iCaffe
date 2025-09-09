@@ -5,12 +5,19 @@
 package kontroler;
 
 import baza.DBBroker;
+import domen.DomainObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Angazovanje;
 import model.KategorijaMusterije;
 import model.Musterija;
 import model.Prodavac;
+import operacije.DodajSO;
+import operacije.IzmeniSO;
+import operacije.ObrisiSO;
+import operacije.VratiSveSO;
 import server.ObradiKlijentskiZahtev;
 import view.ServerForma;
 
@@ -45,6 +52,37 @@ public class Kontroler {
         this.listaNiti = listaNiti;
     }
 
+    public <T extends DomainObject<T>> boolean dodaj(T object) {
+        return new DodajSO<T>().execute(object);
+    }
+
+    public <T extends DomainObject<T>> boolean izmeni(T object) {
+        try {
+            return new IzmeniSO<T>().execute(object);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public <T extends DomainObject<T>> boolean obrisi(T object) {
+        try {
+            return new ObrisiSO<T>().execute(object);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public <T extends DomainObject<T>> List<T> vratiSve(T object) {
+        try {
+            return new VratiSveSO<T>().execute(object);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<T>();
+    }
+
     public Prodavac ulogujProdavca(Prodavac p) {
         return dbb.ulogujProdavca(p);
     }
@@ -75,34 +113,6 @@ public class Kontroler {
 
     }
 
-    public boolean dodajNovoAngazovanje(Angazovanje a) {
-        try {
-            return dbb.insert(a);
-        } catch (Exception e) {
-        }
-        return false;
-    }
-
-    public List<Angazovanje> vratiListuAngazovanja() {
-        return dbb.selectAll(new Angazovanje());
-    }
-
-    public boolean obrisiAngazovanje(Angazovanje a) {
-        return dbb.delete(a);
-    }
-
-    public boolean promeniAngazovanje(Angazovanje a) {
-        return dbb.update(a);
-    }
-
-    public DBBroker getDbb() {
-        return dbb;
-    }
-
-    public void setDbb(DBBroker dbb) {
-        this.dbb = dbb;
-    }
-
     public ServerForma getSf() {
         return sf;
     }
@@ -114,17 +124,4 @@ public class Kontroler {
     public List<Musterija> vratiListuOnlineMusterija() {
         return dbb.vratiListuOnlineMusterija();
     }
-
-    public List<KategorijaMusterije> vratiListuKategorijaMusterija() {
-        return dbb.selectAll(new KategorijaMusterije());
-    }
-
-    public boolean obrisiKategorijuMusterije(KategorijaMusterije km) {
-        return dbb.delete(km);
-    }
-
-    public boolean dodajNovuKategorijuMusterije(KategorijaMusterije km) {
-        return dbb.insert(km);
-    }
-
 }

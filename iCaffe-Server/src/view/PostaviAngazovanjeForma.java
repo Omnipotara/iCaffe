@@ -214,7 +214,7 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
         td.setVremeDo(vremeDo);
 
         Angazovanje a = new Angazovanje(p, td, LocalDate.now());
-        boolean angazovanjePostavljeno = Kontroler.getInstance().dodajNovoAngazovanje(a);
+        boolean angazovanjePostavljeno = Kontroler.getInstance().dodaj(a);
 
         if (angazovanjePostavljeno) {
             JOptionPane.showMessageDialog(this, "Uspesno ste zapoceli smenu.", "Smena zapoceta", JOptionPane.INFORMATION_MESSAGE);
@@ -250,7 +250,7 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
         td.setVremeDo(vremeDo);
 
         a.setTermin(td);
-        boolean angazovanjePromenjeno = Kontroler.getInstance().promeniAngazovanje(a);
+        boolean angazovanjePromenjeno = Kontroler.getInstance().izmeni(a);
 
         if (angazovanjePromenjeno) {
             JOptionPane.showMessageDialog(this, "Uspesno ste promenili angazovanje.", "Smena izmenjena", JOptionPane.INFORMATION_MESSAGE);

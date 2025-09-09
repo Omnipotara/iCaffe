@@ -62,6 +62,7 @@ public class AngazovanjaForma extends javax.swing.JDialog {
         });
 
         btnIzmeni.setText("Izmeni");
+        btnIzmeni.setEnabled(false);
         btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIzmeniActionPerformed(evt);
@@ -84,7 +85,7 @@ public class AngazovanjaForma extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(147, Short.MAX_VALUE)
+                .addContainerGap(31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -108,7 +109,7 @@ public class AngazovanjaForma extends javax.swing.JDialog {
         ModelTabeleAngazovanja mta = (ModelTabeleAngazovanja) tblAngazovanja.getModel();
         List<Angazovanje> listaAngazovanja = mta.getListaAngazovanja();
         Angazovanje a = listaAngazovanja.get(selektovaniRed);
-        boolean obrisano = Kontroler.getInstance().obrisiAngazovanje(a);
+        boolean obrisano = Kontroler.getInstance().obrisi(a);
 
         if (obrisano) {
             JOptionPane.showMessageDialog(this, "Uspesno obrisano angazovanje.");
@@ -185,7 +186,7 @@ public class AngazovanjaForma extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void osveziTabelu() {
-        List<Angazovanje> listaAngazovanja = Kontroler.getInstance().vratiListuAngazovanja();
+        List<Angazovanje> listaAngazovanja = Kontroler.getInstance().vratiSve(new Angazovanje());
         ModelTabeleAngazovanja mta = new ModelTabeleAngazovanja(listaAngazovanja);
         tblAngazovanja.setModel(mta);
     }

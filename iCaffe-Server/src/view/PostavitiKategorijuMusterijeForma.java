@@ -131,11 +131,12 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
             KategorijaMusterije km = new KategorijaMusterije();
             km.setNaziv(naziv);
             km.setPopust(popust);
-            boolean dodato = Kontroler.getInstance().dodajNovuKategorijuMusterije(km);
+            boolean dodato = Kontroler.getInstance().dodaj(km);
             
             if(dodato){
              JOptionPane.showMessageDialog(this, "Uspesno ste dodali kategoriju!");
              kmf.osveziTabelu();
+             this.dispose();
              return;
             }
             JOptionPane.showMessageDialog(this, "Problem sa dodavanjem kategorije!");

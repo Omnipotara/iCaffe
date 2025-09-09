@@ -118,7 +118,7 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
         ModelTabeleKategorijaMusterija mtkm = (ModelTabeleKategorijaMusterija) tblKategorijeMusterija.getModel();
         List<KategorijaMusterije> listaKategorijaMusterija = mtkm.getListaKategorija();
         KategorijaMusterije km = listaKategorijaMusterija.get(selektovaniRed);
-        boolean obrisano = Kontroler.getInstance().obrisiKategorijuMusterije(km);
+        boolean obrisano = Kontroler.getInstance().obrisi(km);
 
         if (obrisano) {
             JOptionPane.showMessageDialog(this, "Uspesno obrisana kategorija.");
@@ -184,7 +184,7 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void osveziTabelu() {
-        ModelTabeleKategorijaMusterija mtkm = new ModelTabeleKategorijaMusterija(Kontroler.getInstance().vratiListuKategorijaMusterija());
+        ModelTabeleKategorijaMusterija mtkm = new ModelTabeleKategorijaMusterija(Kontroler.getInstance().vratiSve(new KategorijaMusterije()));
         tblKategorijeMusterija.setModel(mtkm);
     }
 }
