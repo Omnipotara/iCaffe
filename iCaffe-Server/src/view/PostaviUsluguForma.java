@@ -7,37 +7,40 @@ package view;
 import java.util.List;
 import javax.swing.JOptionPane;
 import kontroler.Kontroler;
-import model.KategorijaMusterije;
+import model.Usluga;
 
 /**
  *
  * @author Omnix
  */
-public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
+public class PostaviUsluguForma extends javax.swing.JDialog {
 
-    private KategorijeMusterijaForma kmf;
-    private KategorijaMusterije km;
+    private UslugeForma uf;
+    private Usluga u;
 
     /**
-     * Creates new form PostavitiKategorijuMusterijeForma
+     * Creates new form PostaviUsluguForma
      */
-    public PostavitiKategorijuMusterijeForma(java.awt.Frame parent, boolean modal) {
+    public PostaviUsluguForma(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
 
-    public PostavitiKategorijuMusterijeForma(java.awt.Frame parent, boolean modal, KategorijeMusterijaForma kmf, KategorijaMusterije km) {
+    public PostaviUsluguForma(java.awt.Frame parent, boolean modal, UslugeForma uf, Usluga u) {
         super(parent, modal);
         initComponents();
-        this.kmf = kmf;
-        this.km = km;
+        this.uf = uf;
 
-        if (this.km == null) {
+        if (u == null) {
+            btnDodaj.setVisible(true);
             btnIzmeni.setVisible(false);
         } else {
             btnDodaj.setVisible(false);
-            txtNaziv.setText(km.getNaziv());
-            txtPopust.setText(String.valueOf(km.getPopust()));
+            btnIzmeni.setVisible(true);
+
+            this.u = u;
+            txtNaziv.setText(u.getNaziv());
+            txtCena.setText(String.valueOf(u.getCena()));
         }
     }
 
@@ -53,21 +56,21 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtNaziv = new javax.swing.JTextField();
-        txtPopust = new javax.swing.JTextField();
-        btnIzmeni = new javax.swing.JButton();
-        btnOdustani = new javax.swing.JButton();
+        txtCena = new javax.swing.JTextField();
         btnDodaj = new javax.swing.JButton();
+        btnOdustani = new javax.swing.JButton();
+        btnIzmeni = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Naziv kategorije");
+        jLabel1.setText("Naziv proizvoda");
 
-        jLabel2.setText("Popust [%]");
+        jLabel2.setText("Cena proizvoda");
 
-        btnIzmeni.setText("Izmeni");
-        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+        btnDodaj.setText("Dodaj");
+        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIzmeniActionPerformed(evt);
+                btnDodajActionPerformed(evt);
             }
         });
 
@@ -78,10 +81,10 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
             }
         });
 
-        btnDodaj.setText("Dodaj");
-        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+        btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDodajActionPerformed(evt);
+                btnIzmeniActionPerformed(evt);
             }
         });
 
@@ -90,42 +93,46 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1)
-                    .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNaziv, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                            .addComponent(txtPopust))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(54, 54, 54)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(20, 20, 20)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtCena, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                            .addComponent(txtNaziv))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))))
+                        .addContainerGap()
+                        .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnIzmeni, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtNaziv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtPopust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                    .addComponent(txtCena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnIzmeni, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .addComponent(btnOdustani, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .addComponent(btnDodaj, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))
-                .addGap(15, 15, 15))
+                    .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
@@ -136,75 +143,76 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
     }//GEN-LAST:event_btnOdustaniActionPerformed
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
-        String naziv = txtNaziv.getText();
-        int popust = 0;
+        String naziv = txtNaziv.getText().trim();
+        double cena = 0;
 
-        List<KategorijaMusterije> listaKategorija = Kontroler.getInstance().vratiSve(new KategorijaMusterije());
-        for (KategorijaMusterije k : listaKategorija) {
-            if (k.getNaziv().equals(naziv)) {
-                JOptionPane.showMessageDialog(this, "Vec postoji kategorija sa tim imenom, promenite ime.", "Neuspesno dodavanje", JOptionPane.ERROR_MESSAGE);
+        List<Usluga> listaUsluga = Kontroler.getInstance().vratiSve(new Usluga());
+        for (Usluga u : listaUsluga) {
+            if (u.getNaziv().equals(naziv)) {
+                JOptionPane.showMessageDialog(this, "Vec postoji usluga/proizvod sa tim imenom, promenite ime.", "Neuspesno dodavanje", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
         try {
-            popust = Integer.parseInt(txtPopust.getText());
+            cena = Double.parseDouble(txtCena.getText());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unesite broj.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (popust >= 0 && popust <= 100) {
-            KategorijaMusterije km = new KategorijaMusterije();
-            km.setNaziv(naziv);
-            km.setPopust(popust);
-            boolean dodato = Kontroler.getInstance().dodaj(km);
+        if (cena >= 0) {
+            Usluga u = new Usluga();
+            u.setNaziv(naziv);
+            u.setCena(cena);
+            boolean dodato = Kontroler.getInstance().dodaj(u);
 
             if (dodato) {
-                JOptionPane.showMessageDialog(this, "Uspesno ste dodali kategoriju!");
-                kmf.osveziTabelu();
+                JOptionPane.showMessageDialog(this, "Uspesno ste dodali uslugu!");
+                uf.osveziTabelu();
                 this.dispose();
                 return;
             }
-            JOptionPane.showMessageDialog(this, "Problem sa dodavanjem kategorije!");
+            JOptionPane.showMessageDialog(this, "Problem sa dodavanjem usluge!");
         } else {
-            JOptionPane.showMessageDialog(this, "Unesite broj izmedju 0 i 100.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Unesite broj veci ili jednak nuli (ako je proizvod besplatan).", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnDodajActionPerformed
 
     private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
-        String naziv = txtNaziv.getText();
-        int popust = 0;
+        String naziv = txtNaziv.getText().trim();
+        double cena = u.getCena();
 
-        List<KategorijaMusterije> listaKategorija = Kontroler.getInstance().vratiSve(km);
-        for (KategorijaMusterije k : listaKategorija) {
-            if (k.getNaziv().equals(naziv) && k.getId() != km.getId()) {
-                JOptionPane.showMessageDialog(this, "Vec postoji kategorija sa tim imenom, promenite ime.", "Neuspesno dodavanje", JOptionPane.ERROR_MESSAGE);
+        List<Usluga> listaUsluga = Kontroler.getInstance().vratiSve(new Usluga());
+        for (Usluga us : listaUsluga) {
+            if (us.getNaziv().equals(naziv) && us.getId() != u.getId()) {
+                JOptionPane.showMessageDialog(this, "Vec postoji usluga/proizvod sa tim imenom, promenite ime.", "Neuspesna izmena", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
         try {
-            popust = Integer.parseInt(txtPopust.getText());
+            cena = Double.parseDouble(txtCena.getText());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unesite broj.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        if (popust >= 0 && popust <= 100) {
-            km.setNaziv(naziv);
-            km.setPopust(popust);
-
-            boolean izmenjeno = Kontroler.getInstance().izmeni(km);
+        if (cena >= 0) {
+            u.setNaziv(naziv);
+            u.setCena(cena);
+            boolean izmenjeno = Kontroler.getInstance().izmeni(u);
 
             if (izmenjeno) {
-                JOptionPane.showMessageDialog(this, "Uspesno ste izmenili kategoriju!");
-                kmf.osveziTabelu();
+                JOptionPane.showMessageDialog(this, "Uspesno ste izmenili uslugu!");
+                uf.osveziTabelu();
                 this.dispose();
                 return;
             }
-            JOptionPane.showMessageDialog(this, "Problem sa izmenom kategorije!");
+            JOptionPane.showMessageDialog(this, "Problem sa izmenom usluge!");
         } else {
-            JOptionPane.showMessageDialog(this, "Unesite broj izmedju 0 i 100.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Unesite broj veci ili jednak nuli (ako je proizvod besplatan).", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
@@ -225,20 +233,20 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PostavitiKategorijuMusterijeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostaviUsluguForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PostavitiKategorijuMusterijeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostaviUsluguForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PostavitiKategorijuMusterijeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostaviUsluguForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PostavitiKategorijuMusterijeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostaviUsluguForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                PostavitiKategorijuMusterijeForma dialog = new PostavitiKategorijuMusterijeForma(new javax.swing.JFrame(), true);
+                PostaviUsluguForma dialog = new PostaviUsluguForma(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -256,7 +264,7 @@ public class PostavitiKategorijuMusterijeForma extends javax.swing.JDialog {
     private javax.swing.JButton btnOdustani;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField txtCena;
     private javax.swing.JTextField txtNaziv;
-    private javax.swing.JTextField txtPopust;
     // End of variables declaration//GEN-END:variables
 }

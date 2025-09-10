@@ -46,22 +46,17 @@ public class ServerForma extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblOnlineMusterije = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        btnProdaj = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemAngazovanja = new javax.swing.JMenuItem();
         menuItemKategorijeMusterija = new javax.swing.JMenuItem();
+        menuItemUsluge = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         tblOnlineMusterije.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -75,6 +70,16 @@ public class ServerForma extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(tblOnlineMusterije);
+
+        jLabel1.setText("Ulogovane musterije:");
+
+        btnProdaj.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnProdaj.setText("PRODAJ");
+        btnProdaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProdajActionPerformed(evt);
+            }
+        });
 
         menuFile.setText("File");
 
@@ -94,6 +99,14 @@ public class ServerForma extends javax.swing.JFrame {
         });
         menuFile.add(menuItemKategorijeMusterija);
 
+        menuItemUsluge.setText("Usluge");
+        menuItemUsluge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemUslugeActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemUsluge);
+
         jMenuBar1.add(menuFile);
 
         setJMenuBar(jMenuBar1);
@@ -102,31 +115,33 @@ public class ServerForma extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnProdaj, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println(kontroler.Kontroler.getInstance().getListaNiti());
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void menuItemAngazovanjaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAngazovanjaActionPerformed
         AngazovanjaForma af = new AngazovanjaForma(this, false);
@@ -137,6 +152,16 @@ public class ServerForma extends javax.swing.JFrame {
         KategorijeMusterijaForma kmf = new KategorijeMusterijaForma(this, false);
         kmf.setVisible(true);
     }//GEN-LAST:event_menuItemKategorijeMusterijaActionPerformed
+
+    private void menuItemUslugeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemUslugeActionPerformed
+        UslugeForma uf = new UslugeForma(this, false);
+        uf.setVisible(true);
+    }//GEN-LAST:event_menuItemUslugeActionPerformed
+
+    private void btnProdajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdajActionPerformed
+        ProdajForma pf = new ProdajForma();
+        pf.setVisible(true);
+    }//GEN-LAST:event_btnProdajActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,12 +199,14 @@ public class ServerForma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnProdaj;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemAngazovanja;
     private javax.swing.JMenuItem menuItemKategorijeMusterija;
+    private javax.swing.JMenuItem menuItemUsluge;
     private javax.swing.JTable tblOnlineMusterije;
     // End of variables declaration//GEN-END:variables
 

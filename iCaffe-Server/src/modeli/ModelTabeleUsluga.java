@@ -7,25 +7,25 @@ package modeli;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import model.Angazovanje;
-import model.Musterija;
+import model.KategorijaMusterije;
+import model.Usluga;
 
 /**
  *
  * @author Omnix
  */
-public class ModelTabeleMusterija extends AbstractTableModel {
+public class ModelTabeleUsluga extends AbstractTableModel {
 
-    private List<Musterija> listaMusterija = new ArrayList<>();
-    private String[] kolone = {"Username", "Email", "Kategorija", "Popust"};
+    private List<Usluga> listaUsluga = new ArrayList<>();
+    private String[] kolone = {"Naziv usluge", "Cena"};
 
-    public ModelTabeleMusterija(List<Musterija> listaMusterija) {
-        this.listaMusterija = listaMusterija;
+    public ModelTabeleUsluga(List<Usluga> listaUsluga) {
+        this.listaUsluga = listaUsluga;
     }
 
     @Override
     public int getRowCount() {
-        return listaMusterija.size();
+        return listaUsluga.size();
     }
 
     @Override
@@ -35,17 +35,13 @@ public class ModelTabeleMusterija extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Musterija m = listaMusterija.get(rowIndex);
+        Usluga u = listaUsluga.get(rowIndex);
 
         switch (columnIndex) {
             case 0:
-                return m.getUsername();
+                return u.getNaziv();
             case 1:
-                return m.getEmail();
-            case 2:
-                return m.getKategorijaMusterije().getNaziv();
-            case 3:
-                return m.getKategorijaMusterije().getPopust() + "%";
+                return u.getCena() + " DIN";
             default:
                 return "N/A";
         }
@@ -56,12 +52,12 @@ public class ModelTabeleMusterija extends AbstractTableModel {
         return kolone[column];
     }
 
-    public List<Musterija> getListaMusterija() {
-        return listaMusterija;
+    public List<Usluga> getListaUsluga() {
+        return listaUsluga;
     }
 
-    public void setListaMusterija(List<Musterija> listaMusterija) {
-        this.listaMusterija = listaMusterija;
+    public void setListaUsluga(List<Usluga> listaUsluga) {
+        this.listaUsluga = listaUsluga;
     }
 
     public String[] getKolone() {
