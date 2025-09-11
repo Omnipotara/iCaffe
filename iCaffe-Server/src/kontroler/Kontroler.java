@@ -6,6 +6,7 @@ package kontroler;
 
 import baza.DBBroker;
 import domen.DomainObject;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import model.Angazovanje;
 import model.KategorijaMusterije;
 import model.Musterija;
 import model.Prodavac;
+import model.Racun;
 import operacije.DodajSO;
 import operacije.IzmeniSO;
 import operacije.ObrisiSO;
@@ -127,5 +129,14 @@ public class Kontroler {
 
     public List<Musterija> vratiListuOnlineMusterija() {
         return dbb.vratiListuOnlineMusterija();
+    }
+
+    public int insertRacun(Racun r) {
+        try {
+            return dbb.insertRacun(r);
+        } catch (SQLException ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 }

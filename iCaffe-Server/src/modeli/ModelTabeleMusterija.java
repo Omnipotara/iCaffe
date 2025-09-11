@@ -17,10 +17,12 @@ import model.Musterija;
 public class ModelTabeleMusterija extends AbstractTableModel {
 
     private List<Musterija> listaMusterija = new ArrayList<>();
-    private String[] kolone = {"Username", "Email", "Kategorija", "Popust"};
+    private List<Musterija> listaOnlineMusterija = new ArrayList<>();
+    private String[] kolone = {"Username", "Email", "Kategorija", "Popust", "Online"};
 
-    public ModelTabeleMusterija(List<Musterija> listaMusterija) {
+    public ModelTabeleMusterija(List<Musterija> listaMusterija, List<Musterija> listaOnlineMusterija) {
         this.listaMusterija = listaMusterija;
+        this.listaOnlineMusterija = listaOnlineMusterija;
     }
 
     @Override
@@ -46,6 +48,12 @@ public class ModelTabeleMusterija extends AbstractTableModel {
                 return m.getKategorijaMusterije().getNaziv();
             case 3:
                 return m.getKategorijaMusterije().getPopust() + "%";
+            case 4:
+                if (listaOnlineMusterija.contains(m)){
+                    return "DA";
+                } else {
+                    return "NE";
+                }
             default:
                 return "N/A";
         }
@@ -58,6 +66,14 @@ public class ModelTabeleMusterija extends AbstractTableModel {
 
     public List<Musterija> getListaMusterija() {
         return listaMusterija;
+    }
+
+    public List<Musterija> getListaOnlineMusterija() {
+        return listaOnlineMusterija;
+    }
+
+    public void setListaOnlineMusterija(List<Musterija> listaOnlineMusterija) {
+        this.listaOnlineMusterija = listaOnlineMusterija;
     }
 
     public void setListaMusterija(List<Musterija> listaMusterija) {

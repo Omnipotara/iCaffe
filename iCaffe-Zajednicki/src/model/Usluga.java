@@ -77,7 +77,7 @@ public class Usluga implements Serializable, DomainObject<Usluga> {
 
     @Override
     public String toString() {
-        return "Usluga{" + "id=" + id + ", naziv=" + naziv + ", cena=" + cena + '}';
+        return naziv + " - " + cena;
     }
 
     @Override

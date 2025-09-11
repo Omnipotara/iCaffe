@@ -198,12 +198,13 @@ public class StavkaRacuna implements Serializable, DomainObject<StavkaRacuna> {
         return "SELECT s.rb, s.racunId, s.kolicina, s.cenaStavke, s.jedinicnaCena, s.uslugaId, "
                 + "u.naziv AS uslugaNaziv, u.cena AS uslugaCena "
                 + "FROM stavka_racuna s "
-                + "LEFT JOIN usluga u ON s.uslugaId = u.id";
+                + "LEFT JOIN usluga u ON s.uslugaId = u.id "
+                + "WHERE s.racunId = ?";
     }
 
     @Override
     public void fillSelectAllStatement(PreparedStatement ps) throws SQLException {
-        // Nema parametara (za sad)
+        ps.setInt(1, racun.getId());
     }
 
     @Override

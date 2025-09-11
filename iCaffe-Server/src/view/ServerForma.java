@@ -4,7 +4,14 @@
  */
 package view;
 
+import view.usluga.UslugeForma;
+import view.musterija.KategorijeMusterijaForma;
+import view.angazovanje.AngazovanjaForma;
+import view.angazovanje.PostaviAngazovanjeForma;
+import java.util.List;
+import javax.swing.JOptionPane;
 import kontroler.Kontroler;
+import model.Musterija;
 import model.Prodavac;
 import modeli.ModelTabeleMusterija;
 import server.PokreniServer;
@@ -17,6 +24,7 @@ public class ServerForma extends javax.swing.JFrame {
 
     private PokreniServer ps;
     private PostaviAngazovanjeForma paf;
+    private Prodavac p;
 
     /**
      * Creates new form ServerForma
@@ -28,6 +36,7 @@ public class ServerForma extends javax.swing.JFrame {
     public ServerForma(Prodavac p) {
         initComponents();
         Kontroler.getInstance().setSf(this);
+        this.p = p;
         setTitle("Zdravo " + p.getIme() + "!");
         ps = new PokreniServer();
         ps.start();
@@ -47,8 +56,7 @@ public class ServerForma extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblOnlineMusterije = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        tblMusterije = new javax.swing.JTable();
         btnProdaj = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
@@ -58,7 +66,7 @@ public class ServerForma extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tblOnlineMusterije.setModel(new javax.swing.table.DefaultTableModel(
+        tblMusterije.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -69,9 +77,7 @@ public class ServerForma extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblOnlineMusterije);
-
-        jLabel1.setText("Ulogovane musterije:");
+        jScrollPane1.setViewportView(tblMusterije);
 
         btnProdaj.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnProdaj.setText("PRODAJ");
@@ -117,26 +123,18 @@ public class ServerForma extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnProdaj, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -159,8 +157,20 @@ public class ServerForma extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemUslugeActionPerformed
 
     private void btnProdajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdajActionPerformed
-        ProdajForma pf = new ProdajForma();
-        pf.setVisible(true);
+        int selektovaniRed = tblMusterije.getSelectedRow();
+
+        if (selektovaniRed == -1) {
+            JOptionPane.showMessageDialog(this, "Izaberite musteriju.");
+            return;
+        }
+
+        ModelTabeleMusterija mtm = (ModelTabeleMusterija) tblMusterije.getModel();
+        List<Musterija> listaMusterija = mtm.getListaMusterija();
+        Musterija kupac = listaMusterija.get(selektovaniRed);
+
+        this.dispose();
+        RacunForma rf = new RacunForma(this, true, p, kupac);
+        rf.setVisible(true);
     }//GEN-LAST:event_btnProdajActionPerformed
 
     /**
@@ -200,18 +210,19 @@ public class ServerForma extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnProdaj;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemAngazovanja;
     private javax.swing.JMenuItem menuItemKategorijeMusterija;
     private javax.swing.JMenuItem menuItemUsluge;
-    private javax.swing.JTable tblOnlineMusterije;
+    private javax.swing.JTable tblMusterije;
     // End of variables declaration//GEN-END:variables
 
     public void osveziTabelu() {
-        ModelTabeleMusterija mtm = new ModelTabeleMusterija(Kontroler.getInstance().vratiListuOnlineMusterija());
-        tblOnlineMusterije.setModel(mtm);
+        List<Musterija> listaMusterija = Kontroler.getInstance().vratiSve(new Musterija());
+        List<Musterija> listaOnlineMusterija = Kontroler.getInstance().vratiListuOnlineMusterija();
+        ModelTabeleMusterija mtm = new ModelTabeleMusterija(listaMusterija, listaOnlineMusterija);
+        tblMusterije.setModel(mtm);
     }
 }

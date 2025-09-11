@@ -97,17 +97,11 @@ public class Musterija implements Serializable, DomainObject<Musterija> {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Musterija other = (Musterija) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return Objects.equals(this.username, other.username);
+        Musterija musterija = (Musterija) obj;
+        return id == musterija.id;
     }
 
     @Override

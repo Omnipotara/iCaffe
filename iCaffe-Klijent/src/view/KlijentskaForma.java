@@ -34,6 +34,18 @@ public class KlijentskaForma extends javax.swing.JFrame {
         Komunikacija.getInstance().start();
         mtn = new MusterijaTimerNit(this, m);
         mtn.start();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGOUT);
+                Komunikacija.getInstance().posaljiZahtev(kz);
+                mtn.setKraj(true);
+                dispose(); // zatvara prozor
+            }
+        });
     }
 
     /**

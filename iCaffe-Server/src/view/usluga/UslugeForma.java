@@ -2,27 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package view;
+package view.usluga;
 
 import java.util.List;
 import javax.swing.JOptionPane;
 import kontroler.Kontroler;
-import model.Angazovanje;
-import model.KategorijaMusterije;
-import modeli.ModelTabeleAngazovanja;
-import modeli.ModelTabeleKategorijaMusterija;
-import server.PokreniServer;
+import model.Usluga;
+import modeli.ModelTabeleUsluga;
 
 /**
  *
  * @author Omnix
  */
-public class KategorijeMusterijaForma extends javax.swing.JDialog {
+public class UslugeForma extends javax.swing.JDialog {
 
     /**
-     * Creates new form KategorijeMusterijaForma
+     * Creates new form UslugeForma
      */
-    public KategorijeMusterijaForma(java.awt.Frame parent, boolean modal) {
+    public UslugeForma(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         osveziTabelu();
@@ -38,14 +35,14 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblKategorijeMusterija = new javax.swing.JTable();
+        tblUsluge = new javax.swing.JTable();
         btnObrisi = new javax.swing.JButton();
-        btnDodaj = new javax.swing.JButton();
         btnIzmeni = new javax.swing.JButton();
+        btnDodaj = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        tblKategorijeMusterija.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsluge.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -56,7 +53,7 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblKategorijeMusterija);
+        jScrollPane1.setViewportView(tblUsluge);
 
         btnObrisi.setText("Obrisi");
         btnObrisi.addActionListener(new java.awt.event.ActionListener() {
@@ -65,17 +62,17 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
             }
         });
 
-        btnDodaj.setText("Dodaj");
-        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDodajActionPerformed(evt);
-            }
-        });
-
         btnIzmeni.setText("Izmeni");
         btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIzmeniActionPerformed(evt);
+            }
+        });
+
+        btnDodaj.setText("Dodaj");
+        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDodajActionPerformed(evt);
             }
         });
 
@@ -89,23 +86,22 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDodaj, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                    .addComponent(btnIzmeni, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
+                    .addComponent(btnIzmeni, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                    .addComponent(btnDodaj, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(19, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 149, Short.MAX_VALUE)
-                        .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDodaj, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -113,45 +109,45 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
-        int selektovaniRed = tblKategorijeMusterija.getSelectedRow();
+        int selektovaniRed = tblUsluge.getSelectedRow();
 
         if (selektovaniRed == -1) {
             JOptionPane.showMessageDialog(this, "Izaberite neku kategoriju za brisanje!");
             return;
         }
 
-        ModelTabeleKategorijaMusterija mtkm = (ModelTabeleKategorijaMusterija) tblKategorijeMusterija.getModel();
-        List<KategorijaMusterije> listaKategorijaMusterija = mtkm.getListaKategorija();
-        KategorijaMusterije km = listaKategorijaMusterija.get(selektovaniRed);
-        boolean obrisano = Kontroler.getInstance().obrisi(km);
+        ModelTabeleUsluga mtu = (ModelTabeleUsluga) tblUsluge.getModel();
+        List<Usluga> listaUsluga = mtu.getListaUsluga();
+        Usluga u = listaUsluga.get(selektovaniRed);
+        boolean obrisano = Kontroler.getInstance().obrisi(u);
 
         if (obrisano) {
-            JOptionPane.showMessageDialog(this, "Uspesno obrisana kategorija.");
+            JOptionPane.showMessageDialog(this, "Uspesno obrisana usluga.");
             osveziTabelu();
         } else {
-            JOptionPane.showMessageDialog(this, "Neuspesno brisanje. Postoji neki musterija sa ovom kategorijom.");
+            JOptionPane.showMessageDialog(this, "Neuspesno brisanje. Postoji neka stavka racuna sa ovom uslugom.");
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
-        PostaviKategorijuMusterijeForma pmkf = new PostaviKategorijuMusterijeForma(null, true, this, null);
-        pmkf.setVisible(true);
+        PostaviUsluguForma puf = new PostaviUsluguForma(null, false, this, null);
+        puf.setVisible(true);
     }//GEN-LAST:event_btnDodajActionPerformed
 
     private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
-        int selektovaniRed = tblKategorijeMusterija.getSelectedRow();
+        int selektovaniRed = tblUsluge.getSelectedRow();
 
         if (selektovaniRed == -1) {
             JOptionPane.showMessageDialog(this, "Izaberite neku kategoriju za izmenu!");
             return;
         }
 
-        ModelTabeleKategorijaMusterija mtkm = (ModelTabeleKategorijaMusterija) tblKategorijeMusterija.getModel();
-        List<KategorijaMusterije> listaKategorijaMusterija = mtkm.getListaKategorija();
-        KategorijaMusterije km = listaKategorijaMusterija.get(selektovaniRed);
+        ModelTabeleUsluga mtu = (ModelTabeleUsluga) tblUsluge.getModel();
+        List<Usluga> listaUsluga = mtu.getListaUsluga();
+        Usluga u = listaUsluga.get(selektovaniRed);
         
-        PostaviKategorijuMusterijeForma pmkf = new PostaviKategorijuMusterijeForma(null, true, this, km);
-        pmkf.setVisible(true);
+        PostaviUsluguForma puf = new PostaviUsluguForma(null, false, this, u);
+        puf.setVisible(true);
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**
@@ -171,20 +167,20 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(KategorijeMusterijaForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UslugeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(KategorijeMusterijaForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UslugeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(KategorijeMusterijaForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UslugeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(KategorijeMusterijaForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UslugeForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                KategorijeMusterijaForma dialog = new KategorijeMusterijaForma(new javax.swing.JFrame(), true);
+                UslugeForma dialog = new UslugeForma(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -201,11 +197,10 @@ public class KategorijeMusterijaForma extends javax.swing.JDialog {
     private javax.swing.JButton btnIzmeni;
     private javax.swing.JButton btnObrisi;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblKategorijeMusterija;
+    private javax.swing.JTable tblUsluge;
     // End of variables declaration//GEN-END:variables
 
     public void osveziTabelu() {
-        ModelTabeleKategorijaMusterija mtkm = new ModelTabeleKategorijaMusterija(Kontroler.getInstance().vratiSve(new KategorijaMusterije()));
-        tblKategorijeMusterija.setModel(mtkm);
+        tblUsluge.setModel(new ModelTabeleUsluga(Kontroler.getInstance().vratiSve(new Usluga())));
     }
 }

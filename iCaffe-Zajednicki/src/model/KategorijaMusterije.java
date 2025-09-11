@@ -48,7 +48,7 @@ public class KategorijaMusterije implements Serializable, DomainObject<Kategorij
     }
 
     public int getPopust() {
-        return popust;
+        return popust / 100;
     }
 
     public void setPopust(int popust) {
