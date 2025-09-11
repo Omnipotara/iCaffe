@@ -4,6 +4,7 @@
  */
 package view;
 
+import view.prodaja.RacunForma;
 import view.usluga.UslugeForma;
 import view.musterija.KategorijeMusterijaForma;
 import view.angazovanje.AngazovanjaForma;
@@ -168,7 +169,6 @@ public class ServerForma extends javax.swing.JFrame {
         List<Musterija> listaMusterija = mtm.getListaMusterija();
         Musterija kupac = listaMusterija.get(selektovaniRed);
 
-        this.dispose();
         RacunForma rf = new RacunForma(this, true, p, kupac);
         rf.setVisible(true);
     }//GEN-LAST:event_btnProdajActionPerformed

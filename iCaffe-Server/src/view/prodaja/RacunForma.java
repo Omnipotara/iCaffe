@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package view;
+package view.prodaja;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -200,6 +200,8 @@ public class RacunForma extends javax.swing.JDialog {
         double ukupnaCena = Double.parseDouble(txtUkupanIznos.getText()) * (1 - m.getKategorijaMusterije().getPopust());
         r.setUkupnaCena(ukupnaCena);
         Kontroler.getInstance().izmeni(r);
+        JOptionPane.showMessageDialog(this, "Uspesno ste napravili racun!");
+        this.dispose();
     }//GEN-LAST:event_btnFinalizujActionPerformed
 
     private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed

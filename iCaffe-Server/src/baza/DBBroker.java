@@ -242,8 +242,8 @@ public class DBBroker {
     }
 
     public int insertRacun(Racun r) throws SQLException {
-        String sql = "INSERT INTO racun (datum, ukupnacena, prodavacId, musterijaId) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        String upit = "INSERT INTO racun (datum, ukupnacena, prodavacId, musterijaId) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit, Statement.RETURN_GENERATED_KEYS)) {
 
             LocalDate local = r.getDatum().toLocalDate();
             ps.setDate(1, java.sql.Date.valueOf(local));
@@ -262,5 +262,20 @@ public class DBBroker {
             }
         }
         return -1;
+    }
+
+    public int vratiMaxRBZaRacun(int racunId) {
+        String upit = "SELECT COALESCE(MAX(rb), 0) FROM stavka_racuna WHERE racunId = ?";
+        try (PreparedStatement ps = Konekcija.getInstance().getKonekcija().prepareStatement(upit)) {
+            ps.setInt(1, racunId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) + 1;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 }

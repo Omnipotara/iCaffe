@@ -53,7 +53,7 @@ public class Kontroler {
     public void setListaNiti(List<ObradiKlijentskiZahtev> listaNiti) {
         this.listaNiti = listaNiti;
     }
-    
+
     public ServerForma getSf() {
         return sf;
     }
@@ -61,9 +61,8 @@ public class Kontroler {
     public void setSf(ServerForma sf) {
         this.sf = sf;
     }
-    
-    /* -- DEFAULT CRUD OPERACIJE DOMENSKOG OBJEKTA -- */
 
+    /* -- DEFAULT CRUD OPERACIJE DOMENSKOG OBJEKTA -- */
     public <T extends DomainObject<T>> boolean dodaj(T object) {
         return new DodajSO<T>().execute(object);
     }
@@ -94,9 +93,8 @@ public class Kontroler {
         }
         return new ArrayList<T>();
     }
-    
-    /* -- SPECIFICNE METODE -- */
 
+    /* -- SPECIFICNE METODE -- */
     public Prodavac ulogujProdavca(Prodavac p) {
         return dbb.ulogujProdavca(p);
     }
@@ -124,7 +122,6 @@ public class Kontroler {
                 return;
             }
         }
-
     }
 
     public List<Musterija> vratiListuOnlineMusterija() {
@@ -138,5 +135,9 @@ public class Kontroler {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
+    }
+
+    public int vratiMaxRBZaRacun(int racunId) {
+        return dbb.vratiMaxRBZaRacun(racunId);
     }
 }

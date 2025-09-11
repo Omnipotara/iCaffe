@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package view;
+package view.prodaja;
 
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -120,6 +120,7 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
         });
 
         txtCena.setEditable(false);
+        txtCena.setText("0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -198,6 +199,7 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
         Racun r = rf.getR();
 
         StavkaRacuna sr = new StavkaRacuna();
+        sr.setRb(Kontroler.getInstance().vratiMaxRBZaRacun(r.getId()));
         sr.setKolicina(kolicina);
         sr.setJedinicnaCena(u.getCena());
         sr.setCenaStavke(cena);
