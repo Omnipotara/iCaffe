@@ -132,9 +132,16 @@ public class KlijentskaForma extends javax.swing.JFrame {
     private javax.swing.JButton btnLogout;
     // End of variables declaration//GEN-END:variables
 
-    public void prikaziLogoutPoruku() {
-        JOptionPane.showMessageDialog(this, "Uspesno ste se izlogovali.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
-        this.dispose();
+    public void prikaziLogoutPoruku(boolean serverLogout) {
+        if (serverLogout) {
+            mtn.setKraj(true);
+            JOptionPane.showMessageDialog(this, "Administrator vas je izbacio.", "Odlogovani ste", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Uspesno ste se izlogovali.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        }
+
     }
 
     public void istekloVreme() {

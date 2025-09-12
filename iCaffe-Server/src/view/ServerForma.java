@@ -15,6 +15,7 @@ import kontroler.Kontroler;
 import model.Musterija;
 import model.Prodavac;
 import modeli.ModelTabeleMusterija;
+import server.ObradiKlijentskiZahtev;
 import server.PokreniServer;
 
 /**
@@ -59,6 +60,8 @@ public class ServerForma extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMusterije = new javax.swing.JTable();
         btnProdaj = new javax.swing.JButton();
+        btnOdloguj = new javax.swing.JButton();
+        btnObrisi = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemAngazovanja = new javax.swing.JMenuItem();
@@ -85,6 +88,20 @@ public class ServerForma extends javax.swing.JFrame {
         btnProdaj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProdajActionPerformed(evt);
+            }
+        });
+
+        btnOdloguj.setText("ODLOGUJ");
+        btnOdloguj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOdlogujActionPerformed(evt);
+            }
+        });
+
+        btnObrisi.setText("OBRISI");
+        btnObrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObrisiActionPerformed(evt);
             }
         });
 
@@ -124,17 +141,25 @@ public class ServerForma extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                    .addComponent(btnOdloguj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnProdaj, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOdloguj, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnProdaj, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -159,19 +184,66 @@ public class ServerForma extends javax.swing.JFrame {
 
     private void btnProdajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdajActionPerformed
         int selektovaniRed = tblMusterije.getSelectedRow();
+        Musterija kupac = odaberiMusteriju(selektovaniRed);
 
-        if (selektovaniRed == -1) {
-            JOptionPane.showMessageDialog(this, "Izaberite musteriju.");
+        if (kupac == null) {
             return;
         }
-
-        ModelTabeleMusterija mtm = (ModelTabeleMusterija) tblMusterije.getModel();
-        List<Musterija> listaMusterija = mtm.getListaMusterija();
-        Musterija kupac = listaMusterija.get(selektovaniRed);
 
         RacunForma rf = new RacunForma(this, true, p, kupac);
         rf.setVisible(true);
     }//GEN-LAST:event_btnProdajActionPerformed
+
+    private void btnOdlogujActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOdlogujActionPerformed
+        int selektovaniRed = tblMusterije.getSelectedRow();
+        Musterija kupac = odaberiMusteriju(selektovaniRed);
+
+        if (kupac == null) {
+            return;
+        }
+
+        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiListuOnlineMusterija();
+        if (listaUlogovanih.contains(kupac)) {
+            for (ObradiKlijentskiZahtev okz : Kontroler.getInstance().getListaNiti()) {
+                if (okz.getUlogovani() != null && okz.getUlogovani().equals(kupac)) {
+                    okz.serverskiLogoutKupca(kupac);
+                    return;
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Taj musterija vec nije online!");
+            return;
+        }
+
+
+    }//GEN-LAST:event_btnOdlogujActionPerformed
+
+    private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
+        int selektovaniRed = tblMusterije.getSelectedRow();
+        Musterija kupac = odaberiMusteriju(selektovaniRed);
+
+        if (kupac == null) {
+            return;
+        }
+
+        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiListuOnlineMusterija();
+        if (!listaUlogovanih.contains(kupac)) {
+            boolean obrisan = Kontroler.getInstance().obrisi(kupac);
+
+            if (obrisan) {
+                osveziTabelu();
+                JOptionPane.showMessageDialog(this, "Uspesno ste obrisali musteriju.");
+                return;
+            } else {
+                JOptionPane.showMessageDialog(this, "Doslo je do greske prilikom brisanjas.");
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Musterija je online, prvo ga odlogujte!");
+            return;
+        }
+
+    }//GEN-LAST:event_btnObrisiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,6 +281,8 @@ public class ServerForma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnObrisi;
+    private javax.swing.JButton btnOdloguj;
     private javax.swing.JButton btnProdaj;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -224,5 +298,17 @@ public class ServerForma extends javax.swing.JFrame {
         List<Musterija> listaOnlineMusterija = Kontroler.getInstance().vratiListuOnlineMusterija();
         ModelTabeleMusterija mtm = new ModelTabeleMusterija(listaMusterija, listaOnlineMusterija);
         tblMusterije.setModel(mtm);
+    }
+
+    private Musterija odaberiMusteriju(int selektovaniRed) {
+        if (selektovaniRed == -1) {
+            JOptionPane.showMessageDialog(this, "Izaberite musteriju.");
+            return null;
+        }
+
+        ModelTabeleMusterija mtm = (ModelTabeleMusterija) tblMusterije.getModel();
+        List<Musterija> listaMusterija = mtm.getListaMusterija();
+        Musterija kupac = listaMusterija.get(selektovaniRed);
+        return kupac;
     }
 }

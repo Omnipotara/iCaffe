@@ -46,25 +46,29 @@ public class Komunikacija extends Thread {
 
     @Override
     public void run() {
-        try{
-        while (!kraj) {
-            ServerskiOdgovor so = primiOdgovor();
-            if (so == null) {
-                return;
-            }
+        try {
+            while (!kraj) {
+                ServerskiOdgovor so = primiOdgovor();
+                if (so == null) {
+                    return;
+                }
 
-            switch (so.getOperacija()) {
-                case Operacija.LOGOUT:
-                    kraj = true;
-                    Kontroler.getInstance().getKf().prikaziLogoutPoruku();
-                    break;
+                switch (so.getOperacija()) {
+                    case Operacija.LOGOUT:
+                        kraj = true;
+                        Kontroler.getInstance().getKf().prikaziLogoutPoruku(false);
+                        break;
 
-                default:
-                    throw new AssertionError();
+                    case Operacija.SERVER_LOGOUT:
+                        kraj = true;
+                        Kontroler.getInstance().getKf().prikaziLogoutPoruku(true);
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
             }
-        }
         } finally {
-            if(s != null && !s.isClosed()){
+            if (s != null && !s.isClosed()) {
                 try {
                     s.close();
                 } catch (IOException ex) {
@@ -125,7 +129,5 @@ public class Komunikacija extends Thread {
     public void setKraj(boolean kraj) {
         this.kraj = kraj;
     }
-    
-    
 
 }

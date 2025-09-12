@@ -18,7 +18,7 @@ public class ModelTabeleMusterija extends AbstractTableModel {
 
     private List<Musterija> listaMusterija = new ArrayList<>();
     private List<Musterija> listaOnlineMusterija = new ArrayList<>();
-    private String[] kolone = {"Username", "Email", "Kategorija", "Popust", "Online"};
+    private String[] kolone = {"Username", "Email", "Kategorija", "Popust", "Online", "Preostalo vreme"};
 
     public ModelTabeleMusterija(List<Musterija> listaMusterija, List<Musterija> listaOnlineMusterija) {
         this.listaMusterija = listaMusterija;
@@ -54,6 +54,12 @@ public class ModelTabeleMusterija extends AbstractTableModel {
                 } else {
                     return "NE";
                 }
+            case 5:
+                long vreme = m.getPreostaloVreme().getSeconds();
+                if (vreme >= 3600 ) return "> 1 sat";
+                if (vreme < 3600 && vreme >= 1800) return "< 1 sat";
+                if (vreme < 1800 && vreme >= 600) return "< 30 minuta";
+                if (vreme < 600) return "< 10 minuta";
             default:
                 return "N/A";
         }

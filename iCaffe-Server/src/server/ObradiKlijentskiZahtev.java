@@ -153,4 +153,18 @@ public class ObradiKlijentskiZahtev extends Thread {
 
     }
 
+    public void serverskiLogoutKupca(Musterija m) {
+        boolean odlogovan = Kontroler.getInstance().odlogujMusteriju(m);
+        Kontroler.getInstance().getListaNiti().remove(this);
+        this.ulogovan = null;
+        mtn.setKraj(true);
+
+        ServerskiOdgovor so = new ServerskiOdgovor(odlogovan, Operacija.SERVER_LOGOUT);
+        posaljiServerskiOdgovor(so);
+
+        kraj = true;
+
+        Kontroler.getInstance().getSf().osveziTabelu();
+    }
+
 }
