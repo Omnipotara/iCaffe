@@ -4,6 +4,7 @@
  */
 package view.prodaja;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -201,6 +202,20 @@ public class RacunForma extends javax.swing.JDialog {
         r.setUkupnaCena(ukupnaCena);
         Kontroler.getInstance().izmeni(r);
         JOptionPane.showMessageDialog(this, "Uspesno ste napravili racun!");
+
+        ModelTabeleStavki mts = (ModelTabeleStavki) tblStavke.getModel();
+        List<StavkaRacuna> listaStavki = mts.getListaStavki();
+
+        for (StavkaRacuna s : listaStavki) {
+            if (s.getUsluga().getId() == 1000) {
+                int kolicina = s.getKolicina();
+                Duration preostaloVreme = Duration.ofSeconds(m.getPreostaloVreme().toSeconds() + kolicina * 3600);
+                m.setPreostaloVreme(preostaloVreme);
+                Kontroler.getInstance().izmeni(m);
+                Kontroler.getInstance().getSf().osveziTabelu();
+            }
+        }
+
         this.dispose();
     }//GEN-LAST:event_btnFinalizujActionPerformed
 
@@ -239,7 +254,7 @@ public class RacunForma extends javax.swing.JDialog {
         ModelTabeleStavki mts = (ModelTabeleStavki) tblStavke.getModel();
         List<StavkaRacuna> listaStavki = mts.getListaStavki();
         StavkaRacuna stavkaZaIzmenu = listaStavki.get(selektovaniRed);
-        
+
         PostaviStavkuForma psf = new PostaviStavkuForma(null, true, this, stavkaZaIzmenu);
         psf.setVisible(true);
     }//GEN-LAST:event_btnIzmeniActionPerformed
