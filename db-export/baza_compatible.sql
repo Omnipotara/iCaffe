@@ -26,11 +26,16 @@ CREATE TABLE `angazovanje` (
   `datum` date NOT NULL,
   PRIMARY KEY (`prodavacId`,`terminId`),
   KEY `idTermin` (`terminId`),
-  CONSTRAINT `angazovanje_ibfk_3` FOREIGN KEY (`prodavacId`) REFERENCES `prodavac` (`id`),
-  CONSTRAINT `angazovanje_ibfk_4` FOREIGN KEY (`terminId`) REFERENCES `termin_dezurstva` (`id`)
+  CONSTRAINT `angazovanje_ibfk_3` FOREIGN KEY (`prodavacId`) REFERENCES `prodavac` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `angazovanje_ibfk_4` FOREIGN KEY (`terminId`) REFERENCES `termin_dezurstva` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `angazovanje` */
+
+insert  into `angazovanje`(`prodavacId`,`terminId`,`datum`) values 
+(1,1,'2025-09-10'),
+(1,2,'2025-09-11'),
+(1,3,'2025-09-11');
 
 /*Table structure for table `kategorija_musterije` */
 
@@ -41,13 +46,14 @@ CREATE TABLE `kategorija_musterije` (
   `naziv` varchar(50) DEFAULT NULL,
   `popust` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `kategorija_musterije` */
 
 insert  into `kategorija_musterije`(`id`,`naziv`,`popust`) values 
 (1,'Obican',0),
-(2,'Pro',50);
+(5,'Nolifer',50),
+(6,'Pro',30);
 
 /*Table structure for table `musterija` */
 
@@ -63,12 +69,12 @@ CREATE TABLE `musterija` (
   PRIMARY KEY (`id`),
   KEY `musterija_ibfk_1` (`kategorijaId`),
   CONSTRAINT `musterija_ibfk_1` FOREIGN KEY (`kategorijaId`) REFERENCES `kategorija_musterije` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `musterija` */
 
 insert  into `musterija`(`id`,`email`,`username`,`password`,`kategorijaId`,`preostaloVreme`) values 
-(1,'gio','gio','gio',1,3833);
+(1,'gio','gio','gio',1,3570);
 
 /*Table structure for table `musterija_ulogovani` */
 
@@ -78,7 +84,7 @@ CREATE TABLE `musterija_ulogovani` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `musterija_ulogovani` */
 
@@ -109,17 +115,25 @@ DROP TABLE IF EXISTS `racun`;
 CREATE TABLE `racun` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `datum` date NOT NULL,
-  `ukupnacena` decimal(10,0) DEFAULT NULL,
+  `ukupnaCena` decimal(10,2) DEFAULT NULL,
   `prodavacId` bigint(20) NOT NULL,
   `musterijaId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `prodavacId` (`prodavacId`),
-  KEY `musterijaId` (`musterijaId`),
-  CONSTRAINT `racun_ibfk_1` FOREIGN KEY (`prodavacId`) REFERENCES `prodavac` (`id`),
-  CONSTRAINT `racun_ibfk_2` FOREIGN KEY (`musterijaId`) REFERENCES `musterija` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `racun_ibfk_1` (`prodavacId`),
+  KEY `racun_ibfk_2` (`musterijaId`),
+  CONSTRAINT `racun_ibfk_1` FOREIGN KEY (`prodavacId`) REFERENCES `prodavac` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `racun_ibfk_2` FOREIGN KEY (`musterijaId`) REFERENCES `musterija` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `racun` */
+
+insert  into `racun`(`id`,`datum`,`ukupnaCena`,`prodavacId`,`musterijaId`) values 
+(30,'2025-09-11',0.00,1,1),
+(31,'2025-09-11',12045.00,1,1),
+(32,'2025-09-11',60522.00,1,1),
+(34,'2025-09-12',200.00,1,1),
+(35,'2025-09-12',200.00,1,1),
+(38,'2025-09-12',100.00,1,1);
 
 /*Table structure for table `stavka_racuna` */
 
@@ -127,18 +141,29 @@ DROP TABLE IF EXISTS `stavka_racuna`;
 
 CREATE TABLE `stavka_racuna` (
   `racunId` bigint(20) NOT NULL,
-  `rb` bigint(20) NOT NULL AUTO_INCREMENT,
+  `rb` bigint(20) NOT NULL,
   `kolicina` bigint(20) NOT NULL,
-  `jedinicnaCena` decimal(10,0) NOT NULL,
+  `jedinicnaCena` decimal(10,2) NOT NULL,
   `uslugaId` bigint(20) NOT NULL,
-  `cenaStavke` decimal(10,0) GENERATED ALWAYS AS ((`jedinicnaCena` * `kolicina`)) STORED,
+  `cenaStavke` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`racunId`,`rb`),
   KEY `rb` (`rb`),
-  KEY `uslugaId` (`uslugaId`),
-  CONSTRAINT `stavka_racuna_ibfk_1` FOREIGN KEY (`uslugaId`) REFERENCES `usluga` (`id`)
+  KEY `stavka_racuna_ibfk_1` (`uslugaId`),
+  CONSTRAINT `stavka_racuna_ibfk_1` FOREIGN KEY (`uslugaId`) REFERENCES `usluga` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `stavka_racuna` */
+
+insert  into `stavka_racuna`(`racunId`,`rb`,`kolicina`,`jedinicnaCena`,`uslugaId`,`cenaStavke`) values 
+(30,0,10,9.00,1,90.00),
+(31,1,1,0.00,3,0.00),
+(31,2,5,9.00,1,45.00),
+(31,3,20,600.00,4,12000.00),
+(32,1,100,600.00,4,60000.00),
+(32,2,58,9.00,1,522.00),
+(34,1,2,100.00,1000,200.00),
+(35,1,2,100.00,1000,200.00),
+(38,1,1,100.00,1000,100.00);
 
 /*Table structure for table `termin_dezurstva` */
 
@@ -150,9 +175,14 @@ CREATE TABLE `termin_dezurstva` (
   `vremeOd` time DEFAULT NULL,
   `vremeDo` time DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `termin_dezurstva` */
+
+insert  into `termin_dezurstva`(`id`,`smena`,`vremeOd`,`vremeDo`) values 
+(1,'PRVA','08:00:00','16:00:00'),
+(2,'DRUGA','16:00:00','00:00:00'),
+(3,'TRECA','00:00:00','08:00:00');
 
 /*Table structure for table `usluga` */
 
@@ -161,11 +191,17 @@ DROP TABLE IF EXISTS `usluga`;
 CREATE TABLE `usluga` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `naziv` varchar(50) DEFAULT NULL,
-  `cena` decimal(10,0) DEFAULT NULL,
+  `cena` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `usluga` */
+
+insert  into `usluga`(`id`,`naziv`,`cena`) values 
+(1,'Koka Kola Batoouu',9.00),
+(3,'Koka Kola ',0.00),
+(4,'dsfF',600.00),
+(1000,'Sat vremena',100.00);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

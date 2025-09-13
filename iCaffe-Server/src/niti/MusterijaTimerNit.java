@@ -16,6 +16,7 @@ public class MusterijaTimerNit extends Thread {
 
     private Musterija musterija;
     private boolean kraj = false;
+    private Duration preostalo;
 
     public MusterijaTimerNit() {
     }
@@ -28,7 +29,7 @@ public class MusterijaTimerNit extends Thread {
     public void run() {
         while (!kraj) {
             try {
-                Duration preostalo = musterija.getPreostaloVreme();
+                preostalo = musterija.getPreostaloVreme();
 
                 if (preostalo.getSeconds() > 0) {
                     Thread.sleep(1000); // 1 sekunda
@@ -38,6 +39,11 @@ public class MusterijaTimerNit extends Thread {
 
                     // azurira vrednost u bazi
                     Kontroler.getInstance().smanjiVreme(musterija.getId());
+
+                    // azurira tabelu
+                    if (preostalo.getSeconds() == 3599 || preostalo.getSeconds() == 1799 || preostalo.getSeconds() == 599) {
+                        Kontroler.getInstance().getSf().osveziTabelu();
+                    }
 
                     //obrisacu posle testiranja
                     System.out.println("Musteriji " + musterija.getUsername()
@@ -68,6 +74,14 @@ public class MusterijaTimerNit extends Thread {
 
     public void setKraj(boolean kraj) {
         this.kraj = kraj;
+    }
+
+    public Duration getPreostalo() {
+        return preostalo;
+    }
+
+    public void setPreostalo(Duration preostalo) {
+        this.preostalo = preostalo;
     }
 
 }

@@ -17,6 +17,7 @@ import model.Prodavac;
 import modeli.ModelTabeleMusterija;
 import server.ObradiKlijentskiZahtev;
 import server.PokreniServer;
+import view.musterija.MusterijaDetaljnijeForma;
 
 /**
  *
@@ -62,6 +63,7 @@ public class ServerForma extends javax.swing.JFrame {
         btnProdaj = new javax.swing.JButton();
         btnOdloguj = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
+        btnOdloguj1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemAngazovanja = new javax.swing.JMenuItem();
@@ -105,6 +107,13 @@ public class ServerForma extends javax.swing.JFrame {
             }
         });
 
+        btnOdloguj1.setText("DETALJNIJE");
+        btnOdloguj1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOdloguj1ActionPerformed(evt);
+            }
+        });
+
         menuFile.setText("File");
 
         menuItemAngazovanja.setText("Angazovanja");
@@ -143,23 +152,27 @@ public class ServerForma extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                    .addComponent(btnOdloguj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                        .addComponent(btnOdloguj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnOdloguj1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnOdloguj1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnOdloguj, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnProdaj, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnProdaj, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -245,6 +258,18 @@ public class ServerForma extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnObrisiActionPerformed
 
+    private void btnOdloguj1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOdloguj1ActionPerformed
+        int selektovaniRed = tblMusterije.getSelectedRow();
+        Musterija m = odaberiMusteriju(selektovaniRed);
+        
+        if(m == null){
+            return;
+        }
+        
+        MusterijaDetaljnijeForma mdf = new MusterijaDetaljnijeForma(this, false, m);
+        mdf.setVisible(true);
+    }//GEN-LAST:event_btnOdloguj1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -283,6 +308,7 @@ public class ServerForma extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnObrisi;
     private javax.swing.JButton btnOdloguj;
+    private javax.swing.JButton btnOdloguj1;
     private javax.swing.JButton btnProdaj;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;

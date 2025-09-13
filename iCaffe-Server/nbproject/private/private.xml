@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/ServerForma.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/kontroler/Kontroler.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/musterija/MusterijaDetaljnijeForma.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/server/ObradiKlijentskiZahtev.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleAngazovanja.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/LoginForma.java</file>
@@ -15,6 +16,7 @@
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/usluga/PostaviUsluguForma.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/musterija/PostaviKategorijuMusterijeForma.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/VratiSveSO.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/niti/MusterijaDetaljnoNit.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/prodaja/RacunForma.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleStavki.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/usluga/UslugeForma.java</file>

@@ -28,7 +28,7 @@ public class ObradiKlijentskiZahtev extends Thread {
     private Socket s;
     private Musterija ulogovan = null;
     private boolean kraj = false;
-    MusterijaTimerNit mtn;
+    private MusterijaTimerNit mtn;
 
     public ObradiKlijentskiZahtev(Socket s) {
         this.s = s;
@@ -144,6 +144,16 @@ public class ObradiKlijentskiZahtev extends Thread {
     public void setUlogovani(Musterija ulogovan) {
         this.ulogovan = ulogovan;
     }
+
+    public MusterijaTimerNit getMtn() {
+        return mtn;
+    }
+
+    public void setMtn(MusterijaTimerNit mtn) {
+        this.mtn = mtn;
+    }
+    
+    
 
     public void ugasiNit() {
         Kontroler.getInstance().getListaNiti().remove(this);
