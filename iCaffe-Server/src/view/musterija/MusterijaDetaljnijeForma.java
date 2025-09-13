@@ -4,10 +4,15 @@
  */
 package view.musterija;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.Duration;
+import java.util.List;
+import javax.swing.JOptionPane;
 import kontroler.Kontroler;
+import model.KategorijaMusterije;
 import model.Musterija;
 import niti.MusterijaDetaljnoNit;
 import niti.MusterijaTimerNit;
@@ -36,7 +41,7 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         this.m = m;
 
         txtEmail.setText(m.getEmail());
-        txtKategorija.setText(m.getKategorijaMusterije().getNaziv());
+        napuniCombobox();
         txtPassword.setText(m.getPassword());
         txtPopust.setText(m.getKategorijaMusterije().getPopust() + "%");
         txtUsername.setText(m.getUsername());
@@ -85,10 +90,11 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         txtEmail = new javax.swing.JTextField();
         txtUsername = new javax.swing.JTextField();
         txtPassword = new javax.swing.JTextField();
-        txtKategorija = new javax.swing.JTextField();
         txtPopust = new javax.swing.JTextField();
         txtPreostaloVreme = new javax.swing.JTextField();
         btnIzadji = new javax.swing.JButton();
+        cmbKategorije = new javax.swing.JComboBox<>();
+        btnSacuvaj = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -110,8 +116,6 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
 
         txtPassword.setEditable(false);
 
-        txtKategorija.setEditable(false);
-
         txtPopust.setEditable(false);
 
         txtPreostaloVreme.setEditable(false);
@@ -123,39 +127,52 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
             }
         });
 
+        cmbKategorije.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbKategorijeActionPerformed(evt);
+            }
+        });
+
+        btnSacuvaj.setText("Sacuvaj promenu");
+        btnSacuvaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSacuvajActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtKategorija, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPopust, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPreostaloVreme, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnIzadji, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel6)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(48, 48, 48)
+                                .addComponent(jLabel5)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPreostaloVreme, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                            .addComponent(txtPopust, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                            .addComponent(cmbKategorije, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 33, Short.MAX_VALUE)
+                        .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnIzadji, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -176,7 +193,7 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtKategorija, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbKategorije, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -186,7 +203,9 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
                     .addComponent(jLabel6)
                     .addComponent(txtPreostaloVreme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btnIzadji, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnIzadji, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -199,6 +218,26 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         }
         this.dispose();
     }//GEN-LAST:event_btnIzadjiActionPerformed
+
+    private void cmbKategorijeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbKategorijeActionPerformed
+        KategorijaMusterije k = (KategorijaMusterije) cmbKategorije.getSelectedItem();
+        if (k != null) {
+            txtPopust.setText(k.getPopust() + "%");
+        }
+    }//GEN-LAST:event_cmbKategorijeActionPerformed
+
+    private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
+        KategorijaMusterije k = (KategorijaMusterije) cmbKategorije.getSelectedItem();
+        m.setKategorijaMusterije(k);
+        boolean izmenjeno = Kontroler.getInstance().izmeni(m);
+        
+        if(izmenjeno){
+            JOptionPane.showMessageDialog(this, "Uspesno izmenjena kategorija musterije.");
+            Kontroler.getInstance().getSf().osveziTabelu();
+        } else {
+            JOptionPane.showMessageDialog(this, "Greska prilikom komunikacije sa bazom podataka.");
+        }
+    }//GEN-LAST:event_btnSacuvajActionPerformed
 
     /**
      * @param args the command line arguments
@@ -244,6 +283,8 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIzadji;
+    private javax.swing.JButton btnSacuvaj;
+    private javax.swing.JComboBox<KategorijaMusterije> cmbKategorije;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -251,7 +292,6 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtKategorija;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtPopust;
     private javax.swing.JTextField txtPreostaloVreme;
@@ -269,4 +309,15 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
 
         return mtn;
     }
+
+    private void napuniCombobox() {
+        List<KategorijaMusterije> listaKategorija = Kontroler.getInstance().vratiSve(new KategorijaMusterije());
+
+        for (KategorijaMusterije k : listaKategorija) {
+            cmbKategorije.addItem(k);
+        }
+
+        cmbKategorije.setSelectedItem(m.getKategorijaMusterije());
+    }
+
 }

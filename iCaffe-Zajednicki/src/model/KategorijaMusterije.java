@@ -48,7 +48,7 @@ public class KategorijaMusterije implements Serializable, DomainObject<Kategorij
     }
 
     public int getPopust() {
-        return popust / 100;
+        return popust;
     }
 
     public void setPopust(int popust) {
@@ -78,7 +78,7 @@ public class KategorijaMusterije implements Serializable, DomainObject<Kategorij
 
     @Override
     public String toString() {
-        return "KategorijaMusterije{" + "naziv=" + naziv + ", popust=" + popust + '}';
+        return naziv;
     }
 
     @Override

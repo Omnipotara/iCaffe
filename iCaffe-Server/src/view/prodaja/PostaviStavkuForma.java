@@ -46,6 +46,7 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
             txtKolicina.setText(String.valueOf(sr.getKolicina()));
             txtCena.setText(String.valueOf(sr.getCenaStavke()));
         }
+        
         //Listener za txt field
         txtKolicina.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -64,9 +65,6 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
             }
 
         });
-
-        // Listener za combo box
-        cmbUsluge.addActionListener(e -> updateCena());
     }
 
     /**
@@ -97,6 +95,12 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
         jLabel3.setText("Cena");
 
         txtKolicina.setText("1");
+
+        cmbUsluge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbUslugeActionPerformed(evt);
+            }
+        });
 
         btnDodaj.setText("Dodaj");
         btnDodaj.addActionListener(new java.awt.event.ActionListener() {
@@ -234,6 +238,10 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
         Kontroler.getInstance().izmeni(sr);
         rf.osveziTabelu();
     }//GEN-LAST:event_btnIzmeniActionPerformed
+
+    private void cmbUslugeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUslugeActionPerformed
+        updateCena();
+    }//GEN-LAST:event_cmbUslugeActionPerformed
 
     /**
      * @param args the command line arguments

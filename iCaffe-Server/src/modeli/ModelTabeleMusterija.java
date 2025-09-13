@@ -55,7 +55,8 @@ public class ModelTabeleMusterija extends AbstractTableModel {
                 if (vreme >= 3600 ) return "> 1 sat";
                 if (vreme < 3600 && vreme >= 1800) return "< 1 sat";
                 if (vreme < 1800 && vreme >= 600) return "< 30 minuta";
-                if (vreme < 600) return "< 10 minuta";
+                if (vreme < 600 && vreme >=1) return "< 10 minuta";
+                if (vreme < 1) return "ISTEKLO";
             default:
                 return "N/A";
         }

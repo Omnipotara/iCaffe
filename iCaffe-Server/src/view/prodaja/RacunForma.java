@@ -198,7 +198,8 @@ public class RacunForma extends javax.swing.JDialog {
     }//GEN-LAST:event_btnOdustaniActionPerformed
 
     private void btnFinalizujActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizujActionPerformed
-        double ukupnaCena = Double.parseDouble(txtUkupanIznos.getText()) * (1 - m.getKategorijaMusterije().getPopust());
+
+        double ukupnaCena = Double.parseDouble(txtUkupanIznos.getText());
         r.setUkupnaCena(ukupnaCena);
         Kontroler.getInstance().izmeni(r);
         JOptionPane.showMessageDialog(this, "Uspesno ste napravili racun!");
@@ -320,6 +321,7 @@ public class RacunForma extends javax.swing.JDialog {
         if (r == null) {
             return;
         }
+
         StavkaRacuna placeholderStavka = new StavkaRacuna();
         placeholderStavka.setRacun(r);
 
@@ -331,7 +333,8 @@ public class RacunForma extends javax.swing.JDialog {
         for (StavkaRacuna s : listaStavki) {
             cena = cena + s.getCenaStavke();
         }
-        r.setUkupnaCena(cena * (1 - m.getKategorijaMusterije().getPopust()));
+        double popust = (double) m.getKategorijaMusterije().getPopust() / 100;
+        r.setUkupnaCena(cena * (1 - popust));
         txtUkupanIznos.setText(String.valueOf(r.getUkupnaCena()));
     }
 

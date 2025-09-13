@@ -14,5 +14,6 @@ public enum Operacija implements Serializable {
     LOGIN,
     LOGOUT,
     SERVER_LOGOUT,
+    REGISTER,
 
 }

@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import kontroler.Kontroler;
@@ -78,6 +79,40 @@ public class ObradiKlijentskiZahtev extends Thread {
                         kraj = true;
 
                         Kontroler.getInstance().getSf().osveziTabelu();
+                        break;
+
+                    case Operacija.REGISTER:
+                        m = (Musterija) kz.getParam();
+                        List<Musterija> listaMusterija = Kontroler.getInstance().vratiSve(m);
+                        boolean duplikat = false;
+
+                        for (Musterija mus : listaMusterija) {
+                            if (m.getEmail().equals(mus.getEmail())) {
+                                so.setParam(-1);
+                                posaljiServerskiOdgovor(so);
+                                duplikat = true;
+                                break;
+                            }
+                            if (m.getUsername().equals(mus.getUsername())) {
+                                so.setParam(-2);
+                                posaljiServerskiOdgovor(so);
+                                duplikat = true;
+                                break;
+                            }
+                        }
+                        
+                        if (duplikat) break;
+
+                        boolean dodat = Kontroler.getInstance().dodaj(m);
+                        if (dodat) {
+                            so.setParam(1);
+                            posaljiServerskiOdgovor(so);
+                            Kontroler.getInstance().getSf().osveziTabelu();
+                        } else {
+                            so.setParam(null);
+                            posaljiServerskiOdgovor(so);
+                        }
+
                         break;
                     default:
                         throw new AssertionError();
@@ -152,8 +187,6 @@ public class ObradiKlijentskiZahtev extends Thread {
     public void setMtn(MusterijaTimerNit mtn) {
         this.mtn = mtn;
     }
-    
-    
 
     public void ugasiNit() {
         Kontroler.getInstance().getListaNiti().remove(this);
