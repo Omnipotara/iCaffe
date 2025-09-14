@@ -4,9 +4,8 @@
  */
 package niti;
 
-import java.awt.Label;
 import java.time.Duration;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import model.Musterija;
 import view.KlijentskaForma;
 
@@ -18,15 +17,16 @@ public class MusterijaTimerNit extends Thread {
 
     private KlijentskaForma kf;
     private Musterija musterija;
-    private Label lblVreme; //Ovo se trenutno ne koristi ali sam ga dodao u slucaju da na labeli odlucim da prikazujem preostalo vreme
+    private JLabel lblVreme; //Ovo se trenutno ne koristi ali sam ga dodao u slucaju da na labeli odlucim da prikazujem preostalo vreme
     private boolean kraj = false;
 
     public MusterijaTimerNit() {
     }
 
-    public MusterijaTimerNit(KlijentskaForma kf, Musterija musterija) {
+    public MusterijaTimerNit(KlijentskaForma kf, Musterija musterija, JLabel lblVreme) {
         this.kf = kf;
         this.musterija = musterija;
+        this.lblVreme = lblVreme;
     }
 
     @Override
@@ -41,8 +41,8 @@ public class MusterijaTimerNit extends Thread {
                 long hours = preostaloVreme.toHours();
                 long minutes = preostaloVreme.toMinutes() % 60;
                 long seconds = preostaloVreme.getSeconds() % 60;
-
-                kf.setTitle("Preostalo vremena: " + hours + "h " + minutes + "min " + seconds + "s");
+                String vremeString = hours + "h " + minutes + "min " + seconds + "s";
+                lblVreme.setText(vremeString);
                 
             } catch (InterruptedException e) {
                 break;
@@ -78,11 +78,11 @@ public class MusterijaTimerNit extends Thread {
         this.kf = kf;
     }
 
-    public Label getLblVreme() {
+    public JLabel getLblVreme() {
         return lblVreme;
     }
 
-    public void setLblVreme(Label lblVreme) {
+    public void setLblVreme(JLabel lblVreme) {
         this.lblVreme = lblVreme;
     }
 

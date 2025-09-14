@@ -15,5 +15,7 @@ public enum Operacija implements Serializable {
     LOGOUT,
     SERVER_LOGOUT,
     REGISTER,
+    AZURIRANJE_PASSWORD, 
+    AZURIRANJE_USERNAME,
 
 }

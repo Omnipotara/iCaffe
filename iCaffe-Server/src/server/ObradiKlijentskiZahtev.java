@@ -100,8 +100,10 @@ public class ObradiKlijentskiZahtev extends Thread {
                                 break;
                             }
                         }
-                        
-                        if (duplikat) break;
+
+                        if (duplikat) {
+                            break;
+                        }
 
                         boolean dodat = Kontroler.getInstance().dodaj(m);
                         if (dodat) {
@@ -114,6 +116,44 @@ public class ObradiKlijentskiZahtev extends Thread {
                         }
 
                         break;
+
+                    case Operacija.AZURIRANJE_PASSWORD:
+                        m = (Musterija) kz.getParam();
+                        boolean izmenjeno = Kontroler.getInstance().izmeni(m);
+                        so.setOperacija(Operacija.AZURIRANJE_PASSWORD);
+                        so.setParam(izmenjeno);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case Operacija.AZURIRANJE_USERNAME:
+                        m = (Musterija) kz.getParam();
+                        listaMusterija = Kontroler.getInstance().vratiSve(m);
+                        duplikat = false;
+
+                        for (Musterija mus : listaMusterija) {
+                            if (m.getUsername().equals(mus.getUsername())) {
+                                so.setParam(false);
+                                so.setOperacija(Operacija.AZURIRANJE_USERNAME);
+                                posaljiServerskiOdgovor(so);
+                                duplikat = true;
+                                break;
+                            }
+                        }
+
+                        if (duplikat) {
+                            break;
+                        }
+
+                        izmenjeno = Kontroler.getInstance().izmeni(m);
+                        
+                        so.setParam(izmenjeno);
+                        so.setOperacija(Operacija.AZURIRANJE_USERNAME);
+                        posaljiServerskiOdgovor(so);
+                        
+                        Kontroler.getInstance().getSf().osveziTabelu();
+
+                        break;
+
                     default:
                         throw new AssertionError();
                 }

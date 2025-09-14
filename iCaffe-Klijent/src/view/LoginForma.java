@@ -4,6 +4,9 @@
  */
 package view;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.Musterija;
@@ -42,6 +45,8 @@ public class LoginForma extends javax.swing.JFrame {
         btnRegistracija = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
+        setResizable(false);
 
         jLabel1.setText("Email");
 
@@ -105,35 +110,39 @@ public class LoginForma extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String email = txtEmail.getText();
-        String password = String.valueOf(txtPassword.getPassword());
-        Musterija m = new Musterija();
-        m.setEmail(email);
-        m.setPassword(password);
-
-        KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGIN);
-        Komunikacija.getInstance().posaljiZahtev(kz);
-        ServerskiOdgovor so = Komunikacija.getInstance().primiOdgovor();
-        
-        if(so == null){
-            JOptionPane.showMessageDialog(this, "Problem pri komunikaciji sa serverom..", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
-            return;
+        try {
+            String email = txtEmail.getText();
+            String password = String.valueOf(txtPassword.getPassword());
+            Musterija m = new Musterija();
+            m.setEmail(email);
+            m.setPassword(password);
+            
+            KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGIN);
+            Komunikacija.getInstance().posaljiZahtev(kz);
+            ServerskiOdgovor so = Komunikacija.getInstance().primiOdgovor();
+            
+            if(so == null){
+                JOptionPane.showMessageDialog(this, "Problem pri komunikaciji sa serverom..", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            m = (Musterija) so.getParam();
+            
+            if(m.getId() == -1){
+                JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else if (m.getId() == -2){
+                JOptionPane.showMessageDialog(this, "Korisnik je vec ulogovan.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            JOptionPane.showMessageDialog(this, "Uspesno ste se ulogovali!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
+            kf = new KlijentskaForma(m);
+            kf.setVisible(true);
+            this.dispose();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Nije uspostavljena konekcija sa serverom.");
         }
-        
-        m = (Musterija) so.getParam();
-
-        if(m.getId() == -1){
-            JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else if (m.getId() == -2){
-            JOptionPane.showMessageDialog(this, "Korisnik je vec ulogovan.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        JOptionPane.showMessageDialog(this, "Uspesno ste se ulogovali!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
-        kf = new KlijentskaForma(m);
-        kf.setVisible(true);
-        this.dispose();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

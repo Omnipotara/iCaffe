@@ -4,6 +4,9 @@
  */
 package view;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.Musterija;
@@ -17,8 +20,9 @@ import transfer.KlijentskiZahtev;
  */
 public class KlijentskaForma extends javax.swing.JFrame {
 
-    Musterija m;
-    MusterijaTimerNit mtn;
+    private Musterija m;
+    private MusterijaTimerNit mtn;
+    private IzmenaKlijentaForma ikf;
 
     /**
      * Creates new form KlijentskaForma
@@ -28,24 +32,33 @@ public class KlijentskaForma extends javax.swing.JFrame {
     }
 
     public KlijentskaForma(Musterija m) {
-        this.m = m;
-        initComponents();
-        kontroler.Kontroler.getInstance().setKf(this);
-        Komunikacija.getInstance().start();
-        mtn = new MusterijaTimerNit(this, m);
-        mtn.start();
+        try {
+            this.m = m;
+            initComponents();
+            osveziTitle();
+            kontroler.Kontroler.getInstance().setKf(this);
+            Komunikacija.getInstance().start();
+            mtn = new MusterijaTimerNit(this, m, lblVreme);
+            mtn.start();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+            setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGOUT);
-                Komunikacija.getInstance().posaljiZahtev(kz);
-                mtn.setKraj(true);
-                dispose(); // zatvara prozor
-            }
-        });
+            addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGOUT);
+                    try {
+                        Komunikacija.getInstance().posaljiZahtev(kz);
+                    } catch (IOException ex) {
+                        Logger.getLogger(KlijentskaForma.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    mtn.setKraj(true);
+                    dispose(); // zatvara prozor
+                }
+            });
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Nije uspostavljena konekcija sa serverom.");
+        }
     }
 
     /**
@@ -58,6 +71,10 @@ public class KlijentskaForma extends javax.swing.JFrame {
     private void initComponents() {
 
         btnLogout = new javax.swing.JButton();
+        btnIzmeniUsername = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lblVreme = new javax.swing.JLabel();
+        btnIzmeniPassword = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,20 +85,58 @@ public class KlijentskaForma extends javax.swing.JFrame {
             }
         });
 
+        btnIzmeniUsername.setText("Izmeni username");
+        btnIzmeniUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniUsernameActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setText("Preostalo vreme na nalogu: ");
+
+        lblVreme.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblVreme.setText("VREME");
+
+        btnIzmeniPassword.setText("Izmeni password");
+        btnIzmeniPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniPasswordActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 328, Short.MAX_VALUE)
-                .addComponent(btnLogout))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnIzmeniUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnIzmeniPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblVreme)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnLogout)
-                .addContainerGap(271, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(70, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblVreme))
+                .addGap(55, 55, 55)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                    .addComponent(btnIzmeniUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnIzmeniPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -89,9 +144,25 @@ public class KlijentskaForma extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.LOGOUT);
-        Komunikacija.getInstance().posaljiZahtev(kz);
+        try {
+            Komunikacija.getInstance().posaljiZahtev(kz);
+        } catch (IOException ex) {
+            Logger.getLogger(KlijentskaForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
         mtn.setKraj(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnIzmeniUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniUsernameActionPerformed
+        IzmenaKlijentaForma ikf = new IzmenaKlijentaForma(this, true, m, false);
+        this.ikf = ikf;
+        ikf.setVisible(true);
+    }//GEN-LAST:event_btnIzmeniUsernameActionPerformed
+
+    private void btnIzmeniPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniPasswordActionPerformed
+        IzmenaKlijentaForma ikf = new IzmenaKlijentaForma(this, true, m, true);
+        this.ikf = ikf;
+        ikf.setVisible(true);
+    }//GEN-LAST:event_btnIzmeniPasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,7 +200,11 @@ public class KlijentskaForma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnIzmeniPassword;
+    private javax.swing.JButton btnIzmeniUsername;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblVreme;
     // End of variables declaration//GEN-END:variables
 
     public void prikaziLogoutPoruku(boolean serverLogout) {
@@ -145,8 +220,33 @@ public class KlijentskaForma extends javax.swing.JFrame {
     }
 
     public void istekloVreme() {
-        Komunikacija.getInstance().setKraj(true);
+        try {
+            Komunikacija.getInstance().setKraj(true);
+        } catch (IOException ex) {
+            Logger.getLogger(KlijentskaForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
         JOptionPane.showMessageDialog(this, "Nestalo vam je vremena, uplatite jos kod prodavca kako biste koristili nalog.", "Logout izvrsen", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
     }
+
+    public IzmenaKlijentaForma getIkf() {
+        return ikf;
+    }
+
+    public void setIkf(IzmenaKlijentaForma ikf) {
+        this.ikf = ikf;
+    }
+
+    public Musterija getM() {
+        return m;
+    }
+
+    public void setM(Musterija m) {
+        this.m = m;
+    }
+
+    void osveziTitle() {
+        setTitle("Dobrodosli " + m.getUsername());
+    }
+
 }

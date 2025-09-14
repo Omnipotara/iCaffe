@@ -4,7 +4,10 @@
  */
 package view;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.KategorijaMusterije;
@@ -18,7 +21,9 @@ import transfer.ServerskiOdgovor;
  * @author Omnix
  */
 public class RegistracijaForma extends javax.swing.JFrame {
+
     KlijentskaForma kf;
+
     /**
      * Creates new form RegistracijaForma
      */
@@ -47,6 +52,8 @@ public class RegistracijaForma extends javax.swing.JFrame {
         btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
+        setResizable(false);
 
         jLabel1.setText("Email");
 
@@ -76,31 +83,26 @@ public class RegistracijaForma extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(84, 84, 84)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                                .addComponent(txtPassword))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                .addComponent(btnRegistracija, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(60, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txtUsername)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegistracija, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,54 +140,67 @@ public class RegistracijaForma extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegistracijaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistracijaActionPerformed
-        String email = txtEmail.getText().trim();
-        if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0–9.-]+\\.[a-zA-Z]{2,}$")){
-            JOptionPane.showMessageDialog(this, "Niste uneli validan mail.");
-            return;
-        }
-        
-        String username = txtUsername.getText().trim();
-        
-        String password = txtPassword.getText();
-        
-        if(!txtPassword2.getText().equals(password)){
-            JOptionPane.showMessageDialog(this, "Sifre koje ste uneli se ne poklapaju.");
-            return;
-        }
-        
-        Musterija m = new Musterija();
-        m.setEmail(email);
-        m.setPassword(password);
-        m.setUsername(username);
-        
-        m.setPreostaloVreme(Duration.ZERO);
-        
-        KategorijaMusterije km = new KategorijaMusterije();
-        km.setId(1);
-        m.setKategorijaMusterije(km);
-        
-        KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.REGISTER);
-        Komunikacija.getInstance().posaljiZahtev(kz);
-        ServerskiOdgovor so = Komunikacija.getInstance().primiOdgovor();
-        
-        if (so == null || so.getParam() == null){
-            JOptionPane.showMessageDialog(this, "Doslo je do greske pri komunikaciji sa serverom.");
-            return;
-        }
-        
-        int odgovor = (int) so.getParam();
-        
-        if (odgovor == -1){
-            JOptionPane.showMessageDialog(this, "Email je vec zauzet.");
-            return;
-        } else if (odgovor == -2){
-            JOptionPane.showMessageDialog(this, "Username je zauzet.");
-            return;
-        } else {
-            JOptionPane.showMessageDialog(this, "Uspesno ste se registrovali, bravo!.");
-            LoginForma lf = new LoginForma();
-            lf.setVisible(true);
-            this.dispose();
+        try {
+            String email = txtEmail.getText().trim();
+            if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0–9.-]+\\.[a-zA-Z]{2,}$")) {
+                JOptionPane.showMessageDialog(this, "Niste uneli validan mail.");
+                return;
+            }
+
+            String username = txtUsername.getText().trim();
+            if (username == null || username.length() < 3) {
+                JOptionPane.showMessageDialog(this, "Username koji ste uneli nije validnog formata.");
+                return;
+            }
+
+            String password = txtPassword.getText();
+            
+            if (password == null || password.length() <= 5) {
+                JOptionPane.showMessageDialog(this, "Password koji ste uneli nije validnog formata. [mora biti duzi od 5 karaktera]");
+                return;
+            }
+
+            if (!txtPassword2.getText().equals(password)) {
+                JOptionPane.showMessageDialog(this, "Sifre koje ste uneli se ne poklapaju.");
+                return;
+            }
+
+            Musterija m = new Musterija();
+            m.setEmail(email);
+            m.setPassword(password);
+            m.setUsername(username);
+
+            m.setPreostaloVreme(Duration.ZERO);
+
+            KategorijaMusterije km = new KategorijaMusterije();
+            km.setId(1);
+            m.setKategorijaMusterije(km);
+
+            KlijentskiZahtev kz = new KlijentskiZahtev(m, Operacija.REGISTER);
+            Komunikacija.getInstance().posaljiZahtev(kz);
+            ServerskiOdgovor so = Komunikacija.getInstance().primiOdgovor();
+
+            if (so == null || so.getParam() == null) {
+                JOptionPane.showMessageDialog(this, "Doslo je do greske pri komunikaciji sa serverom.");
+                return;
+            }
+
+            int odgovor = (int) so.getParam();
+
+            if (odgovor == -1) {
+                JOptionPane.showMessageDialog(this, "Email je vec zauzet.");
+                return;
+            } else if (odgovor == -2) {
+                JOptionPane.showMessageDialog(this, "Username je zauzet.");
+                return;
+            } else {
+                JOptionPane.showMessageDialog(this, "Uspesno ste se registrovali, bravo!.");
+                LoginForma lf = new LoginForma();
+                lf.setVisible(true);
+                this.dispose();
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Nije uspostavljena konekcija sa serverom.");
         }
     }//GEN-LAST:event_btnRegistracijaActionPerformed
 

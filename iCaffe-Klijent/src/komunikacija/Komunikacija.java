@@ -13,6 +13,7 @@ import java.net.SocketException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import kontroler.Kontroler;
 import operacije.Operacija;
 import transfer.KlijentskiZahtev;
@@ -28,20 +29,15 @@ public class Komunikacija extends Thread {
     private Socket s;
     private boolean kraj = false;
 
-    public static Komunikacija getInstance() {
+    public static Komunikacija getInstance() throws IOException {
         if (instance == null) {
             instance = new Komunikacija();
         }
         return instance;
     }
 
-    private Komunikacija() {
-        try {
-            s = new Socket("localhost", 9000);
-        } catch (IOException ex) {
-            Logger.getLogger(Komunikacija.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    private Komunikacija() throws IOException {
+        s = new Socket("localhost", 9000);
     }
 
     @Override
@@ -63,6 +59,21 @@ public class Komunikacija extends Thread {
                         kraj = true;
                         Kontroler.getInstance().getKf().prikaziLogoutPoruku(true);
                         break;
+
+                    case Operacija.AZURIRANJE_PASSWORD:
+                        if (so.getParam() != null){
+                            boolean izmenjeno = (boolean) so.getParam();
+                            Kontroler.getInstance().getKf().getIkf().obradiPromenu(izmenjeno);
+                        }
+                        break;
+
+                    case Operacija.AZURIRANJE_USERNAME:
+                        if (so.getParam() != null){
+                            boolean izmenjeno = (boolean) so.getParam();
+                            Kontroler.getInstance().getKf().getIkf().obradiPromenu(izmenjeno);
+                        }
+                        break;
+                        
                     default:
                         throw new AssertionError();
                 }
