@@ -12,6 +12,7 @@ import view.angazovanje.PostaviAngazovanjeForma;
 import java.util.List;
 import javax.swing.JOptionPane;
 import kontroler.Kontroler;
+import model.Angazovanje;
 import model.Musterija;
 import model.Prodavac;
 import modeli.ModelTabeleMusterija;
@@ -28,6 +29,7 @@ public class ServerForma extends javax.swing.JFrame {
     private PokreniServer ps;
     private PostaviAngazovanjeForma paf;
     private Prodavac p;
+    private Angazovanje a;
 
     /**
      * Creates new form ServerForma
@@ -40,12 +42,12 @@ public class ServerForma extends javax.swing.JFrame {
         initComponents();
         Kontroler.getInstance().setSf(this);
         this.p = p;
-        setTitle("Zdravo " + p.getIme() + "!");
         ps = new PokreniServer();
         ps.start();
         paf = new PostaviAngazovanjeForma(this, true, p, null, null);
         paf.setVisible(true);
 
+        osveziFormu();
         osveziTabelu();
     }
 
@@ -67,6 +69,7 @@ public class ServerForma extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemAngazovanja = new javax.swing.JMenuItem();
+        menuItemPromeniZaposlenog = new javax.swing.JMenuItem();
         menuItemKategorijeMusterija = new javax.swing.JMenuItem();
         menuItemUsluge = new javax.swing.JMenuItem();
 
@@ -123,6 +126,14 @@ public class ServerForma extends javax.swing.JFrame {
             }
         });
         menuFile.add(menuItemAngazovanja);
+
+        menuItemPromeniZaposlenog.setText("Promeni zaposlenog");
+        menuItemPromeniZaposlenog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemPromeniZaposlenogActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemPromeniZaposlenog);
 
         menuItemKategorijeMusterija.setText("Kategorije musterija");
         menuItemKategorijeMusterija.addActionListener(new java.awt.event.ActionListener() {
@@ -261,14 +272,19 @@ public class ServerForma extends javax.swing.JFrame {
     private void btnOdloguj1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOdloguj1ActionPerformed
         int selektovaniRed = tblMusterije.getSelectedRow();
         Musterija m = odaberiMusteriju(selektovaniRed);
-        
-        if(m == null){
+
+        if (m == null) {
             return;
         }
-        
+
         MusterijaDetaljnijeForma mdf = new MusterijaDetaljnijeForma(this, false, m);
         mdf.setVisible(true);
     }//GEN-LAST:event_btnOdloguj1ActionPerformed
+
+    private void menuItemPromeniZaposlenogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemPromeniZaposlenogActionPerformed
+        ZameniZaposlenogForma zzf = new ZameniZaposlenogForma(this, true);
+        zzf.setVisible(true);
+    }//GEN-LAST:event_menuItemPromeniZaposlenogActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,6 +331,7 @@ public class ServerForma extends javax.swing.JFrame {
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemAngazovanja;
     private javax.swing.JMenuItem menuItemKategorijeMusterija;
+    private javax.swing.JMenuItem menuItemPromeniZaposlenog;
     private javax.swing.JMenuItem menuItemUsluge;
     private javax.swing.JTable tblMusterije;
     // End of variables declaration//GEN-END:variables
@@ -337,4 +354,25 @@ public class ServerForma extends javax.swing.JFrame {
         Musterija kupac = listaMusterija.get(selektovaniRed);
         return kupac;
     }
+
+    public Prodavac getP() {
+        return p;
+    }
+
+    public void setP(Prodavac p) {
+        this.p = p;
+    }
+
+    public Angazovanje getA() {
+        return a;
+    }
+
+    public void setA(Angazovanje a) {
+        this.a = a;
+    }
+
+    void osveziFormu() {
+        setTitle("Dobrodosao " + p.getIme() + "! Danas radis: " + a.getTermin().getSmena());
+    }
+
 }

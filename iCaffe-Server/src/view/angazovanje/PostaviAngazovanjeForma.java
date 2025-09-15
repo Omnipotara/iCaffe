@@ -180,9 +180,9 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
                     .addComponent(txtVremeDo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPostavi, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPostavi, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
@@ -214,10 +214,12 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
         td.setVremeDo(vremeDo);
 
         Angazovanje a = new Angazovanje(p, td, LocalDate.now());
+        Kontroler.getInstance().getSf().setA(a);
         boolean angazovanjePostavljeno = Kontroler.getInstance().dodaj(a);
 
         if (angazovanjePostavljeno) {
             JOptionPane.showMessageDialog(this, "Uspesno ste zapoceli smenu.", "Smena zapoceta", JOptionPane.INFORMATION_MESSAGE);
+            Kontroler.getInstance().getSf().setA(a);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Postoji problem sa zapocinjanjem smene.", "Smena NIJE zapoceta", JOptionPane.ERROR_MESSAGE);
