@@ -52,6 +52,7 @@ public class MusterijaTimerNit extends Thread {
 
                 if (musterija.getPreostaloVreme().isZero() || musterija.getPreostaloVreme().isNegative()) {
                     Kontroler.getInstance().istekloVreme(musterija);
+                    Kontroler.getInstance().getSf().osveziTabelu();
                     kraj = true;
                 }
             } catch (InterruptedException e) {

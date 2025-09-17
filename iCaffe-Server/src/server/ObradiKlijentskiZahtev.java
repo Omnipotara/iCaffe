@@ -50,7 +50,7 @@ public class ObradiKlijentskiZahtev extends Thread {
                 switch (kz.getOperacija()) {
                     case Operacija.LOGIN:
                         Musterija m = (Musterija) kz.getParam();
-                        Musterija ulogovan = Kontroler.getInstance().ulogujMusteriju(m);
+                        Musterija ulogovan = Kontroler.getInstance().loginMusterija(m);
 
                         if (ulogovan.getId() > 0) {
                             this.ulogovan = ulogovan;
@@ -60,6 +60,7 @@ public class ObradiKlijentskiZahtev extends Thread {
                         }
 
                         so.setParam(ulogovan);
+                        System.out.println(ulogovan.getPreostaloVreme().toSeconds());
                         posaljiServerskiOdgovor(so);
 
                         Kontroler.getInstance().getSf().osveziTabelu();
@@ -67,7 +68,7 @@ public class ObradiKlijentskiZahtev extends Thread {
 
                     case Operacija.LOGOUT:
                         m = (Musterija) kz.getParam();
-                        boolean odlogovan = Kontroler.getInstance().odlogujMusteriju(m);
+                        boolean odlogovan = Kontroler.getInstance().logoutMusterija(m);
                         Kontroler.getInstance().getListaNiti().remove(this);
                         this.ulogovan = null;
                         mtn.setKraj(true);
@@ -237,7 +238,7 @@ public class ObradiKlijentskiZahtev extends Thread {
     }
 
     public void serverskiLogoutKupca(Musterija m) {
-        boolean odlogovan = Kontroler.getInstance().odlogujMusteriju(m);
+        boolean odlogovan = Kontroler.getInstance().logoutMusterija(m);
         Kontroler.getInstance().getListaNiti().remove(this);
         this.ulogovan = null;
         mtn.setKraj(true);

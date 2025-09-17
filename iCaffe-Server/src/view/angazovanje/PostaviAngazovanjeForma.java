@@ -179,10 +179,11 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
                     .addComponent(jLabel4)
                     .addComponent(txtVremeDo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPostavi, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPostavi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnOdustani, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
@@ -222,7 +223,7 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
             Kontroler.getInstance().getSf().setA(a);
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Postoji problem sa zapocinjanjem smene.", "Smena NIJE zapoceta", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ova smena je vec zapoceta ili postoji problem sa serverom.", "Smena vec postoji", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
 

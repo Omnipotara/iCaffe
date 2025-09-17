@@ -18,7 +18,10 @@ import model.Prodavac;
 import model.Racun;
 import operacije.DodajSO;
 import operacije.IzmeniSO;
+import operacije.LoginMusterijaSO;
+import operacije.LogoutMusterijaSO;
 import operacije.ObrisiSO;
+import operacije.VratiJednogSO;
 import operacije.VratiSveSO;
 import server.ObradiKlijentskiZahtev;
 import view.ServerForma;
@@ -62,7 +65,7 @@ public class Kontroler {
         this.sf = sf;
     }
 
-    /* -- DEFAULT CRUD OPERACIJE DOMENSKOG OBJEKTA -- */
+    /* -- GENERIC OPERACIJE DOMENSKOG OBJEKTA -- */
     public <T extends DomainObject<T>> boolean dodaj(T object) {
         return new DodajSO<T>().execute(object);
     }
@@ -85,6 +88,15 @@ public class Kontroler {
         return false;
     }
 
+    public <T extends DomainObject<T>> T vratiJednog(T object) {
+        try {
+            return new VratiJednogSO<T>().execute(object);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public <T extends DomainObject<T>> List<T> vratiSve(T object) {
         try {
             return new VratiSveSO<T>().execute(object);
@@ -94,18 +106,25 @@ public class Kontroler {
         return new ArrayList<T>();
     }
 
+    public Musterija loginMusterija(Musterija m) {
+        try {
+            return (Musterija) new LoginMusterijaSO().execute(m);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public boolean logoutMusterija(Musterija m) {
+        try {
+            return (boolean) new LogoutMusterijaSO().execute(m);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     /* -- SPECIFICNE METODE -- */
-    public Prodavac ulogujProdavca(Prodavac p) {
-        return dbb.ulogujProdavca(p);
-    }
-
-    public Musterija ulogujMusteriju(Musterija m) {
-        return dbb.ulogujMusteriju(m);
-    }
-
-    public boolean odlogujMusteriju(Musterija m) {
-        return dbb.odlogujMusteriju(m);
-    }
 
     public void smanjiVreme(int id) {
         dbb.smanjiVreme(id);
@@ -113,7 +132,7 @@ public class Kontroler {
 
     public void istekloVreme(Musterija musterija) {
         ObradiKlijentskiZahtev zaPrekidanje;
-        Kontroler.getInstance().odlogujMusteriju(musterija);
+        Kontroler.getInstance().logoutMusterija(musterija);
 
         for (ObradiKlijentskiZahtev okz : listaNiti) {
             if (okz.getUlogovani() != null && okz.getUlogovani().equals(musterija)) {
@@ -122,10 +141,6 @@ public class Kontroler {
                 return;
             }
         }
-    }
-
-    public List<Musterija> vratiListuOnlineMusterija() {
-        return dbb.vratiListuOnlineMusterija();
     }
 
     public int insertRacun(Racun r) {

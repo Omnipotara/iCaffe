@@ -15,6 +15,7 @@ import kontroler.Kontroler;
 import model.Angazovanje;
 import model.Musterija;
 import model.Prodavac;
+import model.UlogovaniMusterija;
 import modeli.ModelTabeleMusterija;
 import server.ObradiKlijentskiZahtev;
 import server.PokreniServer;
@@ -65,7 +66,7 @@ public class ServerForma extends javax.swing.JFrame {
         btnProdaj = new javax.swing.JButton();
         btnOdloguj = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
-        btnOdloguj1 = new javax.swing.JButton();
+        btnDetaljnije = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemAngazovanja = new javax.swing.JMenuItem();
@@ -110,10 +111,10 @@ public class ServerForma extends javax.swing.JFrame {
             }
         });
 
-        btnOdloguj1.setText("DETALJNIJE");
-        btnOdloguj1.addActionListener(new java.awt.event.ActionListener() {
+        btnDetaljnije.setText("DETALJNIJE");
+        btnDetaljnije.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOdloguj1ActionPerformed(evt);
+                btnDetaljnijeActionPerformed(evt);
             }
         });
 
@@ -168,7 +169,7 @@ public class ServerForma extends javax.swing.JFrame {
                         .addComponent(btnProdaj, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                         .addComponent(btnOdloguj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnOdloguj1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDetaljnije, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
@@ -177,7 +178,7 @@ public class ServerForma extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnOdloguj1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDetaljnije, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -226,7 +227,7 @@ public class ServerForma extends javax.swing.JFrame {
             return;
         }
 
-        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiListuOnlineMusterija();
+        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
         if (listaUlogovanih.contains(kupac)) {
             for (ObradiKlijentskiZahtev okz : Kontroler.getInstance().getListaNiti()) {
                 if (okz.getUlogovani() != null && okz.getUlogovani().equals(kupac)) {
@@ -250,7 +251,7 @@ public class ServerForma extends javax.swing.JFrame {
             return;
         }
 
-        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiListuOnlineMusterija();
+        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
         if (!listaUlogovanih.contains(kupac)) {
             boolean obrisan = Kontroler.getInstance().obrisi(kupac);
 
@@ -269,7 +270,7 @@ public class ServerForma extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnObrisiActionPerformed
 
-    private void btnOdloguj1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOdloguj1ActionPerformed
+    private void btnDetaljnijeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetaljnijeActionPerformed
         int selektovaniRed = tblMusterije.getSelectedRow();
         Musterija m = odaberiMusteriju(selektovaniRed);
 
@@ -279,7 +280,7 @@ public class ServerForma extends javax.swing.JFrame {
 
         MusterijaDetaljnijeForma mdf = new MusterijaDetaljnijeForma(this, false, m);
         mdf.setVisible(true);
-    }//GEN-LAST:event_btnOdloguj1ActionPerformed
+    }//GEN-LAST:event_btnDetaljnijeActionPerformed
 
     private void menuItemPromeniZaposlenogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemPromeniZaposlenogActionPerformed
         ZameniZaposlenogForma zzf = new ZameniZaposlenogForma(this, true);
@@ -322,9 +323,9 @@ public class ServerForma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDetaljnije;
     private javax.swing.JButton btnObrisi;
     private javax.swing.JButton btnOdloguj;
-    private javax.swing.JButton btnOdloguj1;
     private javax.swing.JButton btnProdaj;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -338,7 +339,7 @@ public class ServerForma extends javax.swing.JFrame {
 
     public void osveziTabelu() {
         List<Musterija> listaMusterija = Kontroler.getInstance().vratiSve(new Musterija());
-        List<Musterija> listaOnlineMusterija = Kontroler.getInstance().vratiListuOnlineMusterija();
+        List<Musterija> listaOnlineMusterija = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
         ModelTabeleMusterija mtm = new ModelTabeleMusterija(listaMusterija, listaOnlineMusterija);
         tblMusterije.setModel(mtm);
     }

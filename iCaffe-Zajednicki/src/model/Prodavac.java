@@ -156,7 +156,12 @@ public class Prodavac implements Serializable, DomainObject<Prodavac> {
 
     @Override
     public String getSelectQuery() {
-        return "SELECT id, ime, prezime, email, username, password FROM prodavac WHERE id = ?";
+        if (id == 0) {
+            return "SELECT id, ime, prezime, email, username, password FROM prodavac WHERE username = ? AND password = ?";
+        } else {
+            return "SELECT id, ime, prezime, email, username, password FROM prodavac WHERE id = ?";
+        }
+
     }
 
     @Override
@@ -176,7 +181,12 @@ public class Prodavac implements Serializable, DomainObject<Prodavac> {
 
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
-        ps.setInt(1, id);
+        if (id == 0) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+        } else {
+            ps.setInt(1, id);
+        }
     }
 
     @Override

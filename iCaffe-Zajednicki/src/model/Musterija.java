@@ -150,11 +150,20 @@ public class Musterija implements Serializable, DomainObject<Musterija> {
 
     @Override
     public String getSelectQuery() {
-        return "SELECT m.id, m.email, m.username, m.password, m.kategorijaId, m.preostaloVreme, "
-                + "k.naziv AS kategorijaNaziv, k.popust AS kategorijaPopust "
-                + "FROM musterija m "
-                + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id "
-                + "WHERE m.id = ?";
+        if (id == 0) {
+            return "SELECT m.id, m.email, m.username, m.password, m.kategorijaId, m.preostaloVreme, "
+                    + "k.naziv AS kategorijaNaziv, k.popust AS kategorijaPopust "
+                    + "FROM musterija m "
+                    + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id "
+                    + "WHERE m.email = ? AND m.password = ?";
+        } else {
+            return "SELECT m.id, m.email, m.username, m.password, m.kategorijaId, m.preostaloVreme, "
+                    + "k.naziv AS kategorijaNaziv, k.popust AS kategorijaPopust "
+                    + "FROM musterija m "
+                    + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id "
+                    + "WHERE m.id = ?";
+        }
+
     }
 
     @Override
@@ -184,7 +193,13 @@ public class Musterija implements Serializable, DomainObject<Musterija> {
 
     @Override
     public void fillSelectStatement(PreparedStatement ps) throws SQLException {
-        ps.setInt(1, id);
+        if (id == 0) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+        } else {
+            ps.setInt(1, id);
+        }
+
     }
 
     @Override
