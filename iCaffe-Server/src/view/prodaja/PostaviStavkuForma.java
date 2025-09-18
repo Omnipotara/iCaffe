@@ -46,7 +46,7 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
             txtKolicina.setText(String.valueOf(sr.getKolicina()));
             txtCena.setText(String.valueOf(sr.getCenaStavke()));
         }
-        
+
         //Listener za txt field
         txtKolicina.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -203,14 +203,15 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
         Racun r = rf.getR();
 
         StavkaRacuna sr = new StavkaRacuna();
-        sr.setRb(Kontroler.getInstance().vratiMaxRBZaRacun(r.getId()));
+        sr.setRb(rf.getListaStavki().size() + 1); // OVO UMESTO VRATIMAXRB
         sr.setKolicina(kolicina);
         sr.setJedinicnaCena(u.getCena());
         sr.setCenaStavke(cena);
         sr.setRacun(r);
         sr.setUsluga(u);
 
-        Kontroler.getInstance().dodaj(sr);
+        // dodaje se u lokalnu listu (A NE U BAZU)
+        rf.getListaStavki().add(sr);
         rf.osveziTabelu();
 
     }//GEN-LAST:event_btnDodajActionPerformed
@@ -232,11 +233,12 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
 
         double cena = Double.parseDouble(txtCena.getText());
 
+        //Menja se lokalni objekat a nista u bazi
         sr.setKolicina(kolicina);
         sr.setCenaStavke(cena);
 
-        Kontroler.getInstance().izmeni(sr);
         rf.osveziTabelu();
+        this.dispose();
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
     private void cmbUslugeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUslugeActionPerformed

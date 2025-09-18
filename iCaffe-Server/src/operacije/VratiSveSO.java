@@ -5,8 +5,11 @@
 package operacije;
 
 import domen.DomainObject;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,9 +18,14 @@ import java.util.List;
 public class VratiSveSO<T extends DomainObject<T>> extends AbstractSystemOperation<T> {
 
     @Override
-    public List<T> execute(T object) throws Exception {
-        List<T> result = broker.selectAll(object);
-        return result != null ? result : new ArrayList<>();
+    public List<T> execute(T object) {
+        try {
+            List<T> result = broker.selectAll(object);
+            return result != null ? result : new ArrayList<>();
+        } catch (SQLException ex) {
+            Logger.getLogger(VratiSveSO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
 
     }
 }

@@ -126,10 +126,6 @@ public class Kontroler {
 
     /* -- SPECIFICNE METODE -- */
 
-    public void smanjiVreme(int id) {
-        dbb.smanjiVreme(id);
-    }
-
     public void istekloVreme(Musterija musterija) {
         ObradiKlijentskiZahtev zaPrekidanje;
         Kontroler.getInstance().logoutMusterija(musterija);
@@ -143,16 +139,4 @@ public class Kontroler {
         }
     }
 
-    public int insertRacun(Racun r) {
-        try {
-            return dbb.insertRacun(r);
-        } catch (SQLException ex) {
-            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return -1;
-    }
-
-    public int vratiMaxRBZaRacun(int racunId) {
-        return dbb.vratiMaxRBZaRacun(racunId);
-    }
 }

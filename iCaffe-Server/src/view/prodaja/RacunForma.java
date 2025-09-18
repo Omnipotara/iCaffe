@@ -6,6 +6,7 @@ package view.prodaja;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import kontroler.Kontroler;
@@ -14,6 +15,7 @@ import model.Prodavac;
 import model.Racun;
 import model.StavkaRacuna;
 import modeli.ModelTabeleStavki;
+import operacije.UbaciRacunSO;
 
 /**
  *
@@ -24,6 +26,7 @@ public class RacunForma extends javax.swing.JDialog {
     private Prodavac p;
     private Musterija m;
     private Racun r;
+    private List<StavkaRacuna> listaStavki;
 
     /**
      * Creates new form RacunForma
@@ -39,13 +42,13 @@ public class RacunForma extends javax.swing.JDialog {
         setTitle("Racun za korisnika: " + m.getUsername());
         this.p = p;
         this.m = m;
+        listaStavki = new ArrayList<>();
 
         r = new Racun();
         r.setDatum(LocalDateTime.now());
         r.setMusterija(m);
         r.setProdavac(p);
         r.setUkupnaCena(0);
-        r.setId(Kontroler.getInstance().insertRacun(r));
 
         osveziTabelu();
     }
@@ -201,22 +204,36 @@ public class RacunForma extends javax.swing.JDialog {
 
         double ukupnaCena = Double.parseDouble(txtUkupanIznos.getText());
         r.setUkupnaCena(ukupnaCena);
-        Kontroler.getInstance().izmeni(r);
-        JOptionPane.showMessageDialog(this, "Uspesno ste napravili racun!");
 
-        ModelTabeleStavki mts = (ModelTabeleStavki) tblStavke.getModel();
-        List<StavkaRacuna> listaStavki = mts.getListaStavki();
+        // Ubacivanje racuna kao transakcije
+        UbaciRacunSO so = new UbaciRacunSO(listaStavki);
+        int racunId = (int) so.execute(r);
 
+        if (racunId == -1) {
+            JOptionPane.showMessageDialog(this, "Doslo je do greske prilikom cuvanja racuna!");
+            return;
+        }
+
+        // LOGIKA ZA POVECAVANJE VREMENA
+        if (m.getPreostaloVreme() == null) {
+            m.setPreostaloVreme(Duration.ZERO);
+        }
+
+        long ukupnoSekundiZaDodati = 0;
         for (StavkaRacuna s : listaStavki) {
             if (s.getUsluga().getId() == 1000) {
-                int kolicina = s.getKolicina();
-                Duration preostaloVreme = Duration.ofSeconds(m.getPreostaloVreme().toSeconds() + kolicina * 3600);
-                m.setPreostaloVreme(preostaloVreme);
-                Kontroler.getInstance().izmeni(m);
-                Kontroler.getInstance().getSf().osveziTabelu();
+                ukupnoSekundiZaDodati += s.getKolicina() * 3600;
             }
         }
 
+        if (ukupnoSekundiZaDodati > 0) {
+            Duration novoVreme = Duration.ofSeconds(m.getPreostaloVreme().toSeconds() + ukupnoSekundiZaDodati);
+            m.setPreostaloVreme(novoVreme);
+            Kontroler.getInstance().izmeni(m);
+        }
+
+        Kontroler.getInstance().getSf().osveziTabelu();
+        JOptionPane.showMessageDialog(this, "Uspesno ste napravili racun!");
         this.dispose();
     }//GEN-LAST:event_btnFinalizujActionPerformed
 
@@ -229,14 +246,11 @@ public class RacunForma extends javax.swing.JDialog {
         ModelTabeleStavki mts = (ModelTabeleStavki) tblStavke.getModel();
         List<StavkaRacuna> listaStavki = mts.getListaStavki();
         StavkaRacuna stavkaZaBrisanje = listaStavki.get(selektovaniRed);
-        boolean obrisano = Kontroler.getInstance().obrisi(stavkaZaBrisanje);
+        this.listaStavki.remove(stavkaZaBrisanje);
 
-        if (obrisano) {
-            JOptionPane.showMessageDialog(this, "Stavka uspesno obrisana.");
-            osveziTabelu();
-        } else {
-            JOptionPane.showMessageDialog(this, "Stavka nije obrisana obrisana.");
-        }
+        JOptionPane.showMessageDialog(this, "Stavka uspesno obrisana.");
+        osveziTabelu();
+
 
     }//GEN-LAST:event_btnObrisiActionPerformed
 
@@ -318,21 +332,14 @@ public class RacunForma extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void osveziTabelu() {
-        if (r == null) {
-            return;
-        }
-
-        StavkaRacuna placeholderStavka = new StavkaRacuna();
-        placeholderStavka.setRacun(r);
-
-        List<StavkaRacuna> listaStavki = Kontroler.getInstance().vratiSve(placeholderStavka);
         ModelTabeleStavki mts = new ModelTabeleStavki(listaStavki);
         tblStavke.setModel(mts);
 
         double cena = 0;
         for (StavkaRacuna s : listaStavki) {
-            cena = cena + s.getCenaStavke();
+            cena += s.getCenaStavke();
         }
+
         double popust = (double) m.getKategorijaMusterije().getPopust() / 100;
         r.setUkupnaCena(cena * (1 - popust));
         txtUkupanIznos.setText(String.valueOf(r.getUkupnaCena()));
@@ -345,4 +352,13 @@ public class RacunForma extends javax.swing.JDialog {
     public void setR(Racun r) {
         this.r = r;
     }
+
+    public List<StavkaRacuna> getListaStavki() {
+        return listaStavki;
+    }
+
+    public void setListaStavki(List<StavkaRacuna> listaStavki) {
+        this.listaStavki = listaStavki;
+    }
+
 }

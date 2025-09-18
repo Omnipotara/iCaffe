@@ -4,7 +4,9 @@
  */
 package operacije;
 
+import baza.Konekcija;
 import domen.DomainObject;
+import java.sql.SQLException;
 
 /**
  *
@@ -14,6 +16,13 @@ public class IzmeniSO<T extends DomainObject<T>> extends AbstractSystemOperation
 
     @Override
     public Boolean execute(T object) throws Exception {
-        return broker.update(object);
+        try {
+            boolean uspeh = (boolean) broker.update(object);
+            Konekcija.getInstance().getKonekcija().commit();
+            return uspeh;
+        } catch (SQLException e) {
+            Konekcija.getInstance().getKonekcija().rollback();
+            throw e;
+        }
     }
 }

@@ -4,6 +4,7 @@
  */
 package operacije;
 
+import baza.Konekcija;
 import domen.DomainObject;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLException;
@@ -17,19 +18,35 @@ public class DodajSO<T extends DomainObject<T>> extends AbstractSystemOperation<
     @Override
     public Boolean execute(T object) {
         try {
-            return broker.insert(object);
+            boolean uspeh = (boolean) broker.insert(object);
+            Konekcija.getInstance().getKonekcija().commit();
+            return uspeh;
+            
         } catch (SQLIntegrityConstraintViolationException e) {
-            // greska: duplikat primarnog kljuca
             System.out.println("Greska: Duplikat primarnog kljuca!");
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException ex) {
+            }
             return false;
+            
         } catch (SQLException e) {
-            // ostale SQL greske
             System.out.println("SQL greska: " + e.getMessage());
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException ex) {
+            }
             return false;
+            
         } catch (Exception e) {
-            // sve ostalo
             e.printStackTrace();
+            try {
+                Konekcija.getInstance().getKonekcija().rollback();
+            } catch (SQLException ex) {
+            }
             return false;
+            
         }
     }
 }
+

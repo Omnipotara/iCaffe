@@ -5,6 +5,9 @@
 package operacije;
 
 import domen.DomainObject;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,9 +16,14 @@ import domen.DomainObject;
 public class VratiJednogSO<T extends DomainObject<T>> extends AbstractSystemOperation<T> {
 
     @Override
-    public T execute(T object) throws Exception {
-        T result = broker.select(object);
-        return result;
+    public T execute(T object) {
+        try {
+            T result = broker.select(object);
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(VratiJednogSO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
 
     }
 }

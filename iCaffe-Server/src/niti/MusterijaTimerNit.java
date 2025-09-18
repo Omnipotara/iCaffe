@@ -38,7 +38,7 @@ public class MusterijaTimerNit extends Thread {
                     musterija.setPreostaloVreme(preostalo.minusSeconds(1));
 
                     // azurira vrednost u bazi
-                    Kontroler.getInstance().smanjiVreme(musterija.getId());
+                    Kontroler.getInstance().izmeni(musterija);
 
                     // azurira tabelu
                     if (preostalo.getSeconds() == 3599 || preostalo.getSeconds() == 1799 || preostalo.getSeconds() == 599) {

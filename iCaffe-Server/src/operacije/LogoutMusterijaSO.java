@@ -4,8 +4,9 @@
  */
 package operacije;
 
+import baza.Konekcija;
 import model.Musterija;
-import model.UlogovaniMusterija;
+import model.pomocne.UlogovaniMusterija;
 
 /**
  *
@@ -15,13 +16,17 @@ public class LogoutMusterijaSO extends AbstractSystemOperation<Musterija> {
 
     @Override
     public Object execute(Musterija m) throws Exception {
-        // Kreiranej objekat ulogovanog musterije
-        UlogovaniMusterija ulogovan = new UlogovaniMusterija(m.getId(), m.getUsername());
+        try {
 
-        // Brisanje iz baze
-        boolean obrisan = broker.delete(ulogovan);
+            UlogovaniMusterija ulogovan = new UlogovaniMusterija(m.getId(), m.getUsername());
+            boolean obrisan = (boolean) broker.delete(ulogovan);
 
-        return obrisan;
+            Konekcija.getInstance().getKonekcija().commit();
+            return obrisan;
+        } catch (Exception e) {
+            Konekcija.getInstance().getKonekcija().rollback();
+            throw e;
+        }
     }
 
 }

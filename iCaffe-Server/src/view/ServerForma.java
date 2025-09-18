@@ -15,7 +15,7 @@ import kontroler.Kontroler;
 import model.Angazovanje;
 import model.Musterija;
 import model.Prodavac;
-import model.UlogovaniMusterija;
+import model.pomocne.UlogovaniMusterija;
 import modeli.ModelTabeleMusterija;
 import server.ObradiKlijentskiZahtev;
 import server.PokreniServer;
