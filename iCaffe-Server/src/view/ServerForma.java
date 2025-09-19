@@ -73,6 +73,7 @@ public class ServerForma extends javax.swing.JFrame {
         menuItemPromeniZaposlenog = new javax.swing.JMenuItem();
         menuItemKategorijeMusterija = new javax.swing.JMenuItem();
         menuItemUsluge = new javax.swing.JMenuItem();
+        menuItemPretraziRacune = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -151,6 +152,14 @@ public class ServerForma extends javax.swing.JFrame {
             }
         });
         menuFile.add(menuItemUsluge);
+
+        menuItemPretraziRacune.setText("Pretrazi racune");
+        menuItemPretraziRacune.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemPretraziRacuneActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemPretraziRacune);
 
         jMenuBar1.add(menuFile);
 
@@ -287,6 +296,11 @@ public class ServerForma extends javax.swing.JFrame {
         zzf.setVisible(true);
     }//GEN-LAST:event_menuItemPromeniZaposlenogActionPerformed
 
+    private void menuItemPretraziRacuneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemPretraziRacuneActionPerformed
+        PretraziRacuneForma prf = new PretraziRacuneForma();
+        prf.setVisible(true);
+    }//GEN-LAST:event_menuItemPretraziRacuneActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -332,6 +346,7 @@ public class ServerForma extends javax.swing.JFrame {
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemAngazovanja;
     private javax.swing.JMenuItem menuItemKategorijeMusterija;
+    private javax.swing.JMenuItem menuItemPretraziRacune;
     private javax.swing.JMenuItem menuItemPromeniZaposlenog;
     private javax.swing.JMenuItem menuItemUsluge;
     private javax.swing.JTable tblMusterije;
