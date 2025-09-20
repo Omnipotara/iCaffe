@@ -106,6 +106,7 @@ public class Kontroler {
         return new ArrayList<T>();
     }
 
+    /* -- SPECIFICNE METODE -- */
     public Musterija loginMusterija(Musterija m) {
         try {
             return (Musterija) new LoginMusterijaSO().execute(m);
@@ -123,8 +124,6 @@ public class Kontroler {
         }
         return false;
     }
-
-    /* -- SPECIFICNE METODE -- */
 
     public void istekloVreme(Musterija musterija) {
         ObradiKlijentskiZahtev zaPrekidanje;

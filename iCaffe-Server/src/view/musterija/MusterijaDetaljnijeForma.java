@@ -232,10 +232,10 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         boolean izmenjeno = Kontroler.getInstance().izmeni(m);
         
         if(izmenjeno){
-            JOptionPane.showMessageDialog(this, "Uspesno izmenjena kategorija musterije.");
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio musteriju.");
             Kontroler.getInstance().getSf().osveziTabelu();
         } else {
-            JOptionPane.showMessageDialog(this, "Greska prilikom komunikacije sa bazom podataka.");
+            JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti musteriju.");
         }
     }//GEN-LAST:event_btnSacuvajActionPerformed
 

@@ -101,10 +101,10 @@ public class LoginForma extends javax.swing.JFrame {
         p = Kontroler.getInstance().vratiJednog(p);
         
         if(p == null){
-            JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Korisnicko ime i sifra nisu ispravni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        JOptionPane.showMessageDialog(this, "Uspesno ste se ulogovali!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Uspesno ste se prijavili!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
         sf = new ServerForma(p);
         sf.setVisible(true);
         this.dispose();

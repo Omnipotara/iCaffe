@@ -219,11 +219,11 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
         boolean angazovanjePostavljeno = Kontroler.getInstance().dodaj(a);
 
         if (angazovanjePostavljeno) {
-            JOptionPane.showMessageDialog(this, "Uspesno ste zapoceli smenu.", "Smena zapoceta", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sistem je uspesno zapoceo termin dezurstva.", "Smena zapoceta", JOptionPane.INFORMATION_MESSAGE);
             Kontroler.getInstance().getSf().setA(a);
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Ova smena je vec zapoceta ili postoji problem sa serverom.", "Smena vec postoji", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ovaj termin dezurstva je vec zapocet, sistem vas preusmerava na glavnu formu.", "Smena vec postoji", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
 

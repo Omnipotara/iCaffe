@@ -210,7 +210,7 @@ public class RacunForma extends javax.swing.JDialog {
         int racunId = (int) so.execute(r);
 
         if (racunId == -1) {
-            JOptionPane.showMessageDialog(this, "Doslo je do greske prilikom cuvanja racuna!");
+            JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti racun.");
             return;
         }
 
@@ -233,7 +233,7 @@ public class RacunForma extends javax.swing.JDialog {
         }
 
         Kontroler.getInstance().getSf().osveziTabelu();
-        JOptionPane.showMessageDialog(this, "Uspesno ste napravili racun!");
+        JOptionPane.showMessageDialog(this, "Sistem je zapamtio racun.");
         this.dispose();
     }//GEN-LAST:event_btnFinalizujActionPerformed
 

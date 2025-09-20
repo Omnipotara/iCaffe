@@ -266,14 +266,14 @@ public class ServerForma extends javax.swing.JFrame {
 
             if (obrisan) {
                 osveziTabelu();
-                JOptionPane.showMessageDialog(this, "Uspesno ste obrisali musteriju.");
+                JOptionPane.showMessageDialog(this, "Sistem je obrisao musteriju.");
                 return;
             } else {
-                JOptionPane.showMessageDialog(this, "Doslo je do greske prilikom brisanjas.");
+                JOptionPane.showMessageDialog(this, "Sistem ne moze da obrise musteriju.");
                 return;
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Musterija je online, prvo ga odlogujte!");
+            JOptionPane.showMessageDialog(this, "Sistem ne moze da obrise musteriju koje je prijavljena. Prvo odjavite musteriju.");
             return;
         }
 

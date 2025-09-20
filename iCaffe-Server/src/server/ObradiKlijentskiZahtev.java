@@ -60,6 +60,8 @@ public class ObradiKlijentskiZahtev extends Thread {
                         }
 
                         so.setParam(ulogovan);
+                        so.setOperacija(Operacija.LOGIN);
+                        
                         System.out.println(ulogovan.getPreostaloVreme().toSeconds());
                         posaljiServerskiOdgovor(so);
 

@@ -52,6 +52,7 @@ public class RegistracijaForma extends javax.swing.JFrame {
         btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Registracija");
         setAlwaysOnTop(true);
         setResizable(false);
 
@@ -194,7 +195,7 @@ public class RegistracijaForma extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Username je zauzet.");
                 return;
             } else {
-                JOptionPane.showMessageDialog(this, "Uspesno ste se registrovali, bravo!.");
+                JOptionPane.showMessageDialog(this, "Sistem je zapamtio musteriju.");
                 LoginForma lf = new LoginForma();
                 lf.setVisible(true);
                 this.dispose();

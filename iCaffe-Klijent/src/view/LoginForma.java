@@ -45,6 +45,7 @@ public class LoginForma extends javax.swing.JFrame {
         btnRegistracija = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
         setAlwaysOnTop(true);
         setResizable(false);
 
@@ -122,21 +123,21 @@ public class LoginForma extends javax.swing.JFrame {
             ServerskiOdgovor so = Komunikacija.getInstance().primiOdgovor();
             
             if(so == null){
-                JOptionPane.showMessageDialog(this, "Problem pri komunikaciji sa serverom..", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ne moze da se otvori glavna forma i meni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
             m = (Musterija) so.getParam();
             
             if(m.getId() == -1){
-                JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Korisnicko ime i sifra nisu ispravni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
                 return;
             } else if (m.getId() == -2){
-                JOptionPane.showMessageDialog(this, "Korisnik je vec ulogovan.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Korisnik je vec prijavljen na ovom nalogu.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
-            JOptionPane.showMessageDialog(this, "Uspesno ste se ulogovali!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Uspesno ste se prijavili!", "Login uspesan", JOptionPane.INFORMATION_MESSAGE);
             kf = new KlijentskaForma(m);
             kf.setVisible(true);
             this.dispose();
