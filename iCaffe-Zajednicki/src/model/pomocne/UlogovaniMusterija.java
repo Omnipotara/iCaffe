@@ -4,6 +4,7 @@
  */
 package model.pomocne;
 
+import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import model.Musterija;
  *
  * @author Omnix
  */
-public class UlogovaniMusterija extends Musterija {
+public class UlogovaniMusterija extends Musterija implements Serializable{
     
     public UlogovaniMusterija(){
         

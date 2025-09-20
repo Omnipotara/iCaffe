@@ -6,6 +6,7 @@ package operacije;
 
 import baza.Konekcija;
 import domen.DomainObject;
+import java.time.Duration;
 import model.Musterija;
 import model.pomocne.UlogovaniMusterija;
 
@@ -23,6 +24,7 @@ public class LoginMusterijaSO extends AbstractSystemOperation<Musterija> {
             if (izBaze == null) {
                 izBaze = new Musterija();
                 izBaze.setId(-1);
+                izBaze.setPreostaloVreme(Duration.ZERO);
             } else {
                 UlogovaniMusterija ulogovan = new UlogovaniMusterija(izBaze.getId(), izBaze.getUsername());
                 boolean vecUlogovan = broker.select(ulogovan) != null;
