@@ -51,7 +51,7 @@ public class PretraziRacuneForma extends javax.swing.JFrame {
         btnDetaljnije = new javax.swing.JButton();
         btnFilterOBA = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tblRacuni.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
