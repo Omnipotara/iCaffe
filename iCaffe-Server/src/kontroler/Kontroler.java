@@ -37,7 +37,6 @@ import view.ServerForma;
 public class Kontroler {
 
     private List<ObradiKlijentskiZahtev> listaNiti;
-    private DBBroker dbb;
     private static Kontroler instance;
     private ServerForma sf;
 
@@ -50,7 +49,6 @@ public class Kontroler {
 
     private Kontroler() {
         listaNiti = new ArrayList<>();
-        dbb = new DBBroker();
     }
 
     public List<ObradiKlijentskiZahtev> getListaNiti() {

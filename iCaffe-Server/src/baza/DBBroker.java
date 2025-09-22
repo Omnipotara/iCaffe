@@ -5,16 +5,8 @@
 package baza;
 
 import domen.DomainObject;
-import model.Prodavac;
 import java.sql.*;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.KategorijaMusterije;
-import model.Musterija;
 import model.Racun;
 
 /**
