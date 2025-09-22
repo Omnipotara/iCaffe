@@ -16,14 +16,15 @@ import java.util.logging.Logger;
 public class VratiJednogSO<T extends DomainObject<T>> extends AbstractSystemOperation<T> {
 
     @Override
-    public T execute(T object) {
-        try {
-            T result = broker.select(object);
-            return result;
-        } catch (SQLException ex) {
-            Logger.getLogger(VratiJednogSO.class.getName()).log(Level.SEVERE, null, ex);
+    protected void validate(T object) throws Exception {
+        if (object == null) {
+            throw new Exception("Objekat ne sme biti null");
         }
-        return null;
-
     }
+
+    @Override
+    protected Object executeOperation(T object) throws Exception {
+        return broker.select(object);
+    }
+
 }

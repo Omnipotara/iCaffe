@@ -206,8 +206,7 @@ public class RacunForma extends javax.swing.JDialog {
         r.setUkupnaCena(ukupnaCena);
 
         // Ubacivanje racuna kao transakcije
-        UbaciRacunSO so = new UbaciRacunSO(listaStavki);
-        int racunId = (int) so.execute(r);
+        int racunId = Kontroler.getInstance().ubaciRacun(r, listaStavki);
 
         if (racunId == -1) {
             JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti racun.");

@@ -3,14 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/domen/DomainObject.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/StavkaRacuna.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/transfer/KlijentskiZahtev.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/TerminDezurstva.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/domen/DomainObject.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/Musterija.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/Prodavac.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/Usluga.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/pomocne/UlogovaniMusterija.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/operacije/Operacija.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/Angazovanje.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/TerminDezurstva.java</file>
+            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/transfer/ServerskiOdgovor.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/KategorijaMusterije.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/Smene.java</file>
             <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Zajednicki/src/model/Racun.java</file>

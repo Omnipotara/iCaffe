@@ -25,7 +25,7 @@ public class LoginMusterijaSOTest {
 
     @After
     public void ocistiBazu() throws Exception {
-        if (rezultat != null) {
+        if (rezultat != null && rezultat.getId() > 0) {
             Kontroler.getInstance().logoutMusterija(rezultat);
         }
     }

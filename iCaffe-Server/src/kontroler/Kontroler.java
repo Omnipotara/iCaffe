@@ -16,11 +16,13 @@ import model.KategorijaMusterije;
 import model.Musterija;
 import model.Prodavac;
 import model.Racun;
+import model.StavkaRacuna;
 import operacije.DodajSO;
 import operacije.IzmeniSO;
 import operacije.LoginMusterijaSO;
 import operacije.LogoutMusterijaSO;
 import operacije.ObrisiSO;
+import operacije.UbaciRacunSO;
 import operacije.VratiJednogSO;
 import operacije.VratiSveSO;
 import server.ObradiKlijentskiZahtev;
@@ -67,12 +69,17 @@ public class Kontroler {
 
     /* -- GENERIC OPERACIJE DOMENSKOG OBJEKTA -- */
     public <T extends DomainObject<T>> boolean dodaj(T object) {
-        return new DodajSO<T>().execute(object);
+        try {
+            return (boolean) new DodajSO<T>().execute(object);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public <T extends DomainObject<T>> boolean izmeni(T object) {
         try {
-            return new IzmeniSO<T>().execute(object);
+            return (boolean) new IzmeniSO<T>().execute(object);
         } catch (Exception ex) {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,7 +88,7 @@ public class Kontroler {
 
     public <T extends DomainObject<T>> boolean obrisi(T object) {
         try {
-            return new ObrisiSO<T>().execute(object);
+            return (boolean) new ObrisiSO<T>().execute(object);
         } catch (Exception ex) {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,7 +97,7 @@ public class Kontroler {
 
     public <T extends DomainObject<T>> T vratiJednog(T object) {
         try {
-            return new VratiJednogSO<T>().execute(object);
+            return (T) new VratiJednogSO<T>().execute(object);
         } catch (Exception ex) {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,7 +106,7 @@ public class Kontroler {
 
     public <T extends DomainObject<T>> List<T> vratiSve(T object) {
         try {
-            return new VratiSveSO<T>().execute(object);
+            return (List<T>) new VratiSveSO<T>().execute(object);
         } catch (Exception ex) {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -136,6 +143,17 @@ public class Kontroler {
                 return;
             }
         }
+    }
+
+    public int ubaciRacun(Racun r, List<StavkaRacuna> listaStavki) {
+        try {
+            UbaciRacunSO so = new UbaciRacunSO(listaStavki);
+            int racunId = (int) so.execute(r);
+            return racunId;
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }

@@ -18,14 +18,15 @@ import java.util.logging.Logger;
 public class VratiSveSO<T extends DomainObject<T>> extends AbstractSystemOperation<T> {
 
     @Override
-    public List<T> execute(T object) {
-        try {
-            List<T> result = broker.selectAll(object);
-            return result != null ? result : new ArrayList<>();
-        } catch (SQLException ex) {
-            Logger.getLogger(VratiSveSO.class.getName()).log(Level.SEVERE, null, ex);
+    protected void validate(T object) throws Exception {
+        if (object == null) {
+            throw new Exception("Objekat ne sme biti null");
         }
-        return new ArrayList<>();
+    }
 
+    @Override
+    protected Object executeOperation(T object) throws SQLException {
+        List<T> result = broker.selectAll(object);
+        return result != null ? result : new ArrayList<T>();
     }
 }

@@ -1,46 +1,39 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package operacije;
 
-import baza.Konekcija;
 import domen.DomainObject;
 import java.time.Duration;
 import model.Musterija;
 import model.pomocne.UlogovaniMusterija;
 
-/**
- *
- * @author Omnix
- */
 public class LoginMusterijaSO extends AbstractSystemOperation<Musterija> {
 
     @Override
-    public Object execute(Musterija m) throws Exception {
-        try {
-
-            Musterija izBaze = broker.select(m);
-            if (izBaze == null) {
-                izBaze = new Musterija();
-                izBaze.setId(-1);
-                izBaze.setPreostaloVreme(Duration.ZERO);
-            } else {
-                UlogovaniMusterija ulogovan = new UlogovaniMusterija(izBaze.getId(), izBaze.getUsername());
-                boolean vecUlogovan = broker.select(ulogovan) != null;
-                if (vecUlogovan) {
-                    izBaze.setId(-2);
-                } else {
-                    broker.insert(ulogovan);
-                }
-            }
-
-            Konekcija.getInstance().getKonekcija().commit();
-            return izBaze;
-            
-        } catch (Exception e) {
-            Konekcija.getInstance().getKonekcija().rollback();
-            throw e;
+    protected void validate(Musterija m) {
+        if (m == null || m.getEmail() == null || m.getPassword() == null) {
+            throw new IllegalArgumentException("Email i password ne smeju biti null");
         }
+    }
+
+    @Override
+    protected Object executeOperation(Musterija m) throws Exception {
+        Musterija izBaze = broker.select(m);
+
+        if (izBaze == null) {
+            izBaze = new Musterija();
+            izBaze.setId(-1);
+            izBaze.setPreostaloVreme(Duration.ZERO);
+        } else {
+            // Provera da li je vec ulogovan
+            UlogovaniMusterija ulogovan = new UlogovaniMusterija(izBaze.getId(), izBaze.getUsername());
+            boolean vecUlogovan = broker.select(ulogovan) != null;
+
+            if (vecUlogovan) {
+                izBaze.setId(-2);
+            } else {
+                broker.insert(ulogovan);
+            }
+        }
+
+        return izBaze;
     }
 }

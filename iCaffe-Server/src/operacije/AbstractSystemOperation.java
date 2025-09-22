@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package operacije;
 
+import baza.Konekcija;
 import baza.DBBroker;
 import domen.DomainObject;
+import java.sql.*;
 
-/**
- *
- * @author Omnix
- */
 public abstract class AbstractSystemOperation<T extends DomainObject<T>> {
 
     protected DBBroker broker;
@@ -19,5 +13,33 @@ public abstract class AbstractSystemOperation<T extends DomainObject<T>> {
         broker = new DBBroker();
     }
 
-    public abstract Object execute(T object) throws Exception;
+    public final Object execute(T object) throws Exception {
+        try {
+            validate(object);
+            Object result = executeOperation(object);
+            Konekcija.getInstance().getKonekcija().commit();
+            return result;
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            Konekcija.getInstance().getKonekcija().rollback();
+            throw e; // duplicate key
+
+        } catch (IllegalArgumentException e) {
+            Konekcija.getInstance().getKonekcija().rollback();
+            throw e; // validacija objekta
+
+        } catch (SQLException e) {
+            Konekcija.getInstance().getKonekcija().rollback();
+            throw e; // sve ostale SQL greške
+
+        } catch (Exception e) {
+            Konekcija.getInstance().getKonekcija().rollback();
+            throw e; // fallback za sve ostalo
+        }
+        // Svaka SO mora ovo da implementira
+    }
+
+    protected abstract void validate(T object) throws Exception;
+
+    protected abstract Object executeOperation(T object) throws Exception;
 }

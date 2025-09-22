@@ -1,32 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package operacije;
 
-import baza.Konekcija;
+import domen.DomainObject;
 import model.Musterija;
 import model.pomocne.UlogovaniMusterija;
 
-/**
- *
- * @author Omnix
- */
 public class LogoutMusterijaSO extends AbstractSystemOperation<Musterija> {
 
     @Override
-    public Object execute(Musterija m) throws Exception {
-        try {
-
-            UlogovaniMusterija ulogovan = new UlogovaniMusterija(m.getId(), m.getUsername());
-            boolean obrisan = (boolean) broker.delete(ulogovan);
-
-            Konekcija.getInstance().getKonekcija().commit();
-            return obrisan;
-        } catch (Exception e) {
-            Konekcija.getInstance().getKonekcija().rollback();
-            throw e;
+    protected void validate(Musterija m) {
+        if (m == null || m.getId() <= 0) {
+            throw new IllegalArgumentException("Musterija mora imati validan ID");
         }
     }
 
+    @Override
+    protected Object executeOperation(Musterija m) throws Exception {
+        UlogovaniMusterija ulogovan = new UlogovaniMusterija(m.getId(), m.getUsername());
+        boolean obrisan = (boolean) broker.delete(ulogovan);
+        return obrisan;
+    }
 }
