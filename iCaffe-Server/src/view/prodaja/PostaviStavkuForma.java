@@ -12,6 +12,7 @@ import kontroler.Kontroler;
 import model.Racun;
 import model.StavkaRacuna;
 import model.Usluga;
+import view.RacunDetaljnijeForma;
 
 /**
  *
@@ -19,7 +20,8 @@ import model.Usluga;
  */
 public class PostaviStavkuForma extends javax.swing.JDialog {
 
-    private RacunForma rf;
+    private RacunForma rf = null;
+    private RacunDetaljnijeForma rdf = null;
     private StavkaRacuna sr;
 
     /**
@@ -35,6 +37,43 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
         initComponents();
         napuniCombobox();
         this.rf = rf;
+
+        if (sr == null) {
+            btnIzmeni.setVisible(false);
+        } else {
+            this.sr = sr;
+            btnDodaj.setVisible(false);
+            cmbUsluge.setEnabled(false);
+            cmbUsluge.setSelectedItem(sr.getUsluga());
+            txtKolicina.setText(String.valueOf(sr.getKolicina()));
+            txtCena.setText(String.valueOf(sr.getCenaStavke()));
+        }
+
+        //Listener za txt field
+        txtKolicina.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateCena();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateCena();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateCena();
+            }
+
+        });
+    }
+
+    public PostaviStavkuForma(java.awt.Frame parent, boolean modal, RacunDetaljnijeForma rdf, StavkaRacuna sr) {
+        super(parent, modal);
+        initComponents();
+        napuniCombobox();
+        this.rdf = rdf;
 
         if (sr == null) {
             btnIzmeni.setVisible(false);
@@ -200,19 +239,38 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
             return;
         }
 
-        Racun r = rf.getR();
+        if (rdf == null && rf != null) {
+            Racun r = rf.getR();
 
-        StavkaRacuna sr = new StavkaRacuna();
-        sr.setRb(rf.getListaStavki().size() + 1); // OVO UMESTO VRATIMAXRB
-        sr.setKolicina(kolicina);
-        sr.setJedinicnaCena(u.getCena());
-        sr.setCenaStavke(cena);
-        sr.setRacun(r);
-        sr.setUsluga(u);
+            StavkaRacuna sr = new StavkaRacuna();
+            //sr.setRb(rf.getListaStavki().size() + 1); // OVO UMESTO VRATIMAXRB
+            sr.setKolicina(kolicina);
+            sr.setJedinicnaCena(u.getCena());
+            sr.setCenaStavke(cena);
+            sr.setRacun(r);
+            sr.setUsluga(u);
 
-        // dodaje se u lokalnu listu (A NE U BAZU)
-        rf.getListaStavki().add(sr);
-        rf.osveziTabelu();
+            // dodaje se u lokalnu listu (A NE U BAZU)
+            rf.getListaStavki().add(sr);
+            rf.osveziTabelu();
+
+        } else if (rdf != null && rf == null) {
+            Racun r = rdf.getR();
+
+            StavkaRacuna sr = new StavkaRacuna();
+            //sr.setRb(rf.getListaStavki().size() + 1); // OVO UMESTO VRATIMAXRB
+            sr.setKolicina(kolicina);
+            sr.setJedinicnaCena(u.getCena());
+            sr.setCenaStavke(cena);
+            sr.setRacun(r);
+            sr.setUsluga(u);
+
+            // dodaje se u lokalnu listu (A NE U BAZU)
+            rdf.getListaStavki().add(sr);
+            rdf.osveziTabelu();
+
+        }
+
 
     }//GEN-LAST:event_btnDodajActionPerformed
 
@@ -233,12 +291,23 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
 
         double cena = Double.parseDouble(txtCena.getText());
 
-        //Menja se lokalni objekat a nista u bazi
+        //Menja se lokalni objekat a nista u bazi jos uvek
         sr.setKolicina(kolicina);
         sr.setCenaStavke(cena);
 
-        rf.osveziTabelu();
-        this.dispose();
+        if (rf != null && rdf == null) {
+            rf.osveziTabelu();
+            JOptionPane.showMessageDialog(this, "Uspeno izmenjena stavka.");
+            this.dispose();
+
+        } else if (rf == null && rdf != null) {
+            rdf.osveziTabelu();
+            JOptionPane.showMessageDialog(this, "Uspeno izmenjena stavka.");
+            this.dispose();
+
+        }
+
+
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
     private void cmbUslugeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUslugeActionPerformed

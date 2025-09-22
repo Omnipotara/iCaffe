@@ -16,7 +16,7 @@ import model.StavkaRacuna;
 public class ModelTabeleStavki extends AbstractTableModel {
 
     private List<StavkaRacuna> listaStavki = new ArrayList<>();
-    private String[] kolone = {"RB", "Naziv", "Kolicina", "Jedinicna cena", "Ukupna cena"};
+    private String[] kolone = {"Naziv", "Kolicina", "Jedinicna cena", "Ukupna cena"};
     
     public ModelTabeleStavki(List<StavkaRacuna> listaStavki){
         this.listaStavki = listaStavki;
@@ -38,14 +38,12 @@ public class ModelTabeleStavki extends AbstractTableModel {
 
         switch (columnIndex) {
             case 0:
-                return s.getRb();
-            case 1:
                 return s.getUsluga().getNaziv();
-            case 2:
+            case 1:
                 return s.getKolicina();
-            case 3:
+            case 2:
                 return s.getUsluga().getCena();
-            case 4:
+            case 3:
                 return s.getCenaStavke();
             default:
                 return "N/A";

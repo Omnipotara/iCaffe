@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.Angazovanje;
 import model.KategorijaMusterije;
 import model.Musterija;
@@ -18,6 +19,7 @@ import model.Prodavac;
 import model.Racun;
 import model.StavkaRacuna;
 import operacije.DodajSO;
+import operacije.IzmeniRacunSO;
 import operacije.IzmeniSO;
 import operacije.LoginMusterijaSO;
 import operacije.LogoutMusterijaSO;
@@ -67,7 +69,6 @@ public class Kontroler {
         this.sf = sf;
     }
 
-    /* -- GENERIC OPERACIJE DOMENSKOG OBJEKTA -- */
     public <T extends DomainObject<T>> boolean dodaj(T object) {
         try {
             return (boolean) new DodajSO<T>().execute(object);
@@ -113,7 +114,6 @@ public class Kontroler {
         return new ArrayList<T>();
     }
 
-    /* -- SPECIFICNE METODE -- */
     public Musterija loginMusterija(Musterija m) {
         try {
             return (Musterija) new LoginMusterijaSO().execute(m);
@@ -154,6 +154,15 @@ public class Kontroler {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
+    }
+
+    public boolean izmeniRacun(Racun racun, List<StavkaRacuna> noveStavke) {
+        try {
+            return (boolean) new IzmeniRacunSO(noveStavke).execute(racun);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
 }

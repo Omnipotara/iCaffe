@@ -29,7 +29,7 @@ public class PretraziRacuneForma extends javax.swing.JFrame {
         initComponents();
         napuniCombobox();
         listaRacuna = Kontroler.getInstance().vratiSve(new Racun());
-        osveziTabelu(listaRacuna);
+        osveziTabelu(null);
     }
 
     /**
@@ -222,21 +222,21 @@ public class PretraziRacuneForma extends javax.swing.JFrame {
 
     private void btnDetaljnijeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetaljnijeActionPerformed
         int selektovaniRed = tblRacuni.getSelectedRow();
-        
-        if (selektovaniRed == -1){
+
+        if (selektovaniRed == -1) {
             JOptionPane.showMessageDialog(this, "Izaberite neki racun.", "Racun nije odabran", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         ModelTabeleRacuna modelTabele = (ModelTabeleRacuna) tblRacuni.getModel();
         List<Racun> tempLista = modelTabele.getListaRacuna();
-        
+
         Racun r = tempLista.get(selektovaniRed);
         StavkaRacuna placeholderStavka = new StavkaRacuna();
         placeholderStavka.setRacun(r);
         List<StavkaRacuna> listaStavki = Kontroler.getInstance().vratiSve(placeholderStavka);
-        
-        RacunDetaljnijeForma rdf = new RacunDetaljnijeForma(this, true, r, listaStavki);
+
+        RacunDetaljnijeForma rdf = new RacunDetaljnijeForma(this, true, this, r, listaStavki);
         rdf.setVisible(true);
     }//GEN-LAST:event_btnDetaljnijeActionPerformed
 
@@ -296,8 +296,15 @@ public class PretraziRacuneForma extends javax.swing.JFrame {
         }
     }
 
-    private void osveziTabelu(List<Racun> listaRacuna) {
-        ModelTabeleRacuna mtr = new ModelTabeleRacuna(listaRacuna);
-        tblRacuni.setModel(mtr);
+    public void osveziTabelu(List<Racun> listaRacuna) {
+        if (listaRacuna == null) {
+            ModelTabeleRacuna mtr = new ModelTabeleRacuna(this.listaRacuna);
+            tblRacuni.setModel(mtr);
+        } else {
+            ModelTabeleRacuna mtr = new ModelTabeleRacuna(listaRacuna);
+            tblRacuni.setModel(mtr);
+        }
+        
     }
+
 }
