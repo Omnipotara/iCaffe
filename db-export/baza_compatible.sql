@@ -33,7 +33,8 @@ CREATE TABLE `angazovanje` (
 /*Data for the table `angazovanje` */
 
 insert  into `angazovanje`(`prodavacId`,`terminId`,`datum`) values 
-(1,1,'2025-09-22');
+(1,1,'2025-09-22'),
+(2,2,'2025-09-24');
 
 /*Table structure for table `kategorija_musterije` */
 
@@ -73,9 +74,9 @@ CREATE TABLE `musterija` (
 /*Data for the table `musterija` */
 
 insert  into `musterija`(`id`,`email`,`username`,`password`,`kategorijaId`,`preostaloVreme`) values 
-(1,'gio','gio','gio123',6,10724),
+(1,'gio','gio','gio123',6,14324),
 (2,'igrac@gmail.com','igrac','123',6,7200),
-(8,'test@test.com','TestKorisnik','123456',1,4600);
+(8,'test@test.com','TestKorisnik','123456',1,8200);
 
 /*Table structure for table `musterija_ulogovani` */
 
@@ -124,15 +125,11 @@ CREATE TABLE `racun` (
   KEY `racun_ibfk_2` (`musterijaId`),
   CONSTRAINT `racun_ibfk_1` FOREIGN KEY (`prodavacId`) REFERENCES `prodavac` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `racun_ibfk_2` FOREIGN KEY (`musterijaId`) REFERENCES `musterija` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `racun` */
 
 insert  into `racun`(`id`,`datum`,`ukupnaCena`,`prodavacId`,`musterijaId`) values 
-(45,'2025-09-17 00:00:00',196.00,1,1),
-(46,'2025-09-17 00:00:00',70.00,1,1),
-(47,'2025-09-17 00:00:00',70.00,1,1),
-(52,'2025-09-18 00:00:00',300.00,1,1),
 (53,'2025-09-19 13:11:26',100.00,1,1),
 (54,'2025-09-19 19:36:28',580.00,1,1),
 (55,'2025-09-19 19:55:49',20.00,1,1),
@@ -145,7 +142,10 @@ insert  into `racun`(`id`,`datum`,`ukupnaCena`,`prodavacId`,`musterijaId`) value
 (73,'2025-09-22 17:02:42',147.00,1,1),
 (74,'2025-09-22 17:03:28',14.00,1,2),
 (76,'2025-09-22 18:19:24',90.00,1,8),
-(77,'2025-09-22 18:55:57',200.00,1,8);
+(77,'2025-09-22 18:55:57',200.00,1,8),
+(78,'2025-09-24 12:38:25',266.00,2,1),
+(79,'2025-09-24 12:38:43',189.00,2,2),
+(80,'2025-09-24 12:38:51',100.00,2,8);
 
 /*Table structure for table `stavka_racuna` */
 
@@ -161,19 +161,13 @@ CREATE TABLE `stavka_racuna` (
   PRIMARY KEY (`racunId`,`rb`),
   KEY `rb` (`rb`),
   KEY `stavka_racuna_ibfk_1` (`uslugaId`),
-  CONSTRAINT `stavka_racuna_ibfk_1` FOREIGN KEY (`uslugaId`) REFERENCES `usluga` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `stavka_racuna_ibfk_1` FOREIGN KEY (`uslugaId`) REFERENCES `usluga` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `stavka_racuna_ibfk_2` FOREIGN KEY (`racunId`) REFERENCES `racun` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `stavka_racuna` */
 
 insert  into `stavka_racuna`(`racunId`,`rb`,`kolicina`,`jedinicnaCena`,`uslugaId`,`cenaStavke`) values 
-(45,1,5,20.00,1,100.00),
-(45,2,2,90.00,2,180.00),
-(46,1,1,100.00,1000,100.00),
-(47,1,1,100.00,1000,100.00),
-(52,1,1,20.00,1,20.00),
-(52,2,2,90.00,4,180.00),
-(52,3,1,100.00,1000,100.00),
 (53,1,1,100.00,1000,100.00),
 (54,1,15,20.00,1,300.00),
 (54,2,2,90.00,4,180.00),
@@ -195,7 +189,12 @@ insert  into `stavka_racuna`(`racunId`,`rb`,`kolicina`,`jedinicnaCena`,`uslugaId
 (73,3,1,90.00,2,90.00),
 (74,1,1,20.00,1,20.00),
 (76,1,1,90.00,2,90.00),
-(77,1,10,20.00,1,200.00);
+(77,1,10,20.00,1,200.00),
+(78,1,5,20.00,1,100.00),
+(78,2,2,90.00,4,180.00),
+(78,3,1,100.00,1000,100.00),
+(79,1,3,90.00,2,270.00),
+(80,1,1,100.00,1000,100.00);
 
 /*Table structure for table `termin_dezurstva` */
 
