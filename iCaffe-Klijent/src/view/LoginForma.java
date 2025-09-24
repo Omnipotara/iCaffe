@@ -7,6 +7,7 @@ package view;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.Musterija;
@@ -25,6 +26,7 @@ public class LoginForma extends javax.swing.JFrame {
      */
     public LoginForma() {
         initComponents();
+        setLocationRelativeTo(null);
         kontroler.Kontroler.getInstance().setLf(this);
     }
 

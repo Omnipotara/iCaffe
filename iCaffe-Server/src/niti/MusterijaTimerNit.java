@@ -46,8 +46,7 @@ public class MusterijaTimerNit extends Thread {
                     }
 
                     //obrisacu posle testiranja
-                    System.out.println("Musteriji " + musterija.getUsername()
-                            + " ostalo: " + musterija.getPreostaloVreme().getSeconds());
+                    //System.out.println("Musteriji " + musterija.getUsername() + "ostalo: " + musterija.getPreostaloVreme().getSeconds());
                 }
 
                 if (musterija.getPreostaloVreme().isZero() || musterija.getPreostaloVreme().isNegative()) {

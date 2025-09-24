@@ -37,6 +37,7 @@ public class IzmenaKlijentaForma extends javax.swing.JDialog {
     public IzmenaKlijentaForma(java.awt.Frame parent, boolean modal, Musterija m, boolean azuriranjeSifre) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         this.m = m;
         this.azuriranjeSifre = azuriranjeSifre;
 

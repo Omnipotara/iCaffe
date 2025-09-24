@@ -36,6 +36,7 @@ public class PostaviAngazovanjeForma extends javax.swing.JDialog {
     public PostaviAngazovanjeForma(java.awt.Frame parent, boolean modal, Prodavac p, Angazovanje a, AngazovanjaForma af) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         this.p = p;
         txtProdavac.setText(p.toString());
 

@@ -213,7 +213,8 @@ public class Racun implements Serializable, DomainObject<Racun> {
                 + "FROM racun r "
                 + "JOIN prodavac p ON r.prodavacId = p.id "
                 + "JOIN musterija m ON r.musterijaId = m.id "
-                + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id";
+                + "LEFT JOIN kategorija_musterije k ON m.kategorijaId = k.id "
+                + "ORDER BY r.datum DESC";
     }
 
     @Override

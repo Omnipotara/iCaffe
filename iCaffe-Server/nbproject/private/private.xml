@@ -3,42 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/ServerForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/kontroler/Kontroler.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/musterija/MusterijaDetaljnijeForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/server/ObradiKlijentskiZahtev.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/RacunDetaljnijeForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleAngazovanja.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/LoginForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/server/PokreniServer.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/AbstractSystemOperation.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/baza/DBBroker.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/niti/MusterijaDetaljnoNit.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/ZameniZaposlenogForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/IzmeniRacunSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/musterija/KategorijeMusterijaForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/DodajSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleKategorijaMusterija.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/test/testovi/UbaciRacunSOTest.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/IzmeniSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/test/testovi/LoginMusterijaSOTest.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/LoginMusterijaSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/ObrisiSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleMusterija.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/prodaja/PostaviStavkuForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/UbaciRacunSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/VratiJednogSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/musterija/PostaviKategorijuMusterijeForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/VratiSveSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/prodaja/RacunForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleStavki.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/baza/Konekcija.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/operacije/LogoutMusterijaSO.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/niti/MusterijaTimerNit.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/modeli/ModelTabeleRacuna.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/angazovanje/AngazovanjaForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/angazovanje/PostaviAngazovanjeForma.java</file>
-            <file>file:/C:/Users/Omnix/Documents/NetBeansProjects/SeminarskiRad/iCaffe-Server/src/view/PretraziRacuneForma.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/test/testovi/LoginMusterijaSOTest.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/src/server/PokreniServer.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/src/server/ObradiKlijentskiZahtev.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/src/baza/Konekcija.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/src/view/prodaja/RacunForma.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/test/testovi/UbaciRacunSOTest.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/src/view/angazovanje/AngazovanjaForma.java</file>
+            <file>file:/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/test/testovi/VratiSveSOTest.java</file>
         </group>
     </open-files>
 </project-private>

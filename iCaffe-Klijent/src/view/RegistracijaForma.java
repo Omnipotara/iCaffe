@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import model.KategorijaMusterije;
@@ -28,7 +29,9 @@ public class RegistracijaForma extends javax.swing.JFrame {
      * Creates new form RegistracijaForma
      */
     public RegistracijaForma() {
+        
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**

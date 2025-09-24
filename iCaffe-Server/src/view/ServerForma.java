@@ -41,6 +41,7 @@ public class ServerForma extends javax.swing.JFrame {
 
     public ServerForma(Prodavac p) {
         initComponents();
+        setLocationRelativeTo(null);
         Kontroler.getInstance().setSf(this);
         this.p = p;
         ps = new PokreniServer();

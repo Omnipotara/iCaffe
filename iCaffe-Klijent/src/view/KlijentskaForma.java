@@ -35,6 +35,7 @@ public class KlijentskaForma extends javax.swing.JFrame {
         try {
             this.m = m;
             initComponents();
+            setLocationRelativeTo(null);
             osveziTitle();
             kontroler.Kontroler.getInstance().setKf(this);
             Komunikacija.getInstance().start();
