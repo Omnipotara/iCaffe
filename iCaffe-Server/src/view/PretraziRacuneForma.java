@@ -298,6 +298,7 @@ public class PretraziRacuneForma extends javax.swing.JFrame {
 
     public void osveziTabelu(List<Racun> listaRacuna) {
         if (listaRacuna == null) {
+            this.listaRacuna = Kontroler.getInstance().vratiSve(new Racun());
             ModelTabeleRacuna mtr = new ModelTabeleRacuna(this.listaRacuna);
             tblRacuni.setModel(mtr);
         } else {

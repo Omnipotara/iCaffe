@@ -37,7 +37,6 @@ public class AngazovanjaForma extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAngazovanja = new javax.swing.JTable();
         btnObrisi = new javax.swing.JButton();
-        btnIzmeni = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -61,14 +60,6 @@ public class AngazovanjaForma extends javax.swing.JDialog {
             }
         });
 
-        btnIzmeni.setText("Izmeni");
-        btnIzmeni.setEnabled(false);
-        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIzmeniActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,9 +68,7 @@ public class AngazovanjaForma extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnIzmeni, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
+                .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -87,10 +76,7 @@ public class AngazovanjaForma extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -118,23 +104,6 @@ public class AngazovanjaForma extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Neuspesno brisanje.");
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
-
-    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
-        int selektovaniRed = tblAngazovanja.getSelectedRow();
-
-        if (selektovaniRed == -1) {
-            JOptionPane.showMessageDialog(this, "Izaberite neko angazovanje za izmenu!");
-            return;
-        }
-
-        ModelTabeleAngazovanja mta = (ModelTabeleAngazovanja) tblAngazovanja.getModel();
-        List<Angazovanje> listaAngazovanja = mta.getListaAngazovanja();
-        Angazovanje a = listaAngazovanja.get(selektovaniRed);
-        
-        PostaviAngazovanjeForma paf = new PostaviAngazovanjeForma(null, false, a.getProdavac(), a, this);
-        paf.setVisible(true);
-        osveziTabelu();
-    }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,7 +148,6 @@ public class AngazovanjaForma extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnIzmeni;
     private javax.swing.JButton btnObrisi;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblAngazovanja;

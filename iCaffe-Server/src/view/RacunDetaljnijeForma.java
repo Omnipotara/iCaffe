@@ -269,6 +269,7 @@ public class RacunDetaljnijeForma extends javax.swing.JDialog {
             prf.osveziTabelu(null);
         } else {
             JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti racun.");
+            prf.osveziTabelu(null);
         }
     }//GEN-LAST:event_btnPotvrdiActionPerformed
 
