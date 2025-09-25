@@ -11,24 +11,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import kontroler.Kontroler;
 import model.Musterija;
-import niti.MusterijaTimerNit;
+import domen.DomainObject;
+import java.util.ArrayList;
+import model.Prodavac;
 import operacije.Operacija;
 import transfer.KlijentskiZahtev;
 import transfer.ServerskiOdgovor;
+import model.pomocne.RacunWrapper;
+import model.pomocne.UlogovaniMusterija;
+import niti.MusterijaTimerNit;
+import static operacije.Operacija.VRATI_ONLINE_MUSTERIJE;
+import static operacije.Operacija.VRATI_SVE_MUSTERIJE;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-/**
- *
- * @author Omnix
- */
 public class ObradiKlijentskiZahtev extends Thread {
 
     private Socket s;
     private Musterija ulogovan = null;
     private boolean kraj = false;
+    private boolean jeProdavac = false;
     private MusterijaTimerNit mtn;
 
     public ObradiKlijentskiZahtev(Socket s) {
@@ -48,30 +48,36 @@ public class ObradiKlijentskiZahtev extends Thread {
                 }
 
                 switch (kz.getOperacija()) {
-                    case Operacija.LOGIN:
+                    // MUSTERIJA OPERACIJE
+                    case LOGIN:
                         Musterija m = (Musterija) kz.getParam();
                         Musterija ulogovan = Kontroler.getInstance().loginMusterija(m);
 
                         if (ulogovan.getId() > 0) {
                             this.ulogovan = ulogovan;
-                            Kontroler.getInstance().getListaNiti().add(this);
+                            Kontroler.getInstance().getListaMusterija().add(this);
+                            Kontroler.getInstance().getSveKonekcije().remove(this);
+
                             mtn = new MusterijaTimerNit(this.ulogovan);
                             mtn.start();
+
+                            Kontroler.getInstance().obavestiProdavce(ulogovan);
+                            //Kontroler.getInstance().posaljiVremeUpdateProdavcima(ulogovan);
                         }
 
                         so.setParam(ulogovan);
                         so.setOperacija(Operacija.LOGIN);
-                        
+
                         System.out.println(ulogovan.getPreostaloVreme().toSeconds());
                         posaljiServerskiOdgovor(so);
 
-                        Kontroler.getInstance().getSf().osveziTabelu();
+                        // Obavesti prodavce o novoj mušteriji
                         break;
 
-                    case Operacija.LOGOUT:
+                    case LOGOUT:
                         m = (Musterija) kz.getParam();
                         boolean odlogovan = Kontroler.getInstance().logoutMusterija(m);
-                        Kontroler.getInstance().getListaNiti().remove(this);
+                        Kontroler.getInstance().getListaMusterija().remove(this);
                         this.ulogovan = null;
                         mtn.setKraj(true);
 
@@ -81,10 +87,12 @@ public class ObradiKlijentskiZahtev extends Thread {
 
                         kraj = true;
 
-                        Kontroler.getInstance().getSf().osveziTabelu();
+                        // Obavesti prodavce o logout-u
+                        Kontroler.getInstance().obavestiProdavce(m);
+                        //Kontroler.getInstance().posaljiVremeUpdateProdavcima(m);
                         break;
 
-                    case Operacija.REGISTER:
+                    case REGISTER:
                         m = (Musterija) kz.getParam();
                         List<Musterija> listaMusterija = Kontroler.getInstance().vratiSve(m);
                         boolean duplikat = false;
@@ -112,23 +120,26 @@ public class ObradiKlijentskiZahtev extends Thread {
                         if (dodat) {
                             so.setParam(1);
                             posaljiServerskiOdgovor(so);
-                            Kontroler.getInstance().getSf().osveziTabelu();
                         } else {
                             so.setParam(null);
                             posaljiServerskiOdgovor(so);
                         }
-
                         break;
 
-                    case Operacija.AZURIRANJE_PASSWORD:
+                    case AZURIRANJE_PASSWORD:
                         m = (Musterija) kz.getParam();
                         boolean izmenjeno = Kontroler.getInstance().izmeni(m);
+
+                        if (izmenjeno) {
+                            Kontroler.getInstance().obavestiProdavce(m);
+                        }
+
                         so.setOperacija(Operacija.AZURIRANJE_PASSWORD);
                         so.setParam(izmenjeno);
                         posaljiServerskiOdgovor(so);
                         break;
 
-                    case Operacija.AZURIRANJE_USERNAME:
+                    case AZURIRANJE_USERNAME:
                         m = (Musterija) kz.getParam();
                         listaMusterija = Kontroler.getInstance().vratiSve(m);
                         duplikat = false;
@@ -148,20 +159,191 @@ public class ObradiKlijentskiZahtev extends Thread {
                         }
 
                         izmenjeno = Kontroler.getInstance().izmeni(m);
-                        
+
+                        if (izmenjeno) {
+                            Kontroler.getInstance().obavestiProdavce(m);
+                        }
+
                         so.setParam(izmenjeno);
                         so.setOperacija(Operacija.AZURIRANJE_USERNAME);
                         posaljiServerskiOdgovor(so);
-                        
-                        Kontroler.getInstance().getSf().osveziTabelu();
+                        break;
 
+                    // PRODAVAC OPERACIJE
+                    case LOGIN_PRODAVAC:
+                        Prodavac prodavac = (Prodavac) kz.getParam();
+
+                        Prodavac ulogovanProdavac = Kontroler.getInstance().loginProdavac(prodavac);
+
+                        if (ulogovanProdavac != null && ulogovanProdavac.getId() > 0) {
+                            this.jeProdavac = true;
+                            Kontroler.getInstance().getListaProdavaca().add(this);
+                            Kontroler.getInstance().getSveKonekcije().remove(this);
+
+                            System.out.println("SERVER: Šaljem objekat: " + ulogovanProdavac);
+                            System.out.println("SERVER: ID: " + ulogovanProdavac.getId());
+
+                            so.setParam(ulogovanProdavac);
+                            System.out.println("Prodavac se uspesno ulogovao: " + ulogovanProdavac.getUsername());
+                        } else {
+                            so.setParam(null); // neuspesan login
+                            System.out.println("Neuspesan login prodavca");
+                        }
+
+                        so.setOperacija(Operacija.VRATI_JEDNOG);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case LOGOUT_PRODAVAC:
+                        // 1. Prima objekat prodavca iz zahteva
+                        prodavac = (Prodavac) kz.getParam();
+
+                        // 2. Pozovi logout u bazi da ažurira status
+                        odlogovan = Kontroler.getInstance().logoutProdavac(prodavac);
+
+                        // 3. Ukloni iz liste aktivnih prodavaca
+                        Kontroler.getInstance().getListaProdavaca().remove(this);
+
+                        // 4. Očisti lokalne varijable
+                        this.jeProdavac = false;
+
+                        // 5. Pošalji odgovor sa rezultatom logout-a iz baze
+                        so.setParam(odlogovan);
+                        so.setOperacija(Operacija.LOGOUT_PRODAVAC);
+                        posaljiServerskiOdgovor(so);
+
+                        // 6. Postavi flag za kraj konekcije
+                        kraj = true;
+
+                        // 7. Log poruka
+                        System.out.println("Prodavac se odlogovao");
+                        break;
+
+                    // GENERIČKE OPERACIJE (uglavnom za prodavca)
+                    case DODAJ:
+                        DomainObject objekat = (DomainObject) kz.getParam();
+                        boolean dodatObj = Kontroler.getInstance().dodaj(objekat);
+
+                        so.setParam(dodatObj);
+                        so.setOperacija(Operacija.DODAJ);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case IZMENI:
+                        objekat = (DomainObject) kz.getParam();
+                        boolean izmenjen = Kontroler.getInstance().izmeni(objekat);
+
+                        so.setParam(izmenjen);
+                        so.setOperacija(Operacija.IZMENI);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case OBRISI:
+                        objekat = (DomainObject) kz.getParam();
+                        boolean obrisan = Kontroler.getInstance().obrisi(objekat);
+
+                        so.setParam(obrisan);
+                        so.setOperacija(Operacija.OBRISI);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case VRATI_JEDNOG:
+                        objekat = (DomainObject) kz.getParam();
+                        DomainObject rezultat = Kontroler.getInstance().vratiJednog(objekat);
+
+                        so.setParam(rezultat);
+                        so.setOperacija(Operacija.VRATI_JEDNOG);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case VRATI_SVE:
+                        objekat = (DomainObject) kz.getParam();
+                        List lista = Kontroler.getInstance().vratiSve(objekat);
+
+                        so.setParam(lista);
+                        so.setOperacija(Operacija.VRATI_SVE);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case VRATI_SVE_MUSTERIJE:
+                        listaMusterija = Kontroler.getInstance().vratiSve(new Musterija());
+
+                        so = new ServerskiOdgovor();
+                        so.setParam(listaMusterija);
+                        so.setOperacija(VRATI_SVE_MUSTERIJE);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case VRATI_ONLINE_MUSTERIJE:
+                        listaMusterija = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
+
+                        so = new ServerskiOdgovor();
+                        so.setParam(listaMusterija);
+                        so.setOperacija(VRATI_ONLINE_MUSTERIJE);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case UBACI_RACUN:
+                        RacunWrapper wrapper = (RacunWrapper) kz.getParam();
+                        int racunId = Kontroler.getInstance().ubaciRacun(wrapper.getRacun(), wrapper.getStavke());
+
+                        System.out.println("UBACEN RACUN: " + racunId);
+
+                        so.setParam(racunId);
+                        so.setOperacija(Operacija.UBACI_RACUN);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case IZMENI_RACUN:
+                        wrapper = (RacunWrapper) kz.getParam();
+                        boolean racunIzmenjen = Kontroler.getInstance().izmeniRacun(wrapper.getRacun(), wrapper.getStavke());
+
+                        so.setParam(racunIzmenjen);
+                        so.setOperacija(Operacija.IZMENI_RACUN);
+                        posaljiServerskiOdgovor(so);
+                        break;
+
+                    case SERVER_LOGOUT:
+                        Musterija musterijaZaLogout = (Musterija) kz.getParam();
+
+                        // Trazi nit musterije
+                        ObradiKlijentskiZahtev ciljanaNit = null;
+                        for (ObradiKlijentskiZahtev nit : Kontroler.getInstance().getListaMusterija()) {
+                            if (nit.getUlogovani() != null && nit.getUlogovani().getId() == musterijaZaLogout.getId()) {
+                                ciljanaNit = nit;
+                                break;
+                            }
+                        }
+
+                        if (ciljanaNit != null) {
+                            // Zove serverskiLogoutKupca u niti musterije
+                            ciljanaNit.serverskiLogoutKupca(musterijaZaLogout);
+                            so.setParam(true);
+                        } else {
+                            so.setParam(false); // musterija nije pronadjena, error
+                        }
+
+                        Kontroler.getInstance().obavestiProdavce(musterijaZaLogout);
+                        so.setOperacija(Operacija.SERVER_LOGOUT);
+                        posaljiServerskiOdgovor(so);
                         break;
 
                     default:
-                        throw new AssertionError();
+                        System.out.println("Nepoznata operacija: " + kz.getOperacija());
+                        break;
                 }
             }
         } finally {
+            // Ukloni iz odgovarajuće liste pri zatvaranju
+            if (jeProdavac) {
+                Kontroler.getInstance().getListaProdavaca().remove(this);
+            } else {
+                Kontroler.getInstance().getListaMusterija().remove(this);
+                if (mtn != null) {
+                    mtn.setKraj(true);
+                }
+            }
+
             if (s != null && !s.isClosed()) {
                 try {
                     s.close();
@@ -179,6 +361,7 @@ public class ObradiKlijentskiZahtev extends Thread {
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             KlijentskiZahtev kz = (KlijentskiZahtev) ois.readObject();
             return kz;
+
         } catch (EOFException | SocketException ex) {
             System.out.println("Korisnik se nasilno odvezao.");
         } catch (IOException | ClassNotFoundException ex) {
@@ -199,6 +382,7 @@ public class ObradiKlijentskiZahtev extends Thread {
         }
     }
 
+    // Getteri i setteri
     public Socket getS() {
         return s;
     }
@@ -231,26 +415,37 @@ public class ObradiKlijentskiZahtev extends Thread {
         this.mtn = mtn;
     }
 
-    public void ugasiNit() {
-        Kontroler.getInstance().getListaNiti().remove(this);
-        this.ulogovan = null;
-        mtn.setKraj(true);
-        kraj = true;
+    public boolean isJeProdavac() {
+        return jeProdavac;
+    }
 
+    public void setJeProdavac(boolean jeProdavac) {
+        this.jeProdavac = jeProdavac;
+    }
+
+    public void ugasiNit() {
+        Kontroler.getInstance().getListaMusterija().remove(this);
+        this.ulogovan = null;
+        if (mtn != null) {
+            mtn.setKraj(true);
+        }
+        kraj = true;
     }
 
     public void serverskiLogoutKupca(Musterija m) {
         boolean odlogovan = Kontroler.getInstance().logoutMusterija(m);
-        Kontroler.getInstance().getListaNiti().remove(this);
+        Kontroler.getInstance().getListaMusterija().remove(this);
         this.ulogovan = null;
-        mtn.setKraj(true);
+        if (mtn != null) {
+            mtn.setKraj(true);
+        }
 
         ServerskiOdgovor so = new ServerskiOdgovor(odlogovan, Operacija.SERVER_LOGOUT);
         posaljiServerskiOdgovor(so);
 
         kraj = true;
 
-        Kontroler.getInstance().getSf().osveziTabelu();
+        // Obavesti prodavce o logout-u
+        Kontroler.getInstance().posaljiVremeUpdateProdavcima(m);
     }
-
 }

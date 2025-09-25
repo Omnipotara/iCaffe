@@ -17,8 +17,6 @@ import model.Musterija;
 import model.Prodavac;
 import model.pomocne.UlogovaniMusterija;
 import modeli.ModelTabeleMusterija;
-import server.ObradiKlijentskiZahtev;
-import server.PokreniServer;
 import view.musterija.MusterijaDetaljnijeForma;
 
 /**
@@ -27,10 +25,12 @@ import view.musterija.MusterijaDetaljnijeForma;
  */
 public class ServerForma extends javax.swing.JFrame {
 
-    private PokreniServer ps;
     private PostaviAngazovanjeForma paf;
     private Prodavac p;
     private Angazovanje a;
+
+    private List<Musterija> listaMusterija = null;
+    private List<Musterija> listaOnlineMusterija = null;
 
     /**
      * Creates new form ServerForma
@@ -41,16 +41,16 @@ public class ServerForma extends javax.swing.JFrame {
 
     public ServerForma(Prodavac p) {
         initComponents();
-        setLocationRelativeTo(null);
         Kontroler.getInstance().setSf(this);
+        setLocationRelativeTo(null);
         this.p = p;
-        ps = new PokreniServer();
-        ps.start();
+
         paf = new PostaviAngazovanjeForma(this, true, p, null, null);
         paf.setVisible(true);
 
         osveziFormu();
-        osveziTabelu();
+        napuniListe();
+
     }
 
     /**
@@ -186,7 +186,7 @@ public class ServerForma extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnDetaljnije, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -236,15 +236,17 @@ public class ServerForma extends javax.swing.JFrame {
         if (kupac == null) {
             return;
         }
+        List<Musterija> listaOnlineMusterija = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
+        boolean odlogovan = false;
 
-        List<Musterija> listaUlogovanih = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
-        if (listaUlogovanih.contains(kupac)) {
-            for (ObradiKlijentskiZahtev okz : Kontroler.getInstance().getListaNiti()) {
-                if (okz.getUlogovani() != null && okz.getUlogovani().equals(kupac)) {
-                    okz.serverskiLogoutKupca(kupac);
-                    return;
-                }
+        if (listaOnlineMusterija.contains(kupac)) {
+            odlogovan = Kontroler.getInstance().odlogujMusteriju(kupac);
+
+            if (odlogovan) {
+                JOptionPane.showMessageDialog(this, "Musterija uspesno odlogovan.");
+                return;
             }
+            JOptionPane.showMessageDialog(this, "Sistem NIJE odlogovao musteriju.");
         } else {
             JOptionPane.showMessageDialog(this, "Taj musterija vec nije online!");
             return;
@@ -353,11 +355,32 @@ public class ServerForma extends javax.swing.JFrame {
     private javax.swing.JTable tblMusterije;
     // End of variables declaration//GEN-END:variables
 
+    // poziva Kontroler
+    public void napuniListe() {
+        Kontroler.getInstance().vratiSveMusterije();
+        Kontroler.getInstance().vratiOnlineMusterije();
+    }
+
+    // poziva se kad stigne lista svih musterija
+    public void postaviSveMusterije(List<Musterija> lista) {
+        listaMusterija = lista;
+        osveziTabelu();
+    }
+
+    // poziva se kad stigne lista online musterija
+    public void postaviOnlineMusterije(List<Musterija> lista) {
+        listaOnlineMusterija = lista;
+        osveziTabelu();
+    }
+
+    // osveži tabelu samo ako su obe liste pune
     public void osveziTabelu() {
-        List<Musterija> listaMusterija = Kontroler.getInstance().vratiSve(new Musterija());
-        List<Musterija> listaOnlineMusterija = Kontroler.getInstance().vratiSve(new UlogovaniMusterija());
-        ModelTabeleMusterija mtm = new ModelTabeleMusterija(listaMusterija, listaOnlineMusterija);
-        tblMusterije.setModel(mtm);
+        if (listaMusterija != null && listaOnlineMusterija != null) {
+            ModelTabeleMusterija mtm = new ModelTabeleMusterija(listaMusterija, listaOnlineMusterija);
+            tblMusterije.setModel(mtm);
+            tblMusterije.repaint();
+            System.out.println("=== TABELA OSVEZENA ===");
+        }
     }
 
     private Musterija odaberiMusteriju(int selektovaniRed) {
@@ -390,6 +413,27 @@ public class ServerForma extends javax.swing.JFrame {
 
     void osveziFormu() {
         setTitle("Dobrodosao " + p.getIme() + "! Danas radis: " + a.getTermin().getSmena());
+    }
+
+    public void prikaziLogoutPoruku() {
+        JOptionPane.showMessageDialog(this, "Uspesno ste se odjavili.");
+        this.dispose();
+    }
+
+    public List<Musterija> getListaMusterija() {
+        return listaMusterija;
+    }
+
+    public void setListaMusterija(List<Musterija> listaMusterija) {
+        this.listaMusterija = listaMusterija;
+    }
+
+    public List<Musterija> getListaOnlineMusterija() {
+        return listaOnlineMusterija;
+    }
+
+    public void setListaOnlineMusterija(List<Musterija> listaOnlineMusterija) {
+        this.listaOnlineMusterija = listaOnlineMusterija;
     }
 
 }

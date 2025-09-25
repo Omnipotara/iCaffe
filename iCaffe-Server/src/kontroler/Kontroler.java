@@ -4,16 +4,11 @@
  */
 package kontroler;
 
-import baza.DBBroker;
 import domen.DomainObject;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import model.Angazovanje;
-import model.KategorijaMusterije;
 import model.Musterija;
 import model.Prodavac;
 import model.Racun;
@@ -22,13 +17,16 @@ import operacije.DodajSO;
 import operacije.IzmeniRacunSO;
 import operacije.IzmeniSO;
 import operacije.LoginMusterijaSO;
+import operacije.LoginProdavacSO;
 import operacije.LogoutMusterijaSO;
+import operacije.LogoutProdavacSO;
 import operacije.ObrisiSO;
+import operacije.Operacija;
 import operacije.UbaciRacunSO;
 import operacije.VratiJednogSO;
 import operacije.VratiSveSO;
 import server.ObradiKlijentskiZahtev;
-import view.ServerForma;
+import transfer.ServerskiOdgovor;
 
 /**
  *
@@ -36,9 +34,10 @@ import view.ServerForma;
  */
 public class Kontroler {
 
-    private List<ObradiKlijentskiZahtev> listaNiti;
+    private List<ObradiKlijentskiZahtev> sveKonekcije;
+    private List<ObradiKlijentskiZahtev> listaMusterija;
+    private List<ObradiKlijentskiZahtev> listaProdavaca;
     private static Kontroler instance;
-    private ServerForma sf;
 
     public static Kontroler getInstance() {
         if (instance == null) {
@@ -48,23 +47,33 @@ public class Kontroler {
     }
 
     private Kontroler() {
-        listaNiti = new ArrayList<>();
+        sveKonekcije = new ArrayList<>();
+        listaMusterija = new ArrayList<>();
+        listaProdavaca = new ArrayList<>();
     }
 
-    public List<ObradiKlijentskiZahtev> getListaNiti() {
-        return listaNiti;
+    public List<ObradiKlijentskiZahtev> getSveKonekcije() {
+        return sveKonekcije;
     }
 
-    public void setListaNiti(List<ObradiKlijentskiZahtev> listaNiti) {
-        this.listaNiti = listaNiti;
+    public void setSveKonekcije(List<ObradiKlijentskiZahtev> sveKonekcije) {
+        this.sveKonekcije = sveKonekcije;
     }
 
-    public ServerForma getSf() {
-        return sf;
+    public List<ObradiKlijentskiZahtev> getListaMusterija() {
+        return listaMusterija;
     }
 
-    public void setSf(ServerForma sf) {
-        this.sf = sf;
+    public void setListaMusterija(List<ObradiKlijentskiZahtev> listaMusterija) {
+        this.listaMusterija = listaMusterija;
+    }
+
+    public List<ObradiKlijentskiZahtev> getListaProdavaca() {
+        return listaProdavaca;
+    }
+
+    public void setListaProdavaca(List<ObradiKlijentskiZahtev> listaProdavaca) {
+        this.listaProdavaca = listaProdavaca;
     }
 
     public <T extends DomainObject<T>> boolean dodaj(T object) {
@@ -134,7 +143,7 @@ public class Kontroler {
         ObradiKlijentskiZahtev zaPrekidanje;
         Kontroler.getInstance().logoutMusterija(musterija);
 
-        for (ObradiKlijentskiZahtev okz : listaNiti) {
+        for (ObradiKlijentskiZahtev okz : listaMusterija) {
             if (okz.getUlogovani() != null && okz.getUlogovani().equals(musterija)) {
                 zaPrekidanje = okz;
                 zaPrekidanje.ugasiNit();
@@ -161,6 +170,58 @@ public class Kontroler {
             Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public Prodavac loginProdavac(Prodavac prodavac) {
+        try {
+            return (Prodavac) new LoginProdavacSO().execute(prodavac);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public boolean logoutProdavac(Prodavac prodavac) {
+        try {
+            return (boolean) new LogoutProdavacSO().execute(prodavac);
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void posaljiVremeUpdateProdavcima(Musterija musterija) {
+        for (ObradiKlijentskiZahtev prodavac : listaProdavaca) {
+            try {
+                ServerskiOdgovor so = new ServerskiOdgovor();
+                so.setOperacija(Operacija.VREME_UPDATE);
+                so.setParam(musterija); // salje musteriju prodavcu
+
+                prodavac.posaljiServerskiOdgovor(so);
+            } catch (Exception e) {
+                System.out.println("Greška pri slanju update-a prodavcu: " + e.getMessage());
+            }
+        }
+    }
+
+    public void obavestiProdavce(Musterija musterija) {
+
+        try {
+            Thread.sleep(500); // 100ms delay
+        } catch (InterruptedException e) {
+        }
+
+        for (ObradiKlijentskiZahtev prodavac : listaProdavaca) {
+            try {
+                ServerskiOdgovor so = new ServerskiOdgovor();
+                so.setOperacija(Operacija.LOGIN_NORTIFIKACIJA);
+                so.setParam(musterija);
+                prodavac.posaljiServerskiOdgovor(so);
+                System.out.println("Poslata nortifikacija!");
+            } catch (Exception e) {
+                System.out.println("Greška pri slanju notifikacije: " + e.getMessage());
+            }
+        }
     }
 
 }

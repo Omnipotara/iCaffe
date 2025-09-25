@@ -200,7 +200,7 @@ public class ZameniZaposlenogForma extends javax.swing.JDialog {
         p.setUsername(username);
         p.setPassword(password);
 
-        p = Kontroler.getInstance().vratiJednog(p);
+        p = (Prodavac) Kontroler.getInstance().vratiJednog(p);
 
         if (p == null) {
             JOptionPane.showMessageDialog(this, "Kredencijali su pogresni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);

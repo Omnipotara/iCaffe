@@ -4,7 +4,11 @@
  */
 package view;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import komunikacija.Komunikacija;
 import kontroler.Kontroler;
 import model.Prodavac;
 
@@ -19,6 +23,7 @@ public class LoginForma extends javax.swing.JFrame {
      */
     public LoginForma() {
         initComponents();
+        Kontroler.getInstance().setLf(this);
         setLocationRelativeTo(null);
     }
 
@@ -95,11 +100,18 @@ public class LoginForma extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String username = txtUsername.getText();
         String password = String.valueOf(txtPassword.getPassword());
+        
         Prodavac p = new Prodavac();
         p.setUsername(username);
         p.setPassword(password);
         
-        p = Kontroler.getInstance().vratiJednog(p);
+        try {
+            Komunikacija.getInstance().start();
+        } catch (IOException ex) {
+            Logger.getLogger(LoginForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        p = (Prodavac) Kontroler.getInstance().vratiJednog(p);
         
         if(p == null){
             JOptionPane.showMessageDialog(this, "Korisnicko ime i sifra nisu ispravni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);

@@ -15,7 +15,6 @@ import model.Prodavac;
 import model.Racun;
 import model.StavkaRacuna;
 import modeli.ModelTabeleStavki;
-import operacije.UbaciRacunSO;
 
 /**
  *

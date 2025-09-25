@@ -11,10 +11,26 @@ import java.io.Serializable;
  * @author Omnix
  */
 public enum Operacija implements Serializable {
+    //Musterija
     LOGIN,
     LOGOUT,
     SERVER_LOGOUT,
     REGISTER,
-    AZURIRANJE_PASSWORD, 
-    AZURIRANJE_USERNAME;
+    AZURIRANJE_PASSWORD,
+    AZURIRANJE_USERNAME,
+    //Prodavac
+    LOGIN_PRODAVAC,
+    LOGOUT_PRODAVAC,
+    VREME_UPDATE,
+    DODAJ,
+    IZMENI,
+    OBRISI,
+    VRATI_JEDNOG,
+    VRATI_SVE,
+    ISTEKLO_VREME,
+    UBACI_RACUN,
+    IZMENI_RACUN,
+    LOGIN_NORTIFIKACIJA,
+    VRATI_SVE_MUSTERIJE,
+    VRATI_ONLINE_MUSTERIJE;
 }

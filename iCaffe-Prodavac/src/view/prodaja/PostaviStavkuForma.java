@@ -18,6 +18,7 @@ import view.RacunDetaljnijeForma;
  *
  * @author Omnix
  */
+
 public class PostaviStavkuForma extends javax.swing.JDialog {
 
     private RacunForma rf = null;
@@ -233,7 +234,6 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Unesite 1 ili vise za kolicinu.");
                 return;
             }
-
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unesite broj za kolicinu.");
             return;
@@ -241,37 +241,76 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
 
         if (rdf == null && rf != null) {
             Racun r = rf.getR();
+            List<StavkaRacuna> listaStavki = rf.getListaStavki();
 
-            StavkaRacuna sr = new StavkaRacuna();
-            //sr.setRb(rf.getListaStavki().size() + 1); // OVO UMESTO VRATIMAXRB
-            sr.setKolicina(kolicina);
-            sr.setJedinicnaCena(u.getCena());
-            sr.setCenaStavke(cena);
-            sr.setRacun(r);
-            sr.setUsluga(u);
+            // Provera da li vec postoji stavka sa istom uslugom
+            StavkaRacuna postojecaStavka = null;
+            for (StavkaRacuna stavka : listaStavki) {
+                if (stavka.getUsluga().getId() == u.getId()) {
+                    postojecaStavka = stavka;
+                    break;
+                }
+            }
 
-            // dodaje se u lokalnu listu (A NE U BAZU)
-            rf.getListaStavki().add(sr);
+            if (postojecaStavka != null) {
+                // Povecaj kolicinu postojece stavke
+                int novaKolicina = postojecaStavka.getKolicina() + kolicina;
+                postojecaStavka.setKolicina(novaKolicina);
+                postojecaStavka.setCenaStavke(novaKolicina * postojecaStavka.getJedinicnaCena());
+
+                JOptionPane.showMessageDialog(this, "Kolicina je povecana za " + kolicina + ". Nova kolicina: " + novaKolicina);
+            } else {
+                // Dodaj novu stavku
+                StavkaRacuna sr = new StavkaRacuna();
+                sr.setKolicina(kolicina);
+                sr.setJedinicnaCena(u.getCena());
+                sr.setCenaStavke(cena);
+                sr.setRacun(r);
+                sr.setUsluga(u);
+
+                listaStavki.add(sr);
+                JOptionPane.showMessageDialog(this, "Nova stavka je dodata.");
+            }
+
             rf.osveziTabelu();
 
         } else if (rdf != null && rf == null) {
             Racun r = rdf.getR();
+            List<StavkaRacuna> listaStavki = rdf.getListaStavki();
 
-            StavkaRacuna sr = new StavkaRacuna();
-            //sr.setRb(rf.getListaStavki().size() + 1); // OVO UMESTO VRATIMAXRB
-            sr.setKolicina(kolicina);
-            sr.setJedinicnaCena(u.getCena());
-            sr.setCenaStavke(cena);
-            sr.setRacun(r);
-            sr.setUsluga(u);
+            // Proveri da li vec postoji stavka sa istom uslugom
+            StavkaRacuna postojecaStavka = null;
+            for (StavkaRacuna stavka : listaStavki) {
+                if (stavka.getUsluga().getId() == u.getId()) {
+                    postojecaStavka = stavka;
+                    break;
+                }
+            }
 
-            // dodaje se u lokalnu listu (A NE U BAZU)
-            rdf.getListaStavki().add(sr);
+            if (postojecaStavka != null) {
+                // Povecaj kolicinu postojece stavke
+                int novaKolicina = postojecaStavka.getKolicina() + kolicina;
+                postojecaStavka.setKolicina(novaKolicina);
+                postojecaStavka.setCenaStavke(novaKolicina * postojecaStavka.getJedinicnaCena());
+
+                JOptionPane.showMessageDialog(this, "Količina je povećana za " + kolicina + ". Nova količina: " + novaKolicina);
+            } else {
+                // Dodaj novu stavku
+                StavkaRacuna sr = new StavkaRacuna();
+                sr.setKolicina(kolicina);
+                sr.setJedinicnaCena(u.getCena());
+                sr.setCenaStavke(cena);
+                sr.setRacun(r);
+                sr.setUsluga(u);
+
+                listaStavki.add(sr);
+                JOptionPane.showMessageDialog(this, "Nova stavka je dodana.");
+            }
+
             rdf.osveziTabelu();
-
         }
 
-
+        this.dispose();
     }//GEN-LAST:event_btnDodajActionPerformed
 
     private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
@@ -297,12 +336,12 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
 
         if (rf != null && rdf == null) {
             rf.osveziTabelu();
-            JOptionPane.showMessageDialog(this, "Uspeno izmenjena stavka.");
+            JOptionPane.showMessageDialog(this, "Uspesno izmenjena stavka.");
             this.dispose();
 
         } else if (rf == null && rdf != null) {
             rdf.osveziTabelu();
-            JOptionPane.showMessageDialog(this, "Uspeno izmenjena stavka.");
+            JOptionPane.showMessageDialog(this, "Uspesno izmenjena stavka.");
             this.dispose();
 
         }
@@ -318,43 +357,43 @@ public class PostaviStavkuForma extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PostaviStavkuForma dialog = new PostaviStavkuForma(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(PostaviStavkuForma.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    /* Create and display the dialog */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            PostaviStavkuForma dialog = new PostaviStavkuForma(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDodaj;

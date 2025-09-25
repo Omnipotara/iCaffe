@@ -32,7 +32,7 @@ public class PokreniServer extends Thread {
                 System.out.println("Klijent je pokrenut");
 
                 ObradiKlijentskiZahtev nit = new ObradiKlijentskiZahtev(klijent);
-                kontroler.Kontroler.getInstance().getListaNiti().add(nit);
+                kontroler.Kontroler.getInstance().getSveKonekcije().add(nit);
                 nit.start();
 
             }

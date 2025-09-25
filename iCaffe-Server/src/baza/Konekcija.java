@@ -34,10 +34,11 @@ public class Konekcija {
             Properties props = new Properties();
 
             // direktna putanja u stringu
-            String path = "/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/configuration/config.properties";
+            String linuxPath = "/home/omnix/NetBeansProjects/iCaffe/iCaffe-Server/configuration/config.properties";
+            String windowsPath = "C:\\Users\\Omnix\\Documents\\NetBeansProjects\\SeminarskiRad\\iCaffe-Server\\configuration\\config.properties";
             
             // ucitavanje propertija
-            try (FileInputStream fis = new FileInputStream(path)) {
+            try (FileInputStream fis = new FileInputStream(windowsPath)) {
                 props.load(fis);
             } catch (FileNotFoundException ex) {
                 System.getLogger(Konekcija.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

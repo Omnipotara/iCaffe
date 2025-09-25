@@ -4,8 +4,6 @@
  */
 package view.musterija;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.Duration;
@@ -14,9 +12,7 @@ import javax.swing.JOptionPane;
 import kontroler.Kontroler;
 import model.KategorijaMusterije;
 import model.Musterija;
-import niti.MusterijaDetaljnoNit;
-import niti.MusterijaTimerNit;
-import server.ObradiKlijentskiZahtev;
+//import niti.MusterijaDetaljnoNit;
 
 /**
  *
@@ -25,7 +21,7 @@ import server.ObradiKlijentskiZahtev;
 public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
 
     private Musterija m;
-    private MusterijaDetaljnoNit mdn;
+    //private MusterijaDetaljnoNit mdn;
 
     /**
      * Creates new form MusterijaDetaljnijeForma
@@ -39,6 +35,7 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.m = m;
+        Kontroler.getInstance().setMdf(this);
 
         txtEmail.setText(m.getEmail());
         napuniCombobox();
@@ -46,9 +43,7 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         txtPopust.setText(m.getKategorijaMusterije().getPopust() + "%");
         txtUsername.setText(m.getUsername());
 
-        MusterijaTimerNit mtn = pronadjiNit();
-
-        if (mtn == null) {
+        if (null == null) {
             Duration preostaloVreme = m.getPreostaloVreme();
             long sati = preostaloVreme.toHours();
             long minute = preostaloVreme.toMinutes() % 60;
@@ -58,15 +53,12 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
             return;
         }
 
-        mdn = new MusterijaDetaljnoNit(txtPreostaloVreme, mtn);
-        mdn.start();
-
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (mdn != null) {
-                    mdn.setKraj(true);
-                }
+//                if (mdn != null) {
+//                    mdn.setKraj(true);
+//                }
             }
         });
 
@@ -213,9 +205,9 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIzadjiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzadjiActionPerformed
-        if (mdn != null) {
-            mdn.setKraj(true);
-        }
+//        if (mdn != null) {
+//            mdn.setKraj(true);
+//        }
         this.dispose();
     }//GEN-LAST:event_btnIzadjiActionPerformed
 
@@ -230,9 +222,10 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
         KategorijaMusterije k = (KategorijaMusterije) cmbKategorije.getSelectedItem();
         m.setKategorijaMusterije(k);
         boolean izmenjeno = Kontroler.getInstance().izmeni(m);
-        
-        if(izmenjeno){
+
+        if (izmenjeno) {
             JOptionPane.showMessageDialog(this, "Sistem je zapamtio musteriju.");
+            
             Kontroler.getInstance().getSf().osveziTabelu();
         } else {
             JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti musteriju.");
@@ -298,16 +291,17 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 
-    private MusterijaTimerNit pronadjiNit() {
-        MusterijaTimerNit mtn = null;
-        for (ObradiKlijentskiZahtev okz : Kontroler.getInstance().getListaNiti()) {
-            if (okz.getUlogovani() != null && okz.getUlogovani().equals(m)) {
-                mtn = okz.getMtn();
-                break;
-            }
-        }
+    public void azurirajVreme(Musterija azuriranaMusterija) {
+        // Azuriraj lokalnu musteriju
+        this.m = azuriranaMusterija;
 
-        return mtn;
+        // Formatiraj i prikazi novo vreme
+        Duration preostaloVreme = m.getPreostaloVreme();
+        long sati = preostaloVreme.toHours();
+        long minute = preostaloVreme.toMinutes() % 60;
+        long sekunde = preostaloVreme.toSeconds() % 60;
+        String stringVreme = sati + "h " + minute + "min " + sekunde + "s";
+        txtPreostaloVreme.setText(stringVreme);
     }
 
     private void napuniCombobox() {
@@ -319,5 +313,15 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
 
         cmbKategorije.setSelectedItem(m.getKategorijaMusterije());
     }
+
+    public Musterija getM() {
+        return m;
+    }
+
+    public void setM(Musterija m) {
+        this.m = m;
+    }
+    
+    
 
 }

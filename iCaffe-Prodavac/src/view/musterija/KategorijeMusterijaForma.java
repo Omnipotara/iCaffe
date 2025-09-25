@@ -7,11 +7,8 @@ package view.musterija;
 import java.util.List;
 import javax.swing.JOptionPane;
 import kontroler.Kontroler;
-import model.Angazovanje;
 import model.KategorijaMusterije;
-import modeli.ModelTabeleAngazovanja;
 import modeli.ModelTabeleKategorijaMusterija;
-import server.PokreniServer;
 
 /**
  *
