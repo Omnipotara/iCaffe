@@ -207,9 +207,7 @@ public class Kontroler {
             Komunikacija.getInstance().posaljiZahtev(zahtev);
             synchronized (this) {
                 wait(1000);
-                if (poslednjiObjekatRezultat == null) {
-                    System.out.println("AAAAAAAAAAAAAA");
-                }
+                
                 return poslednjiObjekatRezultat;
             }
         } catch (Exception e) {
@@ -250,6 +248,21 @@ public class Kontroler {
                     return;
                 }
             }
+        }
+    }
+
+    public boolean izmeniRacun(Racun r, List<StavkaRacuna> listaStavki) {
+        RacunWrapper rw = new RacunWrapper(r, listaStavki);
+        KlijentskiZahtev zahtev = new KlijentskiZahtev(rw, Operacija.IZMENI_RACUN);
+        try {
+            Komunikacija.getInstance().posaljiZahtev(zahtev);
+            synchronized (this) {
+                wait(1000);
+                return poslednjiBooleanRezultat;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, e);
+            return false;
         }
     }
 }

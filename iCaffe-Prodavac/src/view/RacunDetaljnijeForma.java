@@ -262,15 +262,15 @@ public class RacunDetaljnijeForma extends javax.swing.JDialog {
     }//GEN-LAST:event_btnDodajActionPerformed
 
     private void btnPotvrdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPotvrdiActionPerformed
-//        boolean izmenjeno = Kontroler.getInstance().izmeniRacun(r, listaStavki);
-//        
-//        if (izmenjeno){
-//            JOptionPane.showMessageDialog(this, "Sistem je zapamtio racun.");
-//            prf.osveziTabelu(null);
-//        } else {
-//            JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti racun.");
-//            prf.osveziTabelu(null);
-//        }
+        boolean izmenjeno = Kontroler.getInstance().izmeniRacun(r, listaStavki);
+        
+        if (izmenjeno){
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio racun.");
+            prf.osveziTabelu(null);
+        } else {
+            JOptionPane.showMessageDialog(this, "Sistem ne moze da zapamti racun.");
+            prf.osveziTabelu(null);
+        }
     }//GEN-LAST:event_btnPotvrdiActionPerformed
 
     /**

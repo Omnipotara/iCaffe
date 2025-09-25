@@ -85,6 +85,13 @@ public class StavkaRacuna implements Serializable, DomainObject<StavkaRacuna> {
         this.usluga = usluga;
     }
 
+    public boolean isDifferent(StavkaRacuna other) {
+        if (other == null) {
+            return true;
+        }
+        return this.kolicina != other.kolicina || this.cenaStavke != other.cenaStavke;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -96,17 +103,17 @@ public class StavkaRacuna implements Serializable, DomainObject<StavkaRacuna> {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        StavkaRacuna other = (StavkaRacuna) obj;
+
+        if (this.racun == null || other.racun == null || this.usluga == null || other.usluga == null) {
             return false;
         }
-        final StavkaRacuna other = (StavkaRacuna) obj;
-        if (this.rb != other.rb) {
-            return false;
-        }
-        return Objects.equals(this.racun, other.racun);
+
+        return Objects.equals(this.racun.getId(), other.racun.getId())
+                && Objects.equals(this.usluga.getId(), other.usluga.getId());
     }
 
     @Override

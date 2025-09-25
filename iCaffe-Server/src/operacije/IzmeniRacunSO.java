@@ -39,26 +39,58 @@ public class IzmeniRacunSO extends AbstractSystemOperation<Racun> {
         primerStavke.setRacun(racun);
         List<StavkaRacuna> stareStavke = broker.selectAll(primerStavke);
 
-        // 2. Brisu se sve stare stavke iz baze
-        for (StavkaRacuna s : stareStavke) {
-            broker.delete(s);
-        }
-
-        // 3. Cena racuna se updateuje
+        // 2. Cena racuna se updateuje
         boolean uspeh = (boolean) broker.update(racun);
         if (!uspeh) {
             throw new SQLException("Racun nije izmenjen");
         }
 
-        // 4. Ubacuju se nove stavke
-        int rb = 0;
-        for (StavkaRacuna s : noveStavke) {
-            rb++;
-            s.setRb(rb);
-            s.setRacun(racun);
-            broker.insert(s);
+        // 3. Obrada stavki
+        // 3.1 Brisu se one koje vise ne postoje
+        for (StavkaRacuna stara : stareStavke) {
+            boolean postoji = false;
+            for (StavkaRacuna nova : noveStavke) {
+                if (stara.getUsluga().getId() == nova.getUsluga().getId()) {
+                    postoji = true;
+                    break;
+                }
+            }
+            if (!postoji) {
+                broker.delete(stara);
+            }
         }
 
-        return true; // Ako do ovde nsita ne pukne onda vraca true
+        // 3.2 Dodavanje novih i update postojećih
+        int rb = 0;
+
+        if (!stareStavke.isEmpty()) {
+            StavkaRacuna poslednja = stareStavke.get(stareStavke.size() - 1);
+            rb = poslednja.getRb();
+        }
+
+        for (StavkaRacuna nova : noveStavke) {
+            
+            nova.setRacun(racun);
+
+            StavkaRacuna postojeca = null;
+            for (StavkaRacuna stara : stareStavke) {
+                if (stara.getUsluga().getId() == nova.getUsluga().getId()) {
+                    postojeca = stara;
+                    break;
+                }
+            }
+
+            if (postojeca == null) {
+                // nema je u starim (NOVA STAVKA)
+                rb++;
+                nova.setRb(rb);
+                broker.insert(nova);
+            } else if (postojeca.isDifferent(nova)) {
+                // ima je u starim (STARA STAVKA)
+                broker.update(nova);
+            }
+        }
+
+        return true;
     }
 }

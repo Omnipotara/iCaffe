@@ -51,7 +51,7 @@ public class Komunikacija extends Thread {
                         Kontroler.getInstance().getSf().prikaziLogoutPoruku();
                         break;
 
-                    // Real-time update vremena mušterija
+                    // Real-time update vremena musterija
                     case VREME_UPDATE:
                         if (so.getParam() != null) {
                             Musterija musterija = (Musterija) so.getParam();
@@ -117,6 +117,7 @@ public class Komunikacija extends Thread {
                         List<Musterija> online = so.getParam() != null ? (List<Musterija>) so.getParam() : new ArrayList<>();
                         Kontroler.getInstance().getSf().postaviOnlineMusterije(online);
                         break;
+                        
                     // Objekat operacije
                     case VRATI_JEDNOG:
                         System.out.println("PRODAVAC: Primio odgovor: " + so.getParam());
