@@ -17,7 +17,9 @@ import model.Prodavac;
  * @author Omnix
  */
 public class LoginForma extends javax.swing.JFrame {
+
     private ServerForma sf;
+
     /**
      * Creates new form LoginForma
      */
@@ -25,6 +27,12 @@ public class LoginForma extends javax.swing.JFrame {
         initComponents();
         Kontroler.getInstance().setLf(this);
         setLocationRelativeTo(null);
+
+        try {
+            Komunikacija.getInstance().start();
+        } catch (IOException ex) {
+            Logger.getLogger(LoginForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -100,20 +108,14 @@ public class LoginForma extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String username = txtUsername.getText();
         String password = String.valueOf(txtPassword.getPassword());
-        
+
         Prodavac p = new Prodavac();
         p.setUsername(username);
         p.setPassword(password);
-        
-        try {
-            Komunikacija.getInstance().start();
-        } catch (IOException ex) {
-            Logger.getLogger(LoginForma.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+
         p = (Prodavac) Kontroler.getInstance().vratiJednog(p);
-        
-        if(p == null){
+
+        if (p == null) {
             JOptionPane.showMessageDialog(this, "Korisnicko ime i sifra nisu ispravni.", "Login neuspesan", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -121,7 +123,7 @@ public class LoginForma extends javax.swing.JFrame {
         sf = new ServerForma(p);
         sf.setVisible(true);
         this.dispose();
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
