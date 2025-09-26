@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import kontroler.Kontroler;
 import model.Musterija;
 import operacije.Operacija;
+import static operacije.Operacija.SERVER_LOGOUT;
 import static operacije.Operacija.VRATI_SVE;
 import transfer.KlijentskiZahtev;
 import transfer.ServerskiOdgovor;
@@ -47,8 +48,11 @@ public class Komunikacija extends Thread {
                 switch (so.getOperacija()) {
                     // Osnovni prodavac operacije
                     case LOGOUT_PRODAVAC:
-                        kraj = true;
-                        Kontroler.getInstance().getSf().prikaziLogoutPoruku();
+                        if (so.getParam() != null) {
+                            boolean uspeh = (boolean) so.getParam();
+                            kraj = true;
+                            Kontroler.getInstance().getSf().logoutPoruka(!uspeh);
+                        }
                         break;
 
                     // Real-time update vremena musterija
@@ -98,6 +102,14 @@ public class Komunikacija extends Thread {
                         }
                         break;
 
+                    case SERVER_LOGOUT_PRODAVCA:
+                        if (so.getParam() != null) {
+                            boolean uspeh = (boolean) so.getParam();
+                            kraj = true;
+                            Kontroler.getInstance().getSf().logoutPoruka(uspeh);
+                        }
+                        break;
+
                     // Lista operacije
                     case VRATI_SVE:
                         if (so.getParam() != null) {
@@ -117,7 +129,7 @@ public class Komunikacija extends Thread {
                         List<Musterija> online = so.getParam() != null ? (List<Musterija>) so.getParam() : new ArrayList<>();
                         Kontroler.getInstance().getSf().postaviOnlineMusterije(online);
                         break;
-                        
+
                     // Objekat operacije
                     case VRATI_JEDNOG:
                         System.out.println("PRODAVAC: Primio odgovor: " + so.getParam());

@@ -234,7 +234,7 @@ public class Kontroler {
 
     // Metoda za ažuriranje vremena
     public void azurirajVremeMusterije(Musterija musterija) {
-        if (sf != null) {
+        if (sf != null && sf.getListaMusterija() != null) {
             for (Musterija m : sf.getListaMusterija()) {
                 if (m.getId() == musterija.getId()) {
                     m.setPreostaloVreme(musterija.getPreostaloVreme());

@@ -221,16 +221,18 @@ public class RacunForma extends javax.swing.JDialog {
         for (StavkaRacuna s : listaStavki) {
             if (s.getUsluga().getId() == 1000) {
                 ukupnoSekundiZaDodati += s.getKolicina() * 3600;
+                break;
             }
         }
 
         if (ukupnoSekundiZaDodati > 0) {
             Duration novoVreme = Duration.ofSeconds(m.getPreostaloVreme().toSeconds() + ukupnoSekundiZaDodati);
             m.setPreostaloVreme(novoVreme);
+            System.out.println("Saljem zahtev za " + ukupnoSekundiZaDodati + " sekundi!");
             Kontroler.getInstance().izmeni(m);
         }
 
-        Kontroler.getInstance().getSf().osveziTabelu();
+        Kontroler.getInstance().getSf().napuniListe();
         JOptionPane.showMessageDialog(this, "Sistem je zapamtio racun.");
         this.dispose();
     }//GEN-LAST:event_btnFinalizujActionPerformed

@@ -219,6 +219,12 @@ public class MusterijaDetaljnijeForma extends javax.swing.JDialog {
     }//GEN-LAST:event_cmbKategorijeActionPerformed
 
     private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
+        
+        if (Kontroler.getInstance().getSf().getListaOnlineMusterija().contains(m)){
+            JOptionPane.showMessageDialog(this, "Musterija ne moze da se izmeni kada je ONLINE, prvo odlogujte musteriju.");
+            return;
+        }
+        
         KategorijaMusterije k = (KategorijaMusterije) cmbKategorije.getSelectedItem();
         m.setKategorijaMusterije(k);
         boolean izmenjeno = Kontroler.getInstance().izmeni(m);

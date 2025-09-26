@@ -188,6 +188,7 @@ public class PostaviKategorijuMusterijeForma extends javax.swing.JDialog {
             popust = Integer.parseInt(txtPopust.getText());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unesite broj.", "Neuspesan unos.", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         if (popust >= 0 && popust <= 100) {

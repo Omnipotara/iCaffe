@@ -119,6 +119,7 @@ public class ObradiKlijentskiZahtev extends Thread {
                         boolean dodat = Kontroler.getInstance().dodaj(m);
                         if (dodat) {
                             so.setParam(1);
+                            Kontroler.getInstance().obavestiProdavce(m);
                             posaljiServerskiOdgovor(so);
                         } else {
                             so.setParam(null);
@@ -145,7 +146,7 @@ public class ObradiKlijentskiZahtev extends Thread {
                         duplikat = false;
 
                         for (Musterija mus : listaMusterija) {
-                            if (m.getUsername().equals(mus.getUsername())) {
+                            if (m.getUsername().equals(mus.getUsername()) && m.getId() != mus.getId()) {
                                 so.setParam(false);
                                 so.setOperacija(Operacija.AZURIRANJE_USERNAME);
                                 posaljiServerskiOdgovor(so);
@@ -195,28 +196,16 @@ public class ObradiKlijentskiZahtev extends Thread {
                         break;
 
                     case LOGOUT_PRODAVAC:
-                        // 1. Prima objekat prodavca iz zahteva
-                        prodavac = (Prodavac) kz.getParam();
 
-                        // 2. Pozovi logout u bazi da ažurira status
-                        odlogovan = Kontroler.getInstance().logoutProdavac(prodavac);
-
-                        // 3. Ukloni iz liste aktivnih prodavaca
-                        Kontroler.getInstance().getListaProdavaca().remove(this);
-
-                        // 4. Očisti lokalne varijable
                         this.jeProdavac = false;
 
-                        // 5. Pošalji odgovor sa rezultatom logout-a iz baze
-                        so.setParam(odlogovan);
-                        so.setOperacija(Operacija.LOGOUT_PRODAVAC);
+                        so = new ServerskiOdgovor(true, Operacija.LOGOUT_PRODAVAC);
                         posaljiServerskiOdgovor(so);
 
-                        // 6. Postavi flag za kraj konekcije
-                        kraj = true;
-
-                        // 7. Log poruka
+                        // Log poruka
                         System.out.println("Prodavac se odlogovao");
+
+                        kraj = true;
                         break;
 
                     // GENERIČKE OPERACIJE (uglavnom za prodavca)
@@ -434,7 +423,6 @@ public class ObradiKlijentskiZahtev extends Thread {
 
     public void serverskiLogoutKupca(Musterija m) {
         boolean odlogovan = Kontroler.getInstance().logoutMusterija(m);
-        Kontroler.getInstance().getListaMusterija().remove(this);
         this.ulogovan = null;
         if (mtn != null) {
             mtn.setKraj(true);
@@ -447,5 +435,14 @@ public class ObradiKlijentskiZahtev extends Thread {
 
         // Obavesti prodavce o logout-u
         Kontroler.getInstance().posaljiVremeUpdateProdavcima(m);
+    }
+
+    public void serverskiLogoutProdavca() {
+        this.jeProdavac = false;
+
+        ServerskiOdgovor so = new ServerskiOdgovor(true, Operacija.SERVER_LOGOUT_PRODAVCA);
+        posaljiServerskiOdgovor(so);
+
+        kraj = true;
     }
 }

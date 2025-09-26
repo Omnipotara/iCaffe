@@ -224,4 +224,26 @@ public class Kontroler {
         }
     }
 
+    public void ocistiKonekcije() {
+        sveKonekcije = new ArrayList<>();
+        listaMusterija = new ArrayList<>();
+        listaProdavaca = new ArrayList<>();
+    }
+
+    public void odjaviSvePrijavljene() {
+        //Odjavljuje sve musterije
+        for (ObradiKlijentskiZahtev musterija : listaMusterija){
+            if (musterija != null && musterija.getUlogovani() != null){
+                musterija.serverskiLogoutKupca(musterija.getUlogovani());
+            }
+        }
+        
+        //Odjavljuje sve zaposlene
+        for (ObradiKlijentskiZahtev prodavac : listaProdavaca){
+            if (prodavac != null && prodavac.isJeProdavac()){
+                prodavac.serverskiLogoutProdavca();
+            }
+        }
+    }
+
 }

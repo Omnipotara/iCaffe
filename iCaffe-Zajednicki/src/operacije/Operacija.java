@@ -21,6 +21,7 @@ public enum Operacija implements Serializable {
     //Prodavac
     LOGIN_PRODAVAC,
     LOGOUT_PRODAVAC,
+    SERVER_LOGOUT_PRODAVCA,
     VREME_UPDATE,
     DODAJ,
     IZMENI,

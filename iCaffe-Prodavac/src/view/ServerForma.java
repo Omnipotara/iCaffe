@@ -4,19 +4,25 @@
  */
 package view;
 
+import java.io.IOException;
 import view.prodaja.RacunForma;
 import view.usluga.UslugeForma;
 import view.musterija.KategorijeMusterijaForma;
 import view.angazovanje.AngazovanjaForma;
 import view.angazovanje.PostaviAngazovanjeForma;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import komunikacija.Komunikacija;
 import kontroler.Kontroler;
 import model.Angazovanje;
 import model.Musterija;
 import model.Prodavac;
 import model.pomocne.UlogovaniMusterija;
 import modeli.ModelTabeleMusterija;
+import operacije.Operacija;
+import transfer.KlijentskiZahtev;
 import view.musterija.MusterijaDetaljnijeForma;
 
 /**
@@ -50,6 +56,21 @@ public class ServerForma extends javax.swing.JFrame {
 
         osveziFormu();
         napuniListe();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                KlijentskiZahtev kz = new KlijentskiZahtev(p, Operacija.LOGOUT_PRODAVAC);
+                try {
+                    Komunikacija.getInstance().posaljiZahtev(kz);
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerForma.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                dispose(); // zatvara prozor
+            }
+        });
 
     }
 
@@ -268,7 +289,7 @@ public class ServerForma extends javax.swing.JFrame {
             boolean obrisan = Kontroler.getInstance().obrisi(kupac);
 
             if (obrisan) {
-                osveziTabelu();
+                napuniListe();
                 JOptionPane.showMessageDialog(this, "Sistem je obrisao musteriju.");
                 return;
             } else {
@@ -379,7 +400,7 @@ public class ServerForma extends javax.swing.JFrame {
             ModelTabeleMusterija mtm = new ModelTabeleMusterija(listaMusterija, listaOnlineMusterija);
             tblMusterije.setModel(mtm);
             tblMusterije.repaint();
-            System.out.println("=== TABELA OSVEZENA ===");
+            //System.out.println("=== TABELA OSVEZENA ===");
         }
     }
 
@@ -434,6 +455,16 @@ public class ServerForma extends javax.swing.JFrame {
 
     public void setListaOnlineMusterija(List<Musterija> listaOnlineMusterija) {
         this.listaOnlineMusterija = listaOnlineMusterija;
+    }
+
+    public void logoutPoruka(boolean uspeh) {
+        if (uspeh) {
+            JOptionPane.showMessageDialog(this, "Server je ugasen.", "Odlogovani ste", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Uspesno ste se izlogovali.", "Logout uspesan", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        }
     }
 
 }
